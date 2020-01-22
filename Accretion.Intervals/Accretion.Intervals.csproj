@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>3.1.0</Version>
+    <Authors>Accretion</Authors>
+    <Company />
+    <Product />
+    <PackageLicenseExpression>MIT-0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/RtmK/Accretion/tree/master/Accretion.Intervals</PackageProjectUrl>
+    <PackageReleaseNotes>Fixed a bug where some intervals of integral types would have incorrect IsEmty values. BoolExtensions is no longer a part of the public API.</PackageReleaseNotes>
+    <Description>Intervals that represent a set of valid values between generic IComparables and can have an arbitrary number of pairs of lower and upper bounds, closed or open (for example: (-9,10]∪(80,100]). Support Contains - O(log n), Union, SymmetricDifference, Intersect, Complement and Length - O(n) operations.</Description>
+    <PackageTags>intervals ranges</PackageTags>
+    <LangVersion>8</LangVersion>    
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.0.0" />
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+  </ItemGroup>
+
+</Project>
