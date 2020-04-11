@@ -68,43 +68,36 @@ namespace Accretion.Intervals
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones. 
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<sbyte> Reduce(this ContinuousInterval<sbyte> interval) => ReduceContinuousInterval(interval);
 
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones. 
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<byte> Reduce(this ContinuousInterval<byte> interval) => ReduceContinuousInterval(interval);
 
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones. 
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<short> Reduce(this ContinuousInterval<short> interval) => ReduceContinuousInterval(interval);
         
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones. 
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<ushort> Reduce(this ContinuousInterval<ushort> interval) => ReduceContinuousInterval(interval);
 
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones. 
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<char> Reduce(this ContinuousInterval<char> interval) => ReduceContinuousInterval(interval);
 
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones. 
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<int> Reduce(this ContinuousInterval<int> interval) => ReduceContinuousInterval(interval);
 
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones. 
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<uint> Reduce(this ContinuousInterval<uint> interval) => ReduceContinuousInterval(interval);
 
         /// <summary>
@@ -116,25 +109,12 @@ namespace Accretion.Intervals
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones. 
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<ulong> Reduce(this ContinuousInterval<ulong> interval) => ReduceContinuousInterval(interval);
 
         /// <summary>
         /// Returns a new identical continuous interval, but with open boundaries eliminated or replaced with closed ones.
         /// </summary>  
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ContinuousInterval<T> Reduce<T>(this ContinuousInterval<T> interval) where T : IDiscreteValue<T> => ReduceContinuousInterval(interval);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ContinuousInterval<T> ReduceContinuousInterval<T>(ContinuousInterval<T> interval) where T : IComparable<T>
-        {
-            if (GenericSpecializer<T>.TypeInstanceCanBeNull && interval.IsEmpty)
-            {
-                return ContinuousInterval<T>.EmptyInterval;
-            }
-
-            return new ContinuousInterval<T>(interval.LowerBoundary.ReducedValue(), false, interval.UpperBoundary.ReducedValue(), false);
-        }
 
         private static Interval<T> ReduceInterval<T>(Interval<T> interval) where T : IComparable<T>
         {
@@ -143,19 +123,25 @@ namespace Accretion.Intervals
                 throw new ArgumentNullException(nameof(interval));
             }
 
-            var packedBoundaries = new Boundary<T>[interval.Boundaries.Count];
-            var maxIndex = interval.Boundaries.MaxIndex();
-            var boundariesArray = interval.Boundaries.Array;
-            int j = 0;
+            var reducedIntervals = new ContinuousInterval<T>[interval.Intervals.Count];
 
-            for (int i = interval.Boundaries.Offset; i <= maxIndex; i += 2)
+            for (int i = 0; i < reducedIntervals.Length; i++)
             {
-                //packedBoundaries[j] = new Boundary<T>(boundariesArray[i].ReducedLowerValue(), false, true);
-                //packedBoundaries[j + 1] = new Boundary<T>(boundariesArray[i + 1].ReducedUpperValue(), false, false);
-                j += 2;
+                reducedIntervals[i] = ReduceContinuousInterval(interval.Intervals[i]);
             }
 
-            return new Interval<T>(new ArraySegment<Boundary<T>>(packedBoundaries, 0, j), sorted: true, mayOverlap: false);
+            return new Interval<T>(new ReadOnlyArray<ContinuousInterval<T>>(reducedIntervals));
+        }
+
+        private static ContinuousInterval<T> ReduceContinuousInterval<T>(ContinuousInterval<T> interval) where T : IComparable<T>
+        {
+            if (interval.IsEmpty)
+            {
+                return ContinuousInterval<T>.EmptyInterval;
+            }
+
+            return new ContinuousInterval<T>(LowerBoundary<T>.CreateUnchecked(interval.LowerBoundary.ReducedValue(), false), 
+                                             UpperBoundary<T>.CreateUnchecked(interval.UpperBoundary.ReducedValue(), false));
         }
     }
 }

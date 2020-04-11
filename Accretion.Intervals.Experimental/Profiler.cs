@@ -32,22 +32,19 @@ namespace Accretion.Intervals
                 while (true)
                 {
                     a.TestNormal();
-                    a.TestExperimental();
+                    //a.TestExperimental();
                 }
             }
-            
 
-            //IntervalsTests.RunAll();
-            //ExperimentalIntervalsTests.RunAll();
+            //InfiniteLoop();
 
             BenchmarkRunner.Run<Profiled>();
             //Console.ReadLine();
         }
     }    
 
-    [HardwareCounters(HardwareCounter.BranchInstructions, HardwareCounter.BranchMispredictions, HardwareCounter.CacheMisses)]
-    //[InliningDiagnoser(logFailuresOnly: true, allowedNamespaces: new[] { "Accretion.Intervals" })]
-    [SimpleJob(RunStrategy.Throughput)]
+    //[HardwareCounters(HardwareCounter.BranchInstructions, HardwareCounter.BranchMispredictions, HardwareCounter.CacheMisses, HardwareCounter.InstructionRetired)]
+    [InliningDiagnoser(logFailuresOnly: true, allowedNamespaces: new[] { "Accretion.Intervals" })]
     public class Profiled
     {
         public int N = 1000;
@@ -87,7 +84,7 @@ namespace Accretion.Intervals
             //TestNormalIntReduce();
         }
 
-        [Benchmark(Baseline = true)]
+        //[Benchmark(Baseline = true)]
         public void TestExperimental()
         {
             TestExperimentalIntIntersect();
@@ -100,7 +97,7 @@ namespace Accretion.Intervals
         private void TestNormalIntIntersect()
         {
             var intervals = IntIntervals;
-
+            
             for (int i = 0; i < intervals.Length - 1; i++)
             {
                 intervals[i].Intersect(intervals[i + 1]);
@@ -178,3 +175,5 @@ namespace Accretion.Intervals
         }
     }
 }
+
+

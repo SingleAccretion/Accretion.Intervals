@@ -17,13 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<ProjectReference Include="..\Accretion.Intervals\Accretion.Intervals.csproj" />
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.0" />
     <PackageReference Include="ObjectLayoutInspector" Version="0.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Accretion.Intervals\Accretion.Intervals.csproj" />
   </ItemGroup>
 
 </Project>

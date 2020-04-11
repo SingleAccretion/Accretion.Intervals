@@ -6,7 +6,9 @@ namespace Accretion.Intervals
 {    
     public interface IDiscreteValue<T> : IComparable<T>
     {
-        T Increment(out bool overflowed);
-        T Decrement(out bool overflowed);        
+        T Increment();
+        T Decrement();
+        public bool IsIncrementable { get; }
+        public bool IsDecrementable { get; }
     }
 }

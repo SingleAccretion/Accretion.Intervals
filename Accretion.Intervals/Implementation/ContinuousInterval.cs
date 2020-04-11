@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Accretion.Intervals
-{
+{    
     public readonly struct ContinuousInterval<T> : IEquatable<ContinuousInterval<T>> where T : IComparable<T>
     {
         private static readonly Parser<ContinuousInterval<T>, T> _parser = new Parser<ContinuousInterval<T>, T>(TryParse);
@@ -12,8 +13,6 @@ namespace Accretion.Intervals
         /// Instance of an empty <see cref="ContinuousInterval{T}"/>
         /// </summary>
         public static readonly ContinuousInterval<T> EmptyInterval = new ContinuousInterval<T>();
-
-        private readonly bool _isNotEmpty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContinuousInterval{T}"/> class with the specified boundaries.         
@@ -24,12 +23,10 @@ namespace Accretion.Intervals
         /// <param name="upperBoundaryIsOpen">Specifies whether upper boundary will be open. Intervals with open boundaries don't contain values of these boundaries.</param>
         public ContinuousInterval(T lowerBoundaryValue, bool lowerBoundaryIsOpen, T upperBoundaryValue, bool upperBoundaryIsOpen)
         {            
-            var lowerBoundaryIsValid = LowerBoundary<T>.TryCreate(lowerBoundaryValue, lowerBoundaryIsOpen, out var lowerBoundary);
-            var upperBoundaryIsValid = UpperBoundary<T>.TryCreate(upperBoundaryValue, upperBoundaryIsOpen, out var upperBoundary);
+            var lowerBoundary = LowerBoundary<T>.CreateChecked(lowerBoundaryValue, lowerBoundaryIsOpen, out var lowerBoundaryIsValid);
+            var upperBoundary = UpperBoundary<T>.CreateChecked(upperBoundaryValue, upperBoundaryIsOpen, out var upperBoundaryIsValid);
 
-            _isNotEmpty = lowerBoundaryIsValid && upperBoundaryIsValid && !BoundariesProduceEmptyInterval(lowerBoundary, upperBoundary);
-
-            if (_isNotEmpty)
+            if (lowerBoundaryIsValid && upperBoundaryIsValid && !BoundariesProduceEmptyInterval(lowerBoundary, upperBoundary))
             {
                 LowerBoundary = lowerBoundary;
                 UpperBoundary = upperBoundary;
@@ -41,10 +38,17 @@ namespace Accretion.Intervals
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal ContinuousInterval(in LowerBoundary<T> lowerBoundary, in UpperBoundary<T> upperBoundary) 
+        {
+            LowerBoundary = lowerBoundary;
+            UpperBoundary = upperBoundary;
+        }
+
         /// <summary>
         /// Specifies whether this interval is empty. Empty intervals contain no values.
         /// </summary>
-        public bool IsEmpty { get => !_isNotEmpty; }
+        public bool IsEmpty => Checker.IsDefault(this);
 
         internal LowerBoundary<T> LowerBoundary { get; }
         internal UpperBoundary<T> UpperBoundary { get; }
@@ -55,10 +59,7 @@ namespace Accretion.Intervals
         /// <param name="str">String representation of the interval.</param>
         /// <param name="tryParseElement">Function that tries to convert the string representation of <see cref="T"/> to an instance of <see cref="T"/>.</param>
         /// <param name="interval">Result of conversion.</param>        
-        public static bool TryParse(string str, TryParse<T> tryParseElement, out ContinuousInterval<T> interval)
-        {
-            return _parser.TryParse(str, tryParseElement, out interval);
-        }
+        public static bool TryParse(string str, TryParse<T> tryParseElement, out ContinuousInterval<T> interval) => _parser.TryParse(str, tryParseElement, out interval);
 
         /// <summary>
         /// Tries to convert the string representation of a continuous interval to an instance of <see cref="ContinuousInterval{T}"/>. Returns whether the operation was successful.
@@ -66,10 +67,7 @@ namespace Accretion.Intervals
         /// <param name="str">String representation of the interval.</param>
         /// <param name="parseElement">Function that converts the string representation of <see cref="T"/> to an instance of <see cref="T"/>.</param>
         /// <param name="interval">Result of conversion.</param>        
-        public static bool TryParse(string str, Func<string, T> parseElement, out ContinuousInterval<T> interval)
-        {
-            return _parser.TryParse(str, parseElement, out interval);
-        }
+        public static bool TryParse(string str, Func<string, T> parseElement, out ContinuousInterval<T> interval) => _parser.TryParse(str, parseElement, out interval);
 
         /// <summary>
         /// Converts the string representation of a continuous interval to an instance of <see cref="ContinuousInterval{T}"/>. 
@@ -77,10 +75,7 @@ namespace Accretion.Intervals
         /// <param name="str">String representation of the interval.</param>
         /// <param name="tryParseElement">Function that tries to convert the string representation of <see cref="T"/> to an instance of <see cref="T"/>.</param>
         /// <exception cref="FormatException" />
-        public static ContinuousInterval<T> Parse(string str, TryParse<T> tryParseElement)
-        {
-            return _parser.Parse(str, tryParseElement);
-        }
+        public static ContinuousInterval<T> Parse(string str, TryParse<T> tryParseElement) => _parser.Parse(str, tryParseElement);
 
         /// <summary>
         /// Converts the string representation of a continuous interval to an instance of <see cref="ContinuousInterval{T}"/>. 
@@ -88,18 +83,15 @@ namespace Accretion.Intervals
         /// <param name="str">String representation of the interval.</param>
         /// <param name="parseElement">Function that converts the string representation of <see cref="T"/> to an instance of <see cref="T"/>.</param>
         /// <exception cref="FormatException" />
-        public static ContinuousInterval<T> Parse(string str, Func<string, T> parseElement)
-        {
-            return _parser.Parse(str, parseElement);
-        }
-           
+        public static ContinuousInterval<T> Parse(string str, Func<string, T> parseElement) => _parser.Parse(str, parseElement);
+
         /// <summary>
         /// Determines whether this <see cref="ContinuousInterval{T}"/> contains the specified value. It is an O(1) operation.
         /// </summary>
         /// <param name="value">The value to be tested.</param>        
         public bool Contains(T value)
         {
-            if (IsEmpty || (GenericSpecializer<T>.TypeInstanceCanBeNull && NullChecker.IsNull(value)))
+            if (IsEmpty || Checker.IsNull(value))
             {
                 return false;
             }
@@ -117,7 +109,7 @@ namespace Accretion.Intervals
 
         /// <summary>
         /// Returns a string that represents this interval.
-        /// </summary>        
+        /// </summary>
         public override string ToString()
         {
             return IsEmpty ?
@@ -212,20 +204,14 @@ namespace Accretion.Intervals
             }
 
             result = new ContinuousInterval<T>(lowerBoundaryValue, lowerBoundaryIsOpen, upperBoundaryValue, upperBoundaryIsOpen);
-        }
+        }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool BoundariesProduceEmptyInterval(LowerBoundary<T> lowerBoundary, UpperBoundary<T> upperBoundary)
+        private static bool BoundariesProduceEmptyInterval(LowerBoundary<T> lowerBoundary, UpperBoundary<T> upperBoundary)
         {
-            if (GenericSpecializer<T>.TypeIsDiscrete)
-            {
-                return lowerBoundary.ReducedValue().IsGreaterThan(upperBoundary.ReducedValue());
-            }
-            else
-            {
-                return lowerBoundary.Value.IsGreaterThan(upperBoundary.Value) ||
-                      (lowerBoundary.Value.IsEqualTo(upperBoundary.Value) && (lowerBoundary.IsOpen || upperBoundary.IsOpen));
-            }
+            return GenericSpecializer<T>.TypeIsDiscrete ? 
+                   lowerBoundary.ReducedValue().IsGreaterThan(upperBoundary.ReducedValue()) : 
+                   lowerBoundary.Value.IsGreaterThan(upperBoundary.Value) || (lowerBoundary.Value.IsEqualTo(upperBoundary.Value) && (lowerBoundary.IsOpen || upperBoundary.IsOpen));
         }        
 
         public static bool operator ==(ContinuousInterval<T> first, ContinuousInterval<T> second) => first.Equals(second);

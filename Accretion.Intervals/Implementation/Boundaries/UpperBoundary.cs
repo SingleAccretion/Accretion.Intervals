@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Accretion.Intervals
-{
-    internal readonly struct UpperBoundary<T> : IBoundary<T>, IEquatable<UpperBoundary<T>> where T : IComparable<T>
+{    
+    internal readonly struct UpperBoundary<T> : IEquatable<UpperBoundary<T>> where T : IComparable<T>
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0052:Remove unread private members", Justification = "Layout compatibility with Boundary<T>")]
-        private readonly bool _isLowerFiller;
-        private readonly bool _isClosed;
         private readonly T _value;
+        private readonly bool _isClosed;
 
         private UpperBoundary(T value, bool isOpen)
         {
-            _isLowerFiller = false;
             _isClosed = !isOpen;
             _value = value;
         }
@@ -23,100 +21,88 @@ namespace Accretion.Intervals
         public bool IsClosed { get => _isClosed; }
         public T Value { get => _value; }
 
-        public static UpperBoundary<T> Create(T value, bool isOpen) => new UpperBoundary<T>(value, isOpen);
+        public static UpperBoundary<T> CreateUnchecked(T value, bool isOpen) => new UpperBoundary<T>(value, isOpen);
 
-        public static bool TryCreate(T value, bool isOpen, out UpperBoundary<T> boundary)
+        public static UpperBoundary<T> CreateChecked(T value, bool isOpen, out bool isValid)
         {
-            boundary = new UpperBoundary<T>(value, isOpen);
+            isValid = true;
+            var boundary = new UpperBoundary<T>(value, isOpen);
 
-            if (typeof(T) == typeof(double))
+            if (typeof(T) == typeof(sbyte))
             {
-                return (((double)(object)value).IsFinite() || double.IsPositiveInfinity((double)(object)value)) &&
-                      !((double)(object)value == double.MinValue && isOpen);
-            }
-            if (typeof(T) == typeof(float))
-            {
-                return (((float)(object)value).IsFinite() || float.IsPositiveInfinity((float)(object)value)) &&
-                      !((float)(object)value == float.MinValue && isOpen);
+                isValid = !((sbyte)(object)value == sbyte.MinValue && isOpen);
             }
             if (typeof(T) == typeof(byte))
             {
-                return !((byte)(object)value == byte.MinValue && isOpen);
-            }
-            if (typeof(T) == typeof(sbyte))
-            {
-                return !((sbyte)(object)value == sbyte.MinValue && isOpen);
+                isValid = !((byte)(object)value == byte.MinValue && isOpen);
             }
             if (typeof(T) == typeof(short))
             {
-                return !((short)(object)value == short.MinValue && isOpen);
-            }
-            if (typeof(T) == typeof(char))
-            {
-                return !((char)(object)value == char.MinValue && isOpen);
+                isValid = !((short)(object)value == short.MinValue && isOpen);
             }
             if (typeof(T) == typeof(ushort))
             {
-                return !((ushort)(object)value == ushort.MinValue && isOpen);
+                isValid = !((ushort)(object)value == ushort.MinValue && isOpen);
             }
-            if (typeof(T) == typeof(uint))
+            if (typeof(T) == typeof(char))
             {
-                return !((uint)(object)value == uint.MinValue && isOpen);
+                isValid = !((char)(object)value == char.MinValue && isOpen);
             }
             if (typeof(T) == typeof(int))
             {
-                return !((int)(object)value == int.MinValue && isOpen);
+                isValid = !((int)(object)value == int.MinValue && isOpen);
             }
-            if (typeof(T) == typeof(ulong))
+            if (typeof(T) == typeof(uint))
             {
-                return !((ulong)(object)value == ulong.MinValue && isOpen);
+                isValid = !((uint)(object)value == uint.MinValue && isOpen);
             }
             if (typeof(T) == typeof(long))
             {
-                return !((long)(object)value == long.MinValue && isOpen);
+                isValid = !((long)(object)value == long.MinValue && isOpen);
             }
-            if (typeof(T) == typeof(DateTime))
+            if (typeof(T) == typeof(ulong))
             {
-                return !((DateTime)(object)value == DateTime.MinValue && isOpen);
+                isValid = !((ulong)(object)value == ulong.MinValue && isOpen);
             }
-            if (typeof(T) == typeof(DateTimeOffset))
+            if (typeof(T) == typeof(float))
             {
-                return !((DateTimeOffset)(object)value == DateTimeOffset.MinValue && isOpen);
+                isValid = ((float)(object)value).IsFinite() || float.IsPositiveInfinity((float)(object)value);
+            }
+            if (typeof(T) == typeof(double))
+            {
+                isValid = ((double)(object)value).IsFinite() || double.IsPositiveInfinity((double)(object)value);
             }
 
-            if (GenericSpecializer<T>.TypeInstanceCanBeNull && (NullChecker.IsNull(value) || NullChecker.IsNull(value)))
+            if (Checker.IsNull(value))
             {
-                return false;
+                isValid = false;
             }
-            if (GenericSpecializer<T>.TypeImplementsIDiscrete)
+            else if (GenericSpecializer<T>.TypeImplementsIDiscrete && isOpen)
             {
-                var overflowed = false;
-                if (isOpen)
-                {
-                    ((IDiscreteValue<T>)value).Decrement(out overflowed);
-                }
-
-                return !overflowed;
+                isValid = ((IDiscreteValue<T>)value).IsDecrementable;
             }
 
-            return true;
+            return boundary;
         }
 
         public bool Equals(UpperBoundary<T> other)
         {
-            if (GenericSpecializer<T>.TypeIsDiscrete)
+            if (GenericSpecializer<T>.TypeIsDiscrete && 
+              !(GenericSpecializer<T>.DefaultTypeValueCannotBeDecremented && (Value.IsEqualTo(default) || other.Value.IsEqualTo(default))))
             {
                 return ReducedValue().IsEqualTo(other.ReducedValue());
             }
-
-            return Value.IsEqualTo(other.Value) && _isClosed == other._isClosed;
+            else
+            {
+                return Value.IsEqualTo(other.Value) && _isClosed == other._isClosed;
+            }
         }
-        
+
         public override bool Equals(object obj) => obj is UpperBoundary<T> boundary && Equals(boundary);
 
         public override int GetHashCode()
         {
-            if (GenericSpecializer<T>.TypeIsDiscrete)
+            if (GenericSpecializer<T>.TypeIsDiscrete && !(GenericSpecializer<T>.DefaultTypeValueCannotBeDecremented && Value.IsEqualTo(default)))
             {
                 return HashCode.Combine(ReducedValue());
             }
@@ -124,28 +110,30 @@ namespace Accretion.Intervals
             return HashCode.Combine(Value, _isClosed);
         }
 
+        public override string ToString() => $"{Value}{(IsOpen ? Interval.RightOpenBoundarySymbol : Interval.RightClosedBoundarySymbol)}";
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal T ReducedValue()
+        public T ReducedValue()
         {
             if (typeof(T) == typeof(byte))
             {
-                return (T)(object)((byte)(object)Value - IsOpen.ToInt());
+                return (T)(object)(byte)((byte)(object)Value - IsOpen.ToInt());
             }
             if (typeof(T) == typeof(sbyte))
             {
-                return (T)(object)((sbyte)(object)Value - IsOpen.ToInt());
+                return (T)(object)(sbyte)((sbyte)(object)Value - IsOpen.ToInt());
             }
             if (typeof(T) == typeof(short))
             {
-                return (T)(object)((short)(object)Value - IsOpen.ToInt());
+                return (T)(object)(short)((short)(object)Value - IsOpen.ToInt());
             }
             if (typeof(T) == typeof(char))
             {
-                return (T)(object)((char)(object)Value - IsOpen.ToInt());
+                return (T)(object)(char)((char)(object)Value - IsOpen.ToInt());
             }
             if (typeof(T) == typeof(ushort))
             {
-                return (T)(object)((ushort)(object)Value - IsOpen.ToInt());
+                return (T)(object)(ushort)((ushort)(object)Value - IsOpen.ToInt());
             }
             if (typeof(T) == typeof(int))
             {
@@ -153,7 +141,7 @@ namespace Accretion.Intervals
             }
             if (typeof(T) == typeof(uint))
             {
-                return (T)(object)((uint)(object)Value - IsOpen.ToLong());
+                return (T)(object)(uint)((uint)(object)Value - IsOpen.ToLong());
             }
             if (typeof(T) == typeof(long))
             {
@@ -164,9 +152,9 @@ namespace Accretion.Intervals
                 return (T)(object)((ulong)(object)Value - (ulong)IsOpen.ToLong());
             }
 
-            if (GenericSpecializer<T>.TypeImplementsIDiscrete)
+            if (GenericSpecializer<T>.TypeImplementsIDiscrete && IsOpen)
             {
-                return IsOpen ? ((IDiscreteValue<T>)Value).Decrement(out _) : Value;
+                return ((IDiscreteValue<T>)Value).Decrement();
             }
             else
             {
