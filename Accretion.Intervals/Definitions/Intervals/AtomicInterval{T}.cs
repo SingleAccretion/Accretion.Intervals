@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Accretion.Intervals.Definitions
 {
-    public readonly struct Interval<T> where T : IComparable<T>
+    public readonly struct AtomicInterval<T> where T : IComparable<T>
     {
     }
 }

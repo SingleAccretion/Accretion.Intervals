@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Accretion.Intervals.Definitions
 {
-    public readonly struct CompositeInterval<T> where T : IComparable<T>
+    public readonly struct FullInterval<T, TComparer> where TComparer : struct, IComparer<T>
     {
+
     }
 }
