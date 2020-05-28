@@ -22,13 +22,13 @@ namespace Accretion.Intervals.Tests
         
         private static object ToBoundaryOfDouble(string s)
         {
-            if (s.StartsWith(Interval.LeftOpenBoundarySymbol) || s.StartsWith(Interval.LeftClosedBoundarySymbol))
+            if (s.StartsWith(IntervalSymbols.LeftOpenBoundarySymbol) || s.StartsWith(IntervalSymbols.LeftClosedBoundarySymbol))
             {
-                return LowerBoundary<double>.CreateUnchecked(double.Parse(s[1..^0], CultureInfo.InvariantCulture), s[0] == Interval.LeftOpenBoundarySymbol);
+                return LowerBoundary<double>.CreateUnchecked(double.Parse(s[1..^0], CultureInfo.InvariantCulture), s[0] == IntervalSymbols.LeftOpenBoundarySymbol);
             }
-            else if (s.EndsWith(Interval.RightOpenBoundarySymbol) || s.EndsWith(Interval.RightClosedBoundarySymbol))
+            else if (s.EndsWith(IntervalSymbols.RightOpenBoundarySymbol) || s.EndsWith(IntervalSymbols.RightClosedBoundarySymbol))
             {
-                return UpperBoundary<double>.CreateUnchecked(double.Parse(s[0..^1], CultureInfo.InvariantCulture), s[^1] == Interval.RightOpenBoundarySymbol);
+                return UpperBoundary<double>.CreateUnchecked(double.Parse(s[0..^1], CultureInfo.InvariantCulture), s[^1] == IntervalSymbols.RightOpenBoundarySymbol);
             }
             else
             {

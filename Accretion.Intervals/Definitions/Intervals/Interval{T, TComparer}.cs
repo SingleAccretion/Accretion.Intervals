@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Accretion.Intervals
 {
-    public enum BoundaryType : byte
+    public readonly struct Interval<T, TComparer> where TComparer : struct, IComparer<T>
     {
-        Open = 0,
-        Closed = 1
+
     }
 }

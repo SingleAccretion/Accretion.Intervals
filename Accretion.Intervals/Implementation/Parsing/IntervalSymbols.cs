@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Accretion.Intervals
 {
-    public static class Interval
+    public static class IntervalSymbols
     {
         public const char SeparatorSymbol = ',';
         public const char IntersectionSymbol = '∩';

@@ -110,7 +110,7 @@ namespace Accretion.Intervals
             return HashCode.Combine(Value, _isClosed);
         }
 
-        public override string ToString() => $"{Value}{(IsOpen ? Interval.RightOpenBoundarySymbol : Interval.RightClosedBoundarySymbol)}";
+        public override string ToString() => $"{Value}{(IsOpen ? IntervalSymbols.RightOpenBoundarySymbol : IntervalSymbols.RightClosedBoundarySymbol)}";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T ReducedValue()

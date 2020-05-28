@@ -113,10 +113,10 @@ namespace Accretion.Intervals
         public override string ToString()
         {
             return IsEmpty ?
-                   Interval.EmptySetSymbol.ToString() :
+                   IntervalSymbols.EmptySetSymbol.ToString() :
                    LowerBoundary.IsClosed && UpperBoundary.IsClosed && LowerBoundary.Value.IsEqualTo(UpperBoundary.Value) ?
-                   $"{Interval.LeftSingleElementSetBrace}{LowerBoundary.Value}{Interval.RightSingleElementSetBrace}" :
-                   $"{LowerBoundary}{Interval.SeparatorSymbol}{UpperBoundary}";
+                   $"{IntervalSymbols.LeftSingleElementSetBrace}{LowerBoundary.Value}{IntervalSymbols.RightSingleElementSetBrace}" :
+                   $"{LowerBoundary}{IntervalSymbols.SeparatorSymbol}{UpperBoundary}";
         }
 
         internal static void TryParse(string str, out ContinuousInterval<T> result, out FormatException exception, ElementParsingAction<T> tryParseElement)
@@ -126,7 +126,7 @@ namespace Accretion.Intervals
 
             str = str.Trim();
 
-            if (str == Interval.EmptySetSymbol.ToString())
+            if (str == IntervalSymbols.EmptySetSymbol.ToString())
             {
                 result = EmptyInterval;
                 return;
@@ -143,30 +143,30 @@ namespace Accretion.Intervals
             var firstCharacter = str[0];
             var lastCharacter = str[stringLength - 1];
 
-            if (firstCharacter != Interval.LeftClosedBoundarySymbol && firstCharacter != Interval.LeftOpenBoundarySymbol && firstCharacter != Interval.LeftSingleElementSetBrace)
+            if (firstCharacter != IntervalSymbols.LeftClosedBoundarySymbol && firstCharacter != IntervalSymbols.LeftOpenBoundarySymbol && firstCharacter != IntervalSymbols.LeftSingleElementSetBrace)
             {
                 exception = ParsingExceptions.InvalidFirstCharacter;
                 return;
             }
-            var lowerBoundaryIsOpen = firstCharacter == Interval.LeftOpenBoundarySymbol;
+            var lowerBoundaryIsOpen = firstCharacter == IntervalSymbols.LeftOpenBoundarySymbol;
 
-            if (lastCharacter != Interval.RightClosedBoundarySymbol && lastCharacter != Interval.RightOpenBoundarySymbol && lastCharacter != Interval.RightSingleElementSetBrace)
+            if (lastCharacter != IntervalSymbols.RightClosedBoundarySymbol && lastCharacter != IntervalSymbols.RightOpenBoundarySymbol && lastCharacter != IntervalSymbols.RightSingleElementSetBrace)
             {
                 exception = ParsingExceptions.InvalidLastCharacter;
                 return;
             }
-            var upperBoundaryIsOpen = lastCharacter == Interval.RightOpenBoundarySymbol;
+            var upperBoundaryIsOpen = lastCharacter == IntervalSymbols.RightOpenBoundarySymbol;
 
-            if ((firstCharacter == Interval.LeftSingleElementSetBrace || lastCharacter == Interval.RightSingleElementSetBrace) &&
-               !(firstCharacter == Interval.LeftSingleElementSetBrace && lastCharacter == Interval.RightSingleElementSetBrace))
+            if ((firstCharacter == IntervalSymbols.LeftSingleElementSetBrace || lastCharacter == IntervalSymbols.RightSingleElementSetBrace) &&
+               !(firstCharacter == IntervalSymbols.LeftSingleElementSetBrace && lastCharacter == IntervalSymbols.RightSingleElementSetBrace))
             {
                 exception = ParsingExceptions.BracesUsedIncorrectly;
                 return;
             }
-            var isOneElementInterval = firstCharacter == Interval.LeftSingleElementSetBrace && lastCharacter == Interval.RightSingleElementSetBrace;
+            var isOneElementInterval = firstCharacter == IntervalSymbols.LeftSingleElementSetBrace && lastCharacter == IntervalSymbols.RightSingleElementSetBrace;
 
-            var separatorIndex = str.IndexOf(Interval.SeparatorSymbol);
-            if (separatorIndex != str.LastIndexOf(Interval.SeparatorSymbol) || (separatorIndex < 0 && !isOneElementInterval))
+            var separatorIndex = str.IndexOf(IntervalSymbols.SeparatorSymbol);
+            if (separatorIndex != str.LastIndexOf(IntervalSymbols.SeparatorSymbol) || (separatorIndex < 0 && !isOneElementInterval))
             {
                 exception = ParsingExceptions.NoSeparator;
                 return;

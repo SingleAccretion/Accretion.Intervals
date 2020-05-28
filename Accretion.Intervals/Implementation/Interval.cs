@@ -109,14 +109,14 @@ namespace Accretion.Intervals
         /// <summary>
         /// Returns a string that represents this interval.
         /// </summary>   
-        public override string ToString() => IsEmpty ? Interval.EmptySetSymbol.ToString() : string.Join(Interval.UnionSymbol.ToString(), Intervals);
+        public override string ToString() => IsEmpty ? IntervalSymbols.EmptySetSymbol.ToString() : string.Join(IntervalSymbols.UnionSymbol.ToString(), Intervals);
 
         private static void TryParse(string str, out Interval<T> result, out FormatException exception, ElementParsingAction<T> tryParseElement)
         {
             exception = null;
             result = null;
 
-            var continuousIntervalStrings = str.Split(Interval.UnionSymbol);
+            var continuousIntervalStrings = str.Split(IntervalSymbols.UnionSymbol);
             var intervals = new ContinuousInterval<T>[continuousIntervalStrings.Length];
 
             for (int i = 0; i < continuousIntervalStrings.Length; i++)

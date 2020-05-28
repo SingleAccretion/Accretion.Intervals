@@ -26,72 +26,72 @@ namespace Accretion.Intervals
         public static Interval<DateTimeOffset> AllDateTimeOffsets { get; } = new Interval<DateTimeOffset>(new ContinuousInterval<DateTimeOffset>(DateTimeOffset.MinValue, false, DateTimeOffset.MaxValue, false));
 
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="byte"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="byte"/> values not present in this interval. 
         /// </summary>  
         /// <exception cref="ArgumentNullException" />
         public static Interval<byte> Complement(this Interval<byte> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllBytes);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="sbyte"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="sbyte"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<sbyte> Complement(this Interval<sbyte> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllSBytes);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="Char"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="Char"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<char> Complement(this Interval<char> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllChars);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="decimal"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="decimal"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<decimal> Complement(this Interval<decimal> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllDecimals);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all values on the number line not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all values on the number line not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<double> Complement(this Interval<double> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(NumberLineOfDoubles);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all values on the number line not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all values on the number line not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<float> Complement(this Interval<float> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(NumberLineOfSingles);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="int"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="int"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<int> Complement(this Interval<int> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllInt32s);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="uint"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="uint"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<uint> Complement(this Interval<uint> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllUInt32s);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="long"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="long"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<long> Complement(this Interval<long> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllInt64s);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="ulong"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="ulong"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<ulong> Complement(this Interval<ulong> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllUInt64s);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="short"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="short"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<short> Complement(this Interval<short> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllInt16s);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="ushort"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="ushort"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<ushort> Complement(this Interval<ushort> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllUInt16s);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="DateTime"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="DateTime"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<DateTime> Complement(this Interval<DateTime> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllDateTimes);
         /// <summary>
-        /// Returns a new <see cref="Interval"/> that contains all possible <see cref="DateTimeOffset"/> values not present in this interval. 
+        /// Returns a new <see cref="IntervalSymbols"/> that contains all possible <see cref="DateTimeOffset"/> values not present in this interval. 
         /// </summary> 
         /// <exception cref="ArgumentNullException" />
         public static Interval<DateTimeOffset> Complement(this Interval<DateTimeOffset> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllDateTimeOffsets);

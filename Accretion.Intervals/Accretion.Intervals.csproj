@@ -29,8 +29,4 @@
     <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Definitions\CreatingIntervals\Parsing\" />
-  </ItemGroup>
-
 </Project>

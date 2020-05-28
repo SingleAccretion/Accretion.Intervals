@@ -112,7 +112,7 @@ namespace Accretion.Intervals
             }
         }
 
-        public override string ToString() => $"{(IsOpen ? Interval.LeftOpenBoundarySymbol : Interval.LeftClosedBoundarySymbol)}{Value}";
+        public override string ToString() => $"{(IsOpen ? IntervalSymbols.LeftOpenBoundarySymbol : IntervalSymbols.LeftClosedBoundarySymbol)}{Value}";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T ReducedValue()
