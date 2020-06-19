@@ -113,7 +113,7 @@ namespace Accretion.Intervals
         public override string ToString()
         {
             return IsEmpty ?
-                   IntervalSymbols.EmptySetSymbol.ToString() :
+                   IntervalSymbols.EmptySetString.ToString() :
                    LowerBoundary.IsClosed && UpperBoundary.IsClosed && LowerBoundary.Value.IsEqualTo(UpperBoundary.Value) ?
                    $"{IntervalSymbols.LeftSingleElementSetBrace}{LowerBoundary.Value}{IntervalSymbols.RightSingleElementSetBrace}" :
                    $"{LowerBoundary}{IntervalSymbols.SeparatorSymbol}{UpperBoundary}";
@@ -126,7 +126,7 @@ namespace Accretion.Intervals
 
             str = str.Trim();
 
-            if (str == IntervalSymbols.EmptySetSymbol.ToString())
+            if (str == IntervalSymbols.EmptySetString.ToString())
             {
                 result = EmptyInterval;
                 return;

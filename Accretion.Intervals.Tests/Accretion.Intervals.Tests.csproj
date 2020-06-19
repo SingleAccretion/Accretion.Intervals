@@ -16,4 +16,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Accretion.Intervals\Accretion.Intervals.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Public\" />
+    <Folder Include="Internal\" />
+  </ItemGroup>
 </Project>

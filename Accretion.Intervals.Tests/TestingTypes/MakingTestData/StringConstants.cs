@@ -7,7 +7,7 @@ namespace Accretion.Intervals.Tests
 {
     public static class StringConstants
     {
-        public static readonly string Empty = IntervalSymbols.EmptySetSymbol.ToString();
+        public static readonly string Empty = IntervalSymbols.EmptySetString.ToString();
         public static readonly string MaxDouble = double.MaxValue.ToString("R", CultureInfo.InvariantCulture);
         public static readonly string MinDouble = double.MinValue.ToString("R", CultureInfo.InvariantCulture);
 

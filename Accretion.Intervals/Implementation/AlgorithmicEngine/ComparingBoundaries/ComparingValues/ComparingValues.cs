@@ -1,17 +1,60 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Accretion.Intervals
 {
-    internal static class IComparableExtensions
+    internal static class ComparingValues
     {
         public const int IsLess = -1;
         public const int IsEqual = 0;
         public const int IsGreater = 1;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLessThan<T>(this T that, T other) where T : IComparable<T>
+        public static bool IsLessThan<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
         {
+            Debug.Assert(that != null && other != null);
+
+            if (typeof(TComparer) == typeof(DefaultComparer<T>))
+            {
+                return IsLessThan(that, other);
+            }
+
+            return default(TComparer).Compare(that, other) < 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsEqualTo<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
+        {
+            Debug.Assert(that != null && other != null);
+
+            if (typeof(TComparer) == typeof(DefaultComparer<T>))
+            {
+                return IsEqualTo(that, other);
+            }
+
+            return default(TComparer).Compare(that, other) == 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsGreaterThan<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
+        {
+            Debug.Assert(that != null && other != null);
+
+            if (typeof(TComparer) == typeof(DefaultComparer<T>))
+            {
+                return IsGreaterThan(that, other);
+            }
+
+            return default(TComparer).Compare(that, other) > 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsLessThan<T>(T that, T other)
+        {
+            Debug.Assert(that != null && other != null);
+
             if (typeof(T) == typeof(sbyte))
             {
                 return (sbyte)(object)that < (sbyte)(object)other;
@@ -72,20 +115,15 @@ namespace Accretion.Intervals
             {
                 return (DateTimeOffset)(object)that < (DateTimeOffset)(object)other;
             }
-            else
-            {
-                if (Checker.IsNull(that))
-                {
-                    return !Checker.IsNull(other);
-                }
 
-                return that.CompareTo(other) < 0;
-            }
+            return ((IComparable<T>)that).CompareTo(other) < 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsEqualTo<T>(this T that, T other) where T : IComparable<T>
+        private static bool IsEqualTo<T>(T that, T other)
         {
+            Debug.Assert(that != null && other != null);
+
             if (typeof(T) == typeof(sbyte))
             {
                 return (sbyte)(object)that == (sbyte)(object)other;
@@ -147,17 +185,14 @@ namespace Accretion.Intervals
                 return (DateTimeOffset)(object)that == (DateTimeOffset)(object)other;
             }
 
-            if (Checker.IsNull(that))
-            {
-                return Checker.IsNull(other);
-            }
-
-            return that.CompareTo(other) == 0;
+            return ((IComparable<T>)that).CompareTo(other) == 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsGreaterThan<T>(this T that, T other) where T : IComparable<T>
+        private static bool IsGreaterThan<T>(T that, T other)
         {
+            Debug.Assert(that != null && other != null);
+
             if (typeof(T) == typeof(sbyte))
             {
                 return (sbyte)(object)that > (sbyte)(object)other;
@@ -218,15 +253,8 @@ namespace Accretion.Intervals
             {
                 return (DateTimeOffset)(object)that > (DateTimeOffset)(object)other;
             }
-            else
-            {
-                if (Checker.IsNull(that))
-                {
-                    return false;
-                }
 
-                return that.CompareTo(other) > 0;
-            }
+            return ((IComparable<T>)that).CompareTo(other) > 0;
         }
     }
 }

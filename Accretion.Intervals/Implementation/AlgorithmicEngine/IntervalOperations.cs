@@ -16,7 +16,7 @@ namespace Accretion.Intervals
                 return ReadOnlyArray<ContinuousInterval<T>>.Empty;
             }
 
-            Array.Sort(sortedIntervals, (x, y) => x.LowerBoundary.IsLessThan(y.LowerBoundary) ? IComparableExtensions.IsLess : IComparableExtensions.IsGreater);
+            Array.Sort(sortedIntervals, (x, y) => x.LowerBoundary.IsLessThan(y.LowerBoundary) ? ComparingValues.IsLess : ComparingValues.IsGreater);
 
             var k = 0;
             var length = 0;

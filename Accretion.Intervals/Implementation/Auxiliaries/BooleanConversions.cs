@@ -2,7 +2,7 @@
 
 namespace Accretion.Intervals
 {
-    internal static class BooleansToIntegers
+    internal static class BooleanConversions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ToInt(this bool boolean) => Unsafe.As<bool, byte>(ref boolean);
@@ -26,5 +26,8 @@ namespace Accretion.Intervals
             var a = (byte)integer;
             return Unsafe.As<byte, bool>(ref a);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ToBool(this BoundaryType boundaryType) => Unsafe.As<BoundaryType, bool>(ref boundaryType);
     }
 }
