@@ -1,7 +1,4 @@
 ﻿using Accretion.Intervals.StringConversion;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Accretion.Intervals
 {
@@ -13,6 +10,6 @@ namespace Accretion.Intervals
         public static IntervalFormatException InputMustStartWithValidStartCharacter { get; } = new IntervalFormatException("Input must not have any non-whitespace characters before interval.");
         public static IntervalFormatException BoundariesMustBeSeparated { get; } = new IntervalFormatException($"Boundaries must be separated by '{Symbols.GetSymbol(TokenType.Separator)}'.");
         public static IntervalFormatException IntervalMustHaveUpperBoundary { get; } = new IntervalFormatException("Interval must have an upper boundary");
-        public static Exception IntervalMustEndWithEndClosedOrEndOpen { get; internal set; }
+        public static IntervalFormatException IntervalMustEndWithEndClosedOrEndOpen { get; } = new IntervalFormatException($"Interval must end with either '{Symbols.GetSymbol(TokenType.EndOpen)}' or '{Symbols.GetSymbol(TokenType.EndOpen)}'.");
     }
 }
