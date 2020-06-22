@@ -4,5 +4,8 @@ using System.Text;
 
 namespace Accretion.Intervals
 {
-    public readonly struct CompositeInterval<T> where T : IComparable<T> { }
+    public readonly struct CompositeInterval<T> where T : IComparable<T> 
+    {
+        public static CompositeInterval<T> Empty { get; }
+    }
 }

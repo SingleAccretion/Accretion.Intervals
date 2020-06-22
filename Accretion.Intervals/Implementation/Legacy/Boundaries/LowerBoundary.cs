@@ -5,7 +5,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Accretion.Intervals
-{    
+{
+    /*
     internal readonly struct LowerBoundary<T> : IEquatable<LowerBoundary<T>> where T : IComparable<T>
     {        
         private readonly T _value;
@@ -17,9 +18,9 @@ namespace Accretion.Intervals
             _value = value;
         }
 
-        public bool IsOpen { get => !_isClosed; }
-        public bool IsClosed { get => _isClosed; }
-        public T Value { get => _value; }
+        public bool IsOpen => !_isClosed;
+        public bool IsClosed => _isClosed;
+        public T Value => _value;
 
         public static LowerBoundary<T> CreateUnchecked(T value, bool isOpen) => new LowerBoundary<T>(value, isOpen);
 
@@ -167,5 +168,5 @@ namespace Accretion.Intervals
         public static bool operator ==(LowerBoundary<T> left, LowerBoundary<T> right) => left.Equals(right);
 
         public static bool operator !=(LowerBoundary<T> left, LowerBoundary<T> right) => !left.Equals(right);
-    }
+    }*/
 }

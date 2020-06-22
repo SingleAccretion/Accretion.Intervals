@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS0661: Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
+dotnet_diagnostic.CS0661.severity = none

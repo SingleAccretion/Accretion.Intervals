@@ -5,7 +5,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Accretion.Intervals
-{    
+{
+    /*
     internal readonly struct UpperBoundary<T> : IEquatable<UpperBoundary<T>> where T : IComparable<T>
     {
         private readonly T _value;
@@ -165,5 +166,5 @@ namespace Accretion.Intervals
         public static bool operator ==(UpperBoundary<T> left, UpperBoundary<T> right) => left.Equals(right);
 
         public static bool operator !=(UpperBoundary<T> left, UpperBoundary<T> right) => !left.Equals(right);
-    }
+    }*/
 }

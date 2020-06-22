@@ -4,11 +4,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-[assembly: InternalsVisibleTo("Accretion.Intervals.Experimental")]
-[assembly: InternalsVisibleTo("Accretion.Intervals.Tests")]
-[assembly: InternalsVisibleTo("Accretion.Profiling")]
 namespace Accretion.Intervals
 {
+    /*
     public class Interval<T> where T : IComparable<T>
     {
         /// <summary>
@@ -175,4 +173,5 @@ namespace Accretion.Intervals
             }
         }
     }
+    */
 }

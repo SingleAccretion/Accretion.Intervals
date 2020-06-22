@@ -6,6 +6,6 @@ namespace Accretion.Intervals
 {
     public readonly struct CompositeInterval<T, TComparer> where TComparer : struct, IComparer<T> 
     {
-
+        public static CompositeInterval<T, TComparer> Empty { get; }
     }
 }
