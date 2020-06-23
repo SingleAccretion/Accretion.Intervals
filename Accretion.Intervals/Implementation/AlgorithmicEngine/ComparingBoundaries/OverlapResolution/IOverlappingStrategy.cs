@@ -2,9 +2,9 @@
 
 namespace Accretion.Intervals
 {
-    internal interface IOverlappingStrategy<T, TComparer> where TComparer : struct, IComparer<T>
+    internal interface IOverlappingStrategy
     {
-        bool IsLess(in UpperBoundary<T, TComparer> thisBoundary, in LowerBoundary<T, TComparer> otherBoundary);
-        bool IsLess(in LowerBoundary<T, TComparer> thisBoundary, in UpperBoundary<T, TComparer> otherBoundary);
+        bool UpperIsLessThanLower(BoundaryType upperBoundaryType, BoundaryType lowerBoundaryType);
+        bool LowerIsLessThanUpper(BoundaryType lowerBoundaryType, BoundaryType upperBoundaryType);
     }
 }

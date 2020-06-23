@@ -8,15 +8,15 @@ namespace Accretion.Intervals
 {
     internal static class IntervalOperations
     {
-        public static ReadOnlyArray<Interval<T, TComparer>> Merge<T, TComparer>(IEnumerable<Interval<T, TComparer>> continuousIntervals) where TComparer: struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> Merge<T, TComparer>(IEnumerable<Interval<T, TComparer>> continuousIntervals) where TComparer : struct, IComparer<T>
         {
             var sortedIntervals = continuousIntervals.ToArray();
             if (sortedIntervals.Length == 0)
             {
-                return ReadOnlyArray<Interval <T, TComparer>>.Empty;
+                return ReadOnlyArray<Interval<T, TComparer>>.Empty;
             }
 
-            Array.Sort(sortedIntervals, (x, y) => x.LowerBoundary.IsLessThan(y.LowerBoundary) ? ComparingValues.IsLess : ComparingValues.IsGreater);
+            Array.Sort(sortedIntervals, (x, y) => x.LowerBoundary.IsLessThan<T, TComparer>(y.LowerBoundary) ? ComparingValues.IsLess : ComparingValues.IsGreater);
 
             var k = 0;
             var length = 0;
@@ -35,30 +35,30 @@ namespace Accretion.Intervals
 
                     if (!nextInterval.IsEmpty)
                     {
-                        if (!nextInterval.LowerBoundary.IsLessThan(currentInterval.UpperBoundary, OverlapStrategies<T, TComparer>.OverlapClosed))
+                        if (!nextInterval.LowerBoundary.IsLessThan<T, TComparer>(currentInterval.UpperBoundary, OverlapStrategies<T, TComparer>.OverlapClosed))
                         {
                             length++;
                             j++;
                             sortedIntervals[j] = nextInterval;
                         }
-                        else if (!nextInterval.UpperBoundary.IsLessThan(currentInterval.UpperBoundary))
+                        else if (!nextInterval.UpperBoundary.IsLessThan<T, TComparer>(currentInterval.UpperBoundary))
                         {
-                            sortedIntervals[j] = new Interval <T, TComparer>(currentInterval.LowerBoundary, nextInterval.UpperBoundary);
+                            sortedIntervals[j] = Interval<T, TComparer>.CreateUnchecked(currentInterval.LowerBoundary, nextInterval.UpperBoundary);
                         }
                     }
                 }
             }
 
-            return new ReadOnlyArray<Interval <T, TComparer>>(sortedIntervals, length);
+            return new ReadOnlyArray<Interval<T, TComparer>>(sortedIntervals, length);
         }
 
-        public static ReadOnlyArray<Interval <T, TComparer>> Union<T, TComparer>(ReadOnlyArray<Interval <T, TComparer>> first, ReadOnlyArray<Interval <T, TComparer>> second) where TComparer: struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> Union<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second) where TComparer : struct, IComparer<T>
         {
             var firstArray = first.AsArrayUnchecked();
             var secondArray = second.AsArrayUnchecked();
             var maxFirst = first.Count - 1;
             var maxSecond = second.Count - 1;
-            var mergedIntervals = new Interval <T, TComparer>[maxFirst + maxSecond + 2];
+            var mergedIntervals = Interval<T, TComparer>.CreateUnchecked[maxFirst + maxSecond + 2];
 
             int f = 0;
             int s = 0;
@@ -77,7 +77,7 @@ namespace Accretion.Intervals
 
         LowerFirstLowerSecond:
             operationState = OperationState.Middle;
-            if (firstArray[f].LowerBoundary.IsLessThan(secondArray[s].LowerBoundary))
+            if (firstArray[f].LowerBoundary.IsLessThan<T, TComparer>(secondArray[s].LowerBoundary))
             {
                 currentLowerBoundary = firstArray[f].LowerBoundary;
                 goto UpperFirstLowerSecond;
@@ -89,7 +89,7 @@ namespace Accretion.Intervals
             }
 
         LowerFirstUpperSecond:
-            if (firstArray[f].LowerBoundary.IsLessThan(secondArray[s].UpperBoundary, OverlapStrategies<T, TComparer>.OverlapClosed))
+            if (firstArray[f].LowerBoundary.IsLessThan<T, TComparer>(secondArray[s].UpperBoundary, OverlapStrategies<T, TComparer>.OverlapClosed))
             {
                 operationState++;
                 if (operationState == OperationState.Middle)
@@ -104,7 +104,7 @@ namespace Accretion.Intervals
                 operationState--;
                 if (operationState == OperationState.Lowest)
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, secondArray[s].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, secondArray[s].UpperBoundary);
                     m++;
                 }
                 if (s == maxSecond)
@@ -117,12 +117,12 @@ namespace Accretion.Intervals
             }
 
         UpperFirstLowerSecond:
-            if (firstArray[f].UpperBoundary.IsLessThan(secondArray[s].LowerBoundary, OverlapStrategies<T, TComparer>.OverlapClosed))
+            if (firstArray[f].UpperBoundary.IsLessThan<T, TComparer>(secondArray[s].LowerBoundary, OverlapStrategies<T, TComparer>.OverlapClosed))
             {
                 operationState--;
                 if (operationState == OperationState.Lowest)
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, firstArray[f].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, firstArray[f].UpperBoundary);
                     m++;
                 }
                 if (f == maxFirst)
@@ -146,7 +146,7 @@ namespace Accretion.Intervals
 
         UpperFirstUpperSecond:
             operationState = OperationState.Middle;
-            if (firstArray[f].UpperBoundary.IsLessThan(secondArray[s].UpperBoundary))
+            if (firstArray[f].UpperBoundary.IsLessThan<T, TComparer>(secondArray[s].UpperBoundary))
             {
                 if (f == maxFirst)
                 {
@@ -168,13 +168,13 @@ namespace Accretion.Intervals
             }
         }
 
-        public static ReadOnlyArray<Interval <T, TComparer>> Intersect<T, TComparer>(ReadOnlyArray<Interval <T, TComparer>> first, ReadOnlyArray<Interval <T, TComparer>> second) where TComparer: struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> Intersect<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second) where TComparer : struct, IComparer<T>
         {
             var firstArray = first.AsArrayUnchecked();
             var secondArray = second.AsArrayUnchecked();
             var maxFirst = first.Count - 1;
             var maxSecond = second.Count - 1;
-            var mergedIntervals = new Interval <T, TComparer>[maxFirst + maxSecond + 2];
+            var mergedIntervals = Interval<T, TComparer>.CreateUnchecked[maxFirst + maxSecond + 2];
 
             int f = 0;
             int s = 0;
@@ -184,12 +184,12 @@ namespace Accretion.Intervals
 
             if (maxFirst == -1 || maxSecond == -1)
             {
-                return ReadOnlyArray<Interval <T, TComparer>>.Empty;
+                return ReadOnlyArray<Interval<T, TComparer>>.Empty;
             }
 
         LowerFirstLowerSecond:
             operationState = OperationState.Middle;
-            if (firstArray[f].LowerBoundary.IsLessThan(secondArray[s].LowerBoundary))
+            if (firstArray[f].LowerBoundary.IsLessThan<T, TComparer>(secondArray[s].LowerBoundary))
             {
                 goto UpperFirstLowerSecond;
             }
@@ -199,7 +199,7 @@ namespace Accretion.Intervals
             }
 
         LowerFirstUpperSecond:
-            if (firstArray[f].LowerBoundary.IsLessThan(secondArray[s].UpperBoundary, OverlapStrategies<T, TComparer>.OverlapFullyClosed))
+            if (firstArray[f].LowerBoundary.IsLessThan<T, TComparer>(secondArray[s].UpperBoundary, default(OverlapFullyClosed)))
             {
                 operationState++;
                 if (operationState == OperationState.Highest)
@@ -214,12 +214,12 @@ namespace Accretion.Intervals
                 operationState--;
                 if (operationState == OperationState.Middle)
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, secondArray[s].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, secondArray[s].UpperBoundary);
                     m++;
                 }
                 if (s == maxSecond)
                 {
-                    return new ReadOnlyArray<Interval <T, TComparer>>(mergedIntervals, m);
+                    return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, m);
                 }
 
                 s++;
@@ -227,17 +227,17 @@ namespace Accretion.Intervals
             }
 
         UpperFirstLowerSecond:
-            if (firstArray[f].UpperBoundary.IsLessThan(secondArray[s].LowerBoundary, OverlapStrategies<T, TComparer>.OverlapFullyClosed))
+            if (firstArray[f].UpperBoundary.IsLessThan<T, TComparer, OverlapFullyClosed>(secondArray[s].LowerBoundary)))
             {
                 operationState--;
                 if (operationState == OperationState.Middle)
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, firstArray[f].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, firstArray[f].UpperBoundary);
                     m++;
                 }
                 if (f == maxFirst)
                 {
-                    return new ReadOnlyArray<Interval <T, TComparer>>(mergedIntervals, m);
+                    return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, m);
                 }
 
                 f++;
@@ -256,13 +256,13 @@ namespace Accretion.Intervals
 
         UpperFirstUpperSecond:
             operationState = OperationState.Middle;
-            if (firstArray[f].UpperBoundary.IsLessThan(secondArray[s].UpperBoundary))
+            if (firstArray[f].UpperBoundary.IsLessThan<T, TComparer>(secondArray[s].UpperBoundary))
             {
-                mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, firstArray[f].UpperBoundary);
+                mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, firstArray[f].UpperBoundary);
                 m++;
                 if (f == maxFirst)
                 {
-                    return new ReadOnlyArray<Interval <T, TComparer>>(mergedIntervals, m);
+                    return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, m);
                 }
                 f++;
 
@@ -270,11 +270,11 @@ namespace Accretion.Intervals
             }
             else
             {
-                mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, secondArray[s].UpperBoundary);
+                mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, secondArray[s].UpperBoundary);
                 m++;
                 if (s == maxSecond)
                 {
-                    return new ReadOnlyArray<Interval <T, TComparer>>(mergedIntervals, m);
+                    return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, m);
                 }
                 s++;
 
@@ -283,14 +283,14 @@ namespace Accretion.Intervals
         }
 
         //NOT IMPLEMENTED YET
-        public static ReadOnlyArray<Interval <T, TComparer>> SymmetricDifference<T, TComparer>(ReadOnlyArray<Interval <T, TComparer>> first, ReadOnlyArray<Interval <T, TComparer>> second)
-            where TComparer: struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> SymmetricDifference<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second)
+            where TComparer : struct, IComparer<T>
         {
             var firstArray = first.AsArrayUnchecked();
             var secondArray = second.AsArrayUnchecked();
             var maxFirst = first.Count - 1;
             var maxSecond = second.Count - 1;
-            var mergedIntervals = new Interval <T, TComparer>[maxFirst + maxSecond + 2];
+            var mergedIntervals = Interval<T, TComparer>.CreateUnchecked[maxFirst + maxSecond + 2];
 
             int f = 0;
             int s = 0;
@@ -310,9 +310,9 @@ namespace Accretion.Intervals
 
         LowerFirstLowerSecond:
             operationState = OperationState.Middle;
-            if (firstArray[f].LowerBoundary.IsLessThan(secondArray[s].LowerBoundary))
+            if (firstArray[f].LowerBoundary.IsLessThan<T, TComparer>(secondArray[s].LowerBoundary))
             {
-                if (description.OperationStateMatchesTheBeginningOfInterval (OperationState.Middle, OperationStatus.Up))
+                if (description.OperationStateMatchesTheBeginningOfInterval(OperationState.Middle, OperationStatus.Up))
                 {
                     currentLowerBoundary = firstArray[f].LowerBoundary;
                 }
@@ -320,7 +320,7 @@ namespace Accretion.Intervals
             }
             else
             {
-                if (description.OperationStateMatchesTheBeginningOfInterval (OperationState.Middle, OperationStatus.Up))
+                if (description.OperationStateMatchesTheBeginningOfInterval(OperationState.Middle, OperationStatus.Up))
                 {
                     currentLowerBoundary = secondArray[s].LowerBoundary;
                 }
@@ -328,10 +328,10 @@ namespace Accretion.Intervals
             }
 
         LowerFirstUpperSecond:
-            if (firstArray[f].LowerBoundary.IsLessThan(secondArray[s].UpperBoundary, description))
+            if (firstArray[f].LowerBoundary.IsLessThan<T, TComparer>(secondArray[s].UpperBoundary, description))
             {
                 operationState++;
-                if (description.OperationStateMatchesTheBeginningOfInterval (operationState, OperationStatus.Up, operationDirection))
+                if (description.OperationStateMatchesTheBeginningOfInterval(operationState, OperationStatus.Up, operationDirection))
                 {
                     currentLowerBoundary = firstArray[f].LowerBoundary;
                 }
@@ -341,9 +341,9 @@ namespace Accretion.Intervals
             else
             {
                 operationState--;
-                if (description.OperationStateMatchesTheEndOfInterval (operationState, OperationStatus.Down, operationDirection))
+                if (description.OperationStateMatchesTheEndOfInterval(operationState, OperationStatus.Down, operationDirection))
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, secondArray[s].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, secondArray[s].UpperBoundary);
                     m++;
                 }
                 if (s == maxSecond)
@@ -356,12 +356,12 @@ namespace Accretion.Intervals
             }
 
         UpperFirstLowerSecond:
-            if (firstArray[f].UpperBoundary.IsLessThan(secondArray[s].LowerBoundary, description))
+            if (firstArray[f].UpperBoundary.IsLessThan<T, TComparer>(secondArray[s].LowerBoundary, description))
             {
                 operationState--;
-                if (description.OperationStateMatchesTheEndOfInterval (operationState, OperationStatus.Down, operationDirection))
+                if (description.OperationStateMatchesTheEndOfInterval(operationState, OperationStatus.Down, operationDirection))
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, firstArray[f].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, firstArray[f].UpperBoundary);
                     m++;
                 }
                 if (f == maxFirst)
@@ -375,7 +375,7 @@ namespace Accretion.Intervals
             else
             {
                 operationState++;
-                if (description.OperationStateMatchesTheBeginningOfInterval (operationState, OperationStatus.Up, operationDirection))
+                if (description.OperationStateMatchesTheBeginningOfInterval(operationState, OperationStatus.Up, operationDirection))
                 {
                     currentLowerBoundary = secondArray[s].LowerBoundary;
                 }
@@ -385,11 +385,11 @@ namespace Accretion.Intervals
 
         UpperFirstUpperSecond:
             operationState = OperationState.Middle;
-            if (firstArray[f].UpperBoundary.IsLessThan(secondArray[s].UpperBoundary))
+            if (firstArray[f].UpperBoundary.IsLessThan<T, TComparer>(secondArray[s].UpperBoundary))
             {
-                if (description.OperationStateMatchesTheEndOfInterval (OperationState.Middle, OperationStatus.Down))
+                if (description.OperationStateMatchesTheEndOfInterval(OperationState.Middle, OperationStatus.Down))
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, firstArray[f].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, firstArray[f].UpperBoundary);
                     m++;
                 }
                 if (f == maxFirst)
@@ -402,9 +402,9 @@ namespace Accretion.Intervals
             }
             else
             {
-                if (description.OperationStateMatchesTheEndOfInterval (OperationState.Middle, OperationStatus.Down))
+                if (description.OperationStateMatchesTheEndOfInterval(OperationState.Middle, OperationStatus.Down))
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, secondArray[s].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, secondArray[s].UpperBoundary);
                     m++;
                 }
                 if (s == maxSecond)
@@ -417,9 +417,10 @@ namespace Accretion.Intervals
             }
         }
 
-        public static bool Contains<T, TComparer>(ReadOnlyArray<Interval <T, TComparer>> continuousIntervals, T value) where TComparer: struct, IComparer<T>
+        public static bool Contains<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> continuousIntervals, T value) where TComparer : struct, IComparer<T>
         {
-            bool ValueIsBetweenThesePivots(int leftPivot, int rightPivot) => new Interval <T, TComparer>(continuousIntervals[leftPivot].LowerBoundary, continuousIntervals[rightPivot].UpperBoundary).Contains(value);
+            bool ValueIsBetweenThesePivots(int leftPivot, int rightPivot) => 
+                Interval<T, TComparer>.CreateUnchecked(continuousIntervals[leftPivot].LowerBoundary, continuousIntervals[rightPivot].UpperBoundary).Contains(value);
 
             if (continuousIntervals.Count == 0)
             {
@@ -457,29 +458,29 @@ namespace Accretion.Intervals
             return ValueIsBetweenThesePivots(leftPivot, leftPivot) || ValueIsBetweenThesePivots(rightPivot, rightPivot);
         }
 
-        public static ReadOnlyArray<Interval <T, TComparer>> MergeTailStartingWithUpperBoundary<T, TComparer>(Interval <T, TComparer>[] mergedIntervals, Interval <T, TComparer>[] sourceIntervals, in LowerBoundary<T, TComparer> lowerBoundary, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer: struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> MergeTailStartingWithUpperBoundary<T, TComparer>(Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, in LowerBoundary<T, TComparer> lowerBoundary, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer : struct, IComparer<T>
         {
-            mergedIntervals[mergerIndex] = new Interval <T, TComparer>(lowerBoundary, sourceIntervals[sourceIndex].UpperBoundary);
+            mergedIntervals[mergerIndex] = Interval<T, TComparer>.CreateUnchecked(lowerBoundary, sourceIntervals[sourceIndex].UpperBoundary);
 
             return MergeTail(mergedIntervals, sourceIntervals, sourceIndex + 1, maxSourceIndex, mergerIndex + 1);
         }
 
-        public static ReadOnlyArray<Interval <T, TComparer>> MergeTail<T, TComparer>(Interval <T, TComparer>[] mergedIntervals, Interval <T, TComparer>[] sourceIntervals, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer: struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> MergeTail<T, TComparer>(Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer : struct, IComparer<T>
         {
             var length = maxSourceIndex - sourceIndex + 1;
             Copying.Copy(sourceIntervals, sourceIndex, mergedIntervals, mergerIndex, length);
 
-            return new ReadOnlyArray<Interval <T, TComparer>>(mergedIntervals, mergerIndex + length);
+            return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, mergerIndex + length);
         }
 
-        public static ReadOnlyArray<Interval <T, TComparer>> Merge<T, D>(ReadOnlyArray<Interval <T, TComparer>> first, ReadOnlyArray<Interval <T, TComparer>> second, D description)
-            where TComparer: struct, IComparer<T> where D : IAlgorithmDescription<T, TComparer>
+        public static ReadOnlyArray<Interval<T, TComparer>> Merge<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second)
+            where TComparer : struct, IComparer<T>
         {
             var firstArray = first.AsArrayUnchecked();
             var secondArray = second.AsArrayUnchecked();
             var maxFirst = first.Count - 1;
             var maxSecond = second.Count - 1;
-            var mergedIntervals = new Interval <T, TComparer>[maxFirst + maxSecond + 2];
+            var mergedIntervals = Interval<T, TComparer>.CreateUnchecked[maxFirst + maxSecond + 2];
 
             int f = 0;
             int s = 0;
@@ -499,9 +500,9 @@ namespace Accretion.Intervals
 
         LowerFirstLowerSecond:
             operationState = OperationState.Middle;
-            if (firstArray[f].LowerBoundary.IsLessThan(secondArray[s].LowerBoundary))
+            if (firstArray[f].LowerBoundary.IsLessThan<T, TComparer>(secondArray[s].LowerBoundary))
             {
-                if (description.OperationStateMatchesTheBeginningOfInterval (OperationState.Middle, OperationStatus.Up))
+                if (description.OperationStateMatchesTheBeginningOfInterval(OperationState.Middle, OperationStatus.Up))
                 {
                     currentLowerBoundary = firstArray[f].LowerBoundary;
                 }
@@ -509,7 +510,7 @@ namespace Accretion.Intervals
             }
             else
             {
-                if (description.OperationStateMatchesTheBeginningOfInterval (OperationState.Middle, OperationStatus.Up))
+                if (description.OperationStateMatchesTheBeginningOfInterval(OperationState.Middle, OperationStatus.Up))
                 {
                     currentLowerBoundary = secondArray[s].LowerBoundary;
                 }
@@ -517,10 +518,10 @@ namespace Accretion.Intervals
             }
 
         LowerFirstUpperSecond:
-            if (firstArray[f].LowerBoundary.IsLessThan(secondArray[s].UpperBoundary, description))
+            if (firstArray[f].LowerBoundary.IsLessThan<T, TComparer>(secondArray[s].UpperBoundary, description))
             {
                 operationState++;
-                if (description.OperationStateMatchesTheBeginningOfInterval (operationState, OperationStatus.Up, operationDirection))
+                if (description.OperationStateMatchesTheBeginningOfInterval(operationState, OperationStatus.Up, operationDirection))
                 {
                     currentLowerBoundary = firstArray[f].LowerBoundary;
                 }
@@ -530,9 +531,9 @@ namespace Accretion.Intervals
             else
             {
                 operationState--;
-                if (description.OperationStateMatchesTheEndOfInterval (operationState, OperationStatus.Down, operationDirection))
+                if (description.OperationStateMatchesTheEndOfInterval(operationState, OperationStatus.Down, operationDirection))
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, secondArray[s].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, secondArray[s].UpperBoundary);
                     m++;
                 }
                 if (s == maxSecond)
@@ -545,12 +546,12 @@ namespace Accretion.Intervals
             }
 
         UpperFirstLowerSecond:
-            if (firstArray[f].UpperBoundary.IsLessThan(secondArray[s].LowerBoundary, description))
+            if (firstArray[f].UpperBoundary.IsLessThan<T, TComparer>(secondArray[s].LowerBoundary, description))
             {
                 operationState--;
-                if (description.OperationStateMatchesTheEndOfInterval (operationState, OperationStatus.Down, operationDirection))
+                if (description.OperationStateMatchesTheEndOfInterval(operationState, OperationStatus.Down, operationDirection))
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, firstArray[f].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, firstArray[f].UpperBoundary);
                     m++;
                 }
                 if (f == maxFirst)
@@ -564,7 +565,7 @@ namespace Accretion.Intervals
             else
             {
                 operationState++;
-                if (description.OperationStateMatchesTheBeginningOfInterval (operationState, OperationStatus.Up, operationDirection))
+                if (description.OperationStateMatchesTheBeginningOfInterval(operationState, OperationStatus.Up, operationDirection))
                 {
                     currentLowerBoundary = secondArray[s].LowerBoundary;
                 }
@@ -576,9 +577,9 @@ namespace Accretion.Intervals
             operationState = OperationState.Middle;
             if (firstArray[f].UpperBoundary.IsLessThan(secondArray[s].UpperBoundary))
             {
-                if (description.OperationStateMatchesTheEndOfInterval (OperationState.Middle, OperationStatus.Down))
+                if (description.OperationStateMatchesTheEndOfInterval(OperationState.Middle, OperationStatus.Down))
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, firstArray[f].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, firstArray[f].UpperBoundary);
                     m++;
                 }
                 if (f == maxFirst)
@@ -591,9 +592,9 @@ namespace Accretion.Intervals
             }
             else
             {
-                if (description.OperationStateMatchesTheEndOfInterval (OperationState.Middle, OperationStatus.Down))
+                if (description.OperationStateMatchesTheEndOfInterval(OperationState.Middle, OperationStatus.Down))
                 {
-                    mergedIntervals[m] = new Interval <T, TComparer>(currentLowerBoundary, secondArray[s].UpperBoundary);
+                    mergedIntervals[m] = Interval<T, TComparer>.CreateUnchecked(currentLowerBoundary, secondArray[s].UpperBoundary);
                     m++;
                 }
                 if (s == maxSecond)
@@ -606,13 +607,13 @@ namespace Accretion.Intervals
             }
         }
 
-        public static ReadOnlyArray<Interval <T, TComparer>> MergeTailStartingWithUpperBoundary<T, D>(
-            Interval <T, TComparer>[] mergedIntervals, Interval <T, TComparer>[] sourceIntervals, in LowerBoundary<T, TComparer> lowerBoundary, int sourceIndex, int maxSourceIndex, int mergerIndex, D description)
-            where D : IAlgorithmDescription<T, TComparer> where TComparer: struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> MergeTailStartingWithUpperBoundary<T, TComparer>(
+            Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, in LowerBoundary<T, TComparer> lowerBoundary, int sourceIndex, int maxSourceIndex, int mergerIndex)
+            where TComparer : struct, IComparer<T>
         {
             if (description.OperationStateMatchesTheEndOfInterval(OperationState.Lowest))
             {
-                mergedIntervals[mergerIndex] = new Interval <T, TComparer>(lowerBoundary, sourceIntervals[sourceIndex].UpperBoundary);
+                mergedIntervals[mergerIndex] = Interval<T, TComparer>.CreateUnchecked(lowerBoundary, sourceIntervals[sourceIndex].UpperBoundary);
                 mergerIndex++;
                 sourceIndex++;
             }
@@ -620,19 +621,19 @@ namespace Accretion.Intervals
             return MergeTail(mergedIntervals, sourceIntervals, sourceIndex, maxSourceIndex, mergerIndex, description);
         }
 
-        public static ReadOnlyArray<Interval <T, TComparer>> MergeTail<T, D>(
-            Interval <T, TComparer>[] mergedIntervals, Interval <T, TComparer>[] sourceIntervals, int sourceIndex, int maxSourceIndex, int mergerIndex, D description)
-            where D : IAlgorithmDescription<T, TComparer> where TComparer: struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> MergeTail<T, TComparer>(
+            Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, int sourceIndex, int maxSourceIndex, int mergerIndex)
+            where TComparer : struct, IComparer<T>
         {
-            if (description.OperationStateMatchesTheBeginningOfInterval (OperationState.Middle, OperationStatus.Up) &&
-                description.OperationStateMatchesTheEndOfInterval (OperationState.Lowest))
+            if (description.OperationStateMatchesTheBeginningOfInterval(OperationState.Middle, OperationStatus.Up) &&
+                description.OperationStateMatchesTheEndOfInterval(OperationState.Lowest))
             {
                 var length = maxSourceIndex - sourceIndex + 1;
                 Copying.Copy(sourceIntervals, sourceIndex, mergedIntervals, mergerIndex, length);
                 mergerIndex += length;
             }
 
-            return new ReadOnlyArray<Interval <T, TComparer>>(mergedIntervals, mergerIndex);
+            return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, mergerIndex);
         }
 
     }

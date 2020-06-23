@@ -3,11 +3,14 @@ using System.Runtime.CompilerServices;
 
 namespace Accretion.Intervals
 {
-    internal readonly struct OverlapFullyClosed<T, TComparer> : IOverlappingStrategy<T, TComparer> where TComparer : struct, IComparer<T>
+    internal readonly struct OverlapFullyClosed : IOverlappingStrategy
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsLess(in UpperBoundary<T, TComparer> thisBoundary, in LowerBoundary<T, TComparer> otherBoundary) => thisBoundary.IsOpen | otherBoundary.IsOpen;
+        public bool LowerIsLessThanUpper(BoundaryType lowerBoundaryType, BoundaryType upperBoundaryType) =>
+            lowerBoundaryType == BoundaryType.Closed & upperBoundaryType == BoundaryType.Closed;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsLess(in LowerBoundary<T, TComparer> thisBoundary, in UpperBoundary<T, TComparer> otherBoundary) => thisBoundary.IsClosed & otherBoundary.IsClosed;
+        public bool UpperIsLessThanLower(BoundaryType upperBoundaryType, BoundaryType lowerBoundaryType) =>
+            upperBoundaryType == BoundaryType.Open | lowerBoundaryType == BoundaryType.Open;
     }
 }

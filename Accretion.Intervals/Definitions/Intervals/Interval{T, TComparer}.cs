@@ -19,15 +19,19 @@ namespace Accretion.Intervals
 
         public bool IsEmpty => throw new NotImplementedException();
 
+        public LowerBoundary<T, TComparer> LowerBoundary => throw new NotImplementedException();
+        public UpperBoundary<T, TComparer> UpperBoundary => throw new NotImplementedException();
+        
+        #region Parsing
         public static bool TryParse(string input, TryParse<T> elementParser, out Interval<T, TComparer> interval)
         {
-            if (input is null) 
-            { 
-                Throw.ArgumentNullException(nameof(input)); 
+            if (input is null)
+            {
+                Throw.ArgumentNullException(nameof(input));
             }
-            if (elementParser is null) 
-            { 
-                Throw.ArgumentNullException(nameof(elementParser)); 
+            if (elementParser is null)
+            {
+                Throw.ArgumentNullException(nameof(elementParser));
             }
 
             return Parser.TryParseInterval(input, elementParser, out interval);
@@ -35,9 +39,9 @@ namespace Accretion.Intervals
 
         public static bool TryParse(ReadOnlySpan<char> input, TryParseSpan<T> elementParser, out Interval<T, TComparer> interval)
         {
-            if (elementParser is null) 
-            { 
-                Throw.ArgumentNullException(nameof(elementParser)); 
+            if (elementParser is null)
+            {
+                Throw.ArgumentNullException(nameof(elementParser));
             }
 
             return Parser.TryParseInterval(input, elementParser, out interval);
@@ -57,13 +61,13 @@ namespace Accretion.Intervals
 
         public static Interval<T, TComparer> Parse(string input, Parse<T> elementParser)
         {
-            if (input is null) 
+            if (input is null)
             {
-                Throw.ArgumentNullException(nameof(input)); 
+                Throw.ArgumentNullException(nameof(input));
             }
-            if (elementParser is null) 
-            { 
-                Throw.ArgumentNullException(nameof(elementParser)); 
+            if (elementParser is null)
+            {
+                Throw.ArgumentNullException(nameof(elementParser));
             }
 
             return Parser.ParseInterval<T, TComparer>(input, elementParser);
@@ -90,6 +94,9 @@ namespace Accretion.Intervals
         }
 
         public static Interval<T, TComparer> Parse(ReadOnlySpan<char> input) => Parser.ParseInterval<T, TComparer>(input, ElementParsers.GetSpanElementParser<T>());
+        #endregion Parsing
+
+        public bool Contains(T value) => throw new NotImplementedException();
 
         internal static Interval<T, TComparer> CreateUnchecked(LowerBoundary<T, TComparer> lowerBoundary, UpperBoundary<T, TComparer> upperBoundary) => new Interval<T, TComparer>(lowerBoundary, upperBoundary);
 
