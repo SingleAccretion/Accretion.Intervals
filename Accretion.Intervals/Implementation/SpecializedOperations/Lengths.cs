@@ -162,11 +162,6 @@ namespace Accretion.Intervals
 
         internal static R IntervalLength<T, R>(Interval<T> interval) where T : IComparable<T>
         {
-            if (interval is null)
-            {
-                throw new ArgumentNullException(nameof(interval));
-            }
-
             var intervals = interval.Intervals;
             var length = GenericSpecializer<R>.ZeroValueOfThisType;
 
@@ -185,7 +180,7 @@ namespace Accretion.Intervals
                 return GenericSpecializer<R>.ZeroValueOfThisType;
             }
 
-            return Subtract<T, R>(interval.UpperBoundary.ReducedValue(), interval.LowerBoundary.ReducedValue());
+            return Subtract<T, R>(interval.UpperBoundary.Value, interval.LowerBoundary.Value);
         }
 
         private static R Subtract<T, R>(T upper, T lower) where T : IComparable<T>

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Accretion.Intervals.StringConversion;
 
 namespace Accretion.Intervals.Tests
 {
@@ -22,13 +23,13 @@ namespace Accretion.Intervals.Tests
         
         private static object ToBoundaryOfDouble(string s)
         {
-            if (s.StartsWith(Symbols.GetSymbol(TokenType.OpenStart)) || s.StartsWith(Symbols.GetSymbol(TokenType.ClosedStart)))
+            if (s.StartsWith(Symbols.GetSymbol(TokenType.StartOpen)) || s.StartsWith(Symbols.GetSymbol(TokenType.StartClosed)))
             {
-                return LowerBoundary<double>.CreateUnchecked(double.Parse(s[1..^0], CultureInfo.InvariantCulture), s[0] == Symbols.GetSymbol(TokenType.OpenStart)[0]);
+                return new LowerBoundary<double>(double.Parse(s[1..^0], CultureInfo.InvariantCulture), s[0] == Symbols.GetSymbol(TokenType.StartOpen)[0] ? BoundaryType.Open : BoundaryType.Closed);
             }
-            else if (s.EndsWith(Symbols.GetSymbol(TokenType.OpenEnd)) || s.EndsWith(Symbols.GetSymbol(TokenType.ClosedEnd)))
+            else if (s.EndsWith(Symbols.GetSymbol(TokenType.EndOpen)) || s.EndsWith(Symbols.GetSymbol(TokenType.EndClosed)))
             {
-                return UpperBoundary<double>.CreateUnchecked(double.Parse(s[0..^1], CultureInfo.InvariantCulture), s[^1] == Symbols.GetSymbol(TokenType.OpenEnd)[0]);
+                return new UpperBoundary<double>(double.Parse(s[0..^1], CultureInfo.InvariantCulture), s[^1] == Symbols.GetSymbol(TokenType.EndOpen)[0] ? BoundaryType.Open : BoundaryType.Closed);
             }
             else
             {

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Accretion.Intervals
 {
-    internal readonly struct NoOverlap<T> : IOverlappingStrategy<T> where T : IComparable<T>
+    internal readonly struct NoOverlap<T, TComparer> : IOverlappingStrategy<T, TComparer> where TComparer : struct, IComparer<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsLess(in UpperBoundary<T> thisBoundary, in LowerBoundary<T> otherBoundary) => true;
+        public bool IsLess(in UpperBoundary<T, TComparer> thisBoundary, in LowerBoundary<T, TComparer> otherBoundary) => true;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsLess(in LowerBoundary<T> thisBoundary, in UpperBoundary<T> otherBoundary) => false;
+        public bool IsLess(in LowerBoundary<T, TComparer> thisBoundary, in UpperBoundary<T, TComparer> otherBoundary) => false;
     }
 }

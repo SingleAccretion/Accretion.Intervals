@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Accretion.Intervals
 {
     internal static class BoundariesComparison
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLessThan<T>(this in LowerBoundary<T> that, in LowerBoundary<T> other) where T : IComparable<T>
+        public static bool IsLessThan<T, TComparer>(this in LowerBoundary<T, TComparer> that, in LowerBoundary<T, TComparer> other) where TComparer : struct, IComparer<T>
         {            
-            return that.Value.IsLessThan(other.Value) || (that.Value.IsEqualTo(other.Value) && OverlapStrategies<T>.Invariant.IsLess(that, other));
+            return that.Value.IsLessThan<T, TComparer>(other.Value) || (that.Value.IsEqualTo<T, TComparer>(other.Value) && default(Invariant).IsLess(that, other));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLessThan<T, S>(this in UpperBoundary<T> that, in LowerBoundary<T> other, S strategy) where T : IComparable<T> where S : IOverlappingStrategy<T>
+        public static bool IsLessThan<T, TComparer, S>(this in UpperBoundary<T, TComparer> that, in LowerBoundary<T, TComparer> other, S strategy) where TComparer : struct, IComparer<T> where S : IOverlappingStrategy<T, TComparer>
         {
-            return that.Value.IsLessThan(other.Value) || (that.Value.IsEqualTo(other.Value) && strategy.IsLess(that, other));
+            return that.Value.IsLessThan<T, TComparer>(other.Value) || (that.Value.IsEqualTo<T, TComparer>(other.Value) && strategy.IsLess(that, other));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLessThan<T, S>(this in LowerBoundary<T> that, in UpperBoundary<T> other, S strategy) where T : IComparable<T> where S : IOverlappingStrategy<T>
+        public static bool IsLessThan<T, TComparer, S>(this in LowerBoundary<T, TComparer> that, in UpperBoundary<T, TComparer> other, S strategy) where TComparer : struct, IComparer<T> where S : IOverlappingStrategy<T, TComparer>
         {
-            return that.Value.IsLessThan(other.Value) || (that.Value.IsEqualTo(other.Value) && strategy.IsLess(that, other));
+            return that.Value.IsLessThan<T, TComparer>(other.Value) || (that.Value.IsEqualTo<T, TComparer>(other.Value) && strategy.IsLess(that, other));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLessThan<T>(this in UpperBoundary<T> that, in UpperBoundary<T> other) where T : IComparable<T>
+        public static bool IsLessThan<T, TComparer>(this in UpperBoundary<T, TComparer> that, in UpperBoundary<T, TComparer> other) where TComparer : struct, IComparer<T>
         {
-            return that.Value.IsLessThan(other.Value) || (that.Value.IsEqualTo(other.Value) && OverlapStrategies<T>.Invariant.IsLess(that, other));
+            return that.Value.IsLessThan<T, TComparer>(other.Value) || (that.Value.IsEqualTo<T, TComparer>(other.Value) && default(Invariant).IsLess(that, other));
         }
     }
 }

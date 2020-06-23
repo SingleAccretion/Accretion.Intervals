@@ -11,6 +11,9 @@ namespace Accretion.Intervals
         public BoundaryType Type => _boundary.Type;
         public T Value => _boundary.Value;
 
+        internal bool IsClosed => _boundary.IsClosed;
+        internal bool IsOpen => _boundary.IsOpen;
+
         public bool Equals(UpperBoundary<T> other) => _boundary == other._boundary;
         public override bool Equals(object obj) => obj is UpperBoundary<T> boundary && Equals(boundary);
         public override int GetHashCode() => _boundary.GetHashCode();

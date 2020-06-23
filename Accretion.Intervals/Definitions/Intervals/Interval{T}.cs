@@ -6,6 +6,10 @@ namespace Accretion.Intervals
 {
     public readonly struct Interval<T> where T : IComparable<T> 
     {
+        private readonly Interval<T, DefaultComparer<T>> _interval;
+
         public static Interval<T> Empty { get; }
+
+        public bool IsEmpty => _interval.IsEmpty;
     }
 }

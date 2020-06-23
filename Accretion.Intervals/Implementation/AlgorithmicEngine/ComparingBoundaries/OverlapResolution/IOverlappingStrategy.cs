@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Accretion.Intervals
 {
-    internal interface IOverlappingStrategy<T> where T : IComparable<T>
+    internal interface IOverlappingStrategy<T, TComparer> where TComparer : struct, IComparer<T>
     {
-        bool IsLess(in UpperBoundary<T> thisBoundary, in LowerBoundary<T> otherBoundary);
-        bool IsLess(in LowerBoundary<T> thisBoundary, in UpperBoundary<T> otherBoundary);
+        bool IsLess(in UpperBoundary<T, TComparer> thisBoundary, in LowerBoundary<T, TComparer> otherBoundary);
+        bool IsLess(in LowerBoundary<T, TComparer> thisBoundary, in UpperBoundary<T, TComparer> otherBoundary);
     }
 }

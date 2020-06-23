@@ -8,9 +8,11 @@ namespace Accretion.Intervals
     internal readonly struct Invariant
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsLess<T>(LowerBoundary<T> firstBoundary, LowerBoundary<T> secondBoundary) where T : IComparable<T> => firstBoundary.IsClosed & secondBoundary.IsOpen;
+        public bool IsLess<T, TComparer>(LowerBoundary<T, TComparer> firstBoundary, LowerBoundary<T, TComparer> secondBoundary) where TComparer : struct, IComparer<T> => 
+            firstBoundary.IsClosed & secondBoundary.IsOpen;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsLess<T>(UpperBoundary<T> firstBoundary, UpperBoundary<T> secondBoundary) where T : IComparable<T> => firstBoundary.IsOpen & secondBoundary.IsClosed;
+        public bool IsLess<T, TComparer>(UpperBoundary<T, TComparer> firstBoundary, UpperBoundary<T, TComparer> secondBoundary) where TComparer : struct, IComparer<T> => 
+            firstBoundary.IsOpen & secondBoundary.IsClosed;
     }
 }

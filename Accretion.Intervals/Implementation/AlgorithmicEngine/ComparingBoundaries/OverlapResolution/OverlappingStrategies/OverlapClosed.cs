@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Accretion.Intervals
 {
-    internal readonly struct OverlapClosed<T> : IOverlappingStrategy<T> where T : IComparable<T>
+    internal readonly struct OverlapClosed<T, TComparer> : IOverlappingStrategy<T, TComparer> where TComparer : struct, IComparer<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsLess(in UpperBoundary<T> thisBoundary, in LowerBoundary<T> otherBoundary) => thisBoundary.IsOpen & otherBoundary.IsOpen;
+        public bool IsLess(in UpperBoundary<T, TComparer> thisBoundary, in LowerBoundary<T, TComparer> otherBoundary) => thisBoundary.IsOpen & otherBoundary.IsOpen;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsLess(in LowerBoundary<T> thisBoundary, in UpperBoundary<T> otherBoundary) => thisBoundary.IsClosed | otherBoundary.IsClosed;
+        public bool IsLess(in LowerBoundary<T, TComparer> thisBoundary, in UpperBoundary<T, TComparer> otherBoundary) => thisBoundary.IsClosed | otherBoundary.IsClosed;
     }
 }

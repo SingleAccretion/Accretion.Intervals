@@ -39,13 +39,16 @@ namespace Accretion.Intervals.StringConversion
             TryParseInterval(input, new SpanElementTryParser<T>(elementParser), out interval, out _);
 
         public static Interval<T, TComparer> ParseInterval<T, TComparer>(string input, Parse<T> elementParser) where TComparer : struct, IComparer<T> =>
-            TryParseInterval<T, TComparer, StringElementParser<T>>(input.AsSpan(), new StringElementParser<T>(elementParser), out var interval, out var exception) ? interval : throw exception;
+            TryParseInterval<T, TComparer, StringElementParser<T>>(input.AsSpan(), new StringElementParser<T>(elementParser), out var interval, out var exception) ? 
+            interval : Throw.Exception<Interval<T, TComparer>>(exception);
 
         public static Interval<T, TComparer> ParseInterval<T, TComparer>(ReadOnlySpan<char> input, ParseSpan<T> elementParser) where TComparer : struct, IComparer<T> =>
-            TryParseInterval<T, TComparer, SpanElementParser<T>>(input, new SpanElementParser<T>(elementParser), out var interval, out var exception) ? interval : throw exception;
+            TryParseInterval<T, TComparer, SpanElementParser<T>>(input, new SpanElementParser<T>(elementParser), out var interval, out var exception) ?
+            interval : Throw.Exception<Interval<T, TComparer>>(exception);
 
         private static bool TryParseInterval<T, TComparer, TParser>(ReadOnlySpan<char> input, TParser elementParser, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IComparer<T> where TParser : IElementParser<T>
         {
+            interval = default;
             var lexer = new Lexer(input);
             var nextToken = lexer.NextToken();
             if (nextToken.Type == TokenType.StartSingleton)
