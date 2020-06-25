@@ -98,6 +98,8 @@ namespace Accretion.Intervals
 
         public bool Contains(T value) => throw new NotImplementedException();
 
+        public override string ToString() => $"{LowerBoundary}{Symbols.GetSymbol(TokenType.Separator)}{UpperBoundary}";
+
         internal static Interval<T, TComparer> CreateUnchecked(LowerBoundary<T, TComparer> lowerBoundary, UpperBoundary<T, TComparer> upperBoundary) => new Interval<T, TComparer>(lowerBoundary, upperBoundary);
 
         internal static bool TryCreate(LowerBoundary<T, TComparer> lowerBoundary, UpperBoundary<T, TComparer> upperBoundary, out Interval<T, TComparer> interval, out Exception exception)

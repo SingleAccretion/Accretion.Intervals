@@ -4,22 +4,16 @@ using System.Reflection;
 
 namespace Accretion.Intervals
 {
+    //This is a very "heavy" API and in general only works well with Tier0 -> Tire1 JITted methods 
+    //This means that you cannot reliably use these properties in methods marked with ArgessiveOptimization
+    //This class also wastes memory, so, again, should only be used as a last resort when every other metaprogramming technique fails
     internal class GenericSpecializer<T> 
     {
         private static T _zeroValueOfThisType;
         private static bool _zeroValueOfThisTypeIsInitialised;
 
-        public static bool TypeIsDiscrete { get; } = typeof(T) == typeof(byte) || 
-                                                     typeof(T) == typeof(sbyte) ||
-                                                     typeof(T) == typeof(ushort) ||
-                                                     typeof(T) == typeof(char) ||
-                                                     typeof(T) == typeof(short) ||
-                                                     typeof(T) == typeof(uint) ||
-                                                     typeof(T) == typeof(int) ||
-                                                     typeof(T) == typeof(ulong) ||
-                                                     typeof(T) == typeof(long) ||
-                                                     typeof(IDiscreteValue<T>).IsAssignableFrom(typeof(T));
-        
+        public static bool TypeIsDefaultValueComparer { get; } = typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(DefaultValueComparer<>);
+
         public static bool TypeIsAddable { get; } = typeof(T) == typeof(sbyte) || 
                                                     typeof(T) == typeof(byte) ||
                                                     typeof(T) == typeof(short) ||
@@ -37,8 +31,6 @@ namespace Accretion.Intervals
         public static bool TypeImplementsIDiscrete { get; } = typeof(IDiscreteValue<T>).IsAssignableFrom(typeof(T));
         public static bool TypeImplementsIAddable { get; } = typeof(IAddable<T>).IsAssignableFrom(typeof(T));
         public static bool TypeInstanceCanBeNull { get; } = !typeof(T).IsValueType || (Nullable.GetUnderlyingType(typeof(T)) != null);        
-        public static bool DefaultTypeValueCannotBeIncremented { get; } = !DefaultTypeValueCanBeIncremented();
-        public static bool DefaultTypeValueCannotBeDecremented { get; } = !DefaultTypeValueCanBeDecremented();
         public static T ZeroValueOfThisType 
         {
             get
@@ -58,29 +50,6 @@ namespace Accretion.Intervals
         }
 
         private GenericSpecializer() { }
-
-        private static bool DefaultTypeValueCanBeIncremented()
-        {
-            return typeof(T) == typeof(byte) ||
-                   typeof(T) == typeof(sbyte) ||
-                   typeof(T) == typeof(short) ||
-                   typeof(T) == typeof(ushort) ||
-                   typeof(T) == typeof(char) ||
-                   typeof(T) == typeof(int) ||
-                   typeof(T) == typeof(uint) ||
-                   typeof(T) == typeof(long) ||
-                   typeof(T) == typeof(ulong) ||
-                  (TypeImplementsIDiscrete && !Checker.IsNull(default(T)) && ((IDiscreteValue<T>)default(T)).IsIncrementable);
-        }
-
-        private static bool DefaultTypeValueCanBeDecremented()
-        {
-            return typeof(T) == typeof(sbyte) ||
-                   typeof(T) == typeof(short) ||
-                   typeof(T) == typeof(int) ||
-                   typeof(T) == typeof(long) ||
-                  (TypeImplementsIDiscrete && !Checker.IsNull(default(T)) && ((IDiscreteValue<T>)default(T)).IsDecrementable);
-        }
 
         private static T DiscoverZeroValue()
         {

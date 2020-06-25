@@ -16,7 +16,7 @@ namespace Accretion.Intervals
         {
             Debug.Assert(that != null && other != null);
 
-            if (typeof(TComparer) == typeof(DefaultComparer<T>))
+            if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
             {
                 return IsLessThan(that, other);
             }
@@ -29,7 +29,7 @@ namespace Accretion.Intervals
         {
             Debug.Assert(that != null && other != null);
 
-            if (typeof(TComparer) == typeof(DefaultComparer<T>))
+            if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
             {
                 return IsEqualTo(that, other);
             }
@@ -42,14 +42,14 @@ namespace Accretion.Intervals
         {
             Debug.Assert(that != null && other != null);
 
-            if (typeof(TComparer) == typeof(DefaultComparer<T>))
+            if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
             {
                 return IsGreaterThan(that, other);
             }
-
+            
             return default(TComparer).Compare(that, other) > 0;
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsLessThan<T>(T that, T other)
         {
