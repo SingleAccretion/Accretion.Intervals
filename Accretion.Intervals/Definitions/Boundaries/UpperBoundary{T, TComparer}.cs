@@ -21,7 +21,7 @@ namespace Accretion.Intervals
         internal bool IsClosed => Type == BoundaryType.Closed;
         internal bool IsOpen => Type == BoundaryType.Open;
 
-        public bool Equals(UpperBoundary<T, TComparer> other) => Value.IsEqualTo<T, DefaultValueComparer<T>>(other.Value) && Type == other.Type;
+        public bool Equals(UpperBoundary<T, TComparer> other) => Value.IsEqualTo<T, TComparer>(other.Value) && Type == other.Type;
         public override bool Equals(object obj) => obj is UpperBoundary<T, TComparer> boundary && Equals(boundary);
         public override int GetHashCode() => HashCode.Combine(Value, Type);
 

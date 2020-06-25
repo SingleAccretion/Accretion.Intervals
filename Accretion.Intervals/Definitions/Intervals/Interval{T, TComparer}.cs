@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Accretion.Intervals
 {
-    public readonly struct Interval<T, TComparer> where TComparer : struct, IComparer<T>
+    public readonly struct Interval<T, TComparer> : IEquatable<Interval<T, TComparer>> where TComparer : struct, IComparer<T>
     {
         private readonly LowerBoundary<T, TComparer> _lowerBoundary;
         private readonly UpperBoundary<T, TComparer> _upperBoundary;
@@ -96,15 +96,22 @@ namespace Accretion.Intervals
         public static Interval<T, TComparer> Parse(ReadOnlySpan<char> input) => Parser.ParseInterval<T, TComparer>(input, ElementParsers.GetSpanElementParser<T>());
         #endregion Parsing
 
-        public bool Contains(T value) => throw new NotImplementedException();
-
-        public override string ToString() => $"{LowerBoundary}{Symbols.GetSymbol(TokenType.Separator)}{UpperBoundary}";
-
         internal static Interval<T, TComparer> CreateUnchecked(LowerBoundary<T, TComparer> lowerBoundary, UpperBoundary<T, TComparer> upperBoundary) => new Interval<T, TComparer>(lowerBoundary, upperBoundary);
 
         internal static bool TryCreate(LowerBoundary<T, TComparer> lowerBoundary, UpperBoundary<T, TComparer> upperBoundary, out Interval<T, TComparer> interval, out Exception exception)
         {
-            throw null;
+            throw new NotImplementedException();
         }
+
+        public bool Contains(T value) => throw new NotImplementedException();
+        
+        public override bool Equals(object obj) => obj is Interval<T, TComparer> interval && Equals(interval);
+        public bool Equals(Interval<T, TComparer> other) => _lowerBoundary == other._lowerBoundary && _upperBoundary == other._upperBoundary;
+        public override int GetHashCode() => HashCode.Combine(_lowerBoundary, _upperBoundary);
+
+        public override string ToString() => $"{LowerBoundary}{Symbols.GetSymbol(TokenType.Separator)}{UpperBoundary}";
+
+        public static bool operator ==(Interval<T, TComparer> left, Interval<T, TComparer> right) => left.Equals(right);
+        public static bool operator !=(Interval<T, TComparer> left, Interval<T, TComparer> right) => !(left == right);
     }
 }

@@ -1,6 +1,4 @@
-﻿using Accretion.Intervals.Comparers;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Accretion.Intervals
 {
