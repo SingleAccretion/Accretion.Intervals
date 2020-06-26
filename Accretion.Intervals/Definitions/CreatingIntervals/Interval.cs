@@ -7,8 +7,8 @@ namespace Accretion.Intervals
 {
     public static class Interval
     {
-        public static Interval<T> Create<T>(BoundaryType lowerBoundaryType, T lowerBoundaryValue, T upperBoundaryValue, BoundaryType upperBoundaryType) where T : IComparable<T> 
-            => throw new NotImplementedException();
+        public static Interval<T> Create<T>(BoundaryType lowerBoundaryType, T lowerBoundaryValue, T upperBoundaryValue, BoundaryType upperBoundaryType) where T : IComparable<T>
+            => Create<T, DefaultValueComparer<T>>(lowerBoundaryType, lowerBoundaryValue, upperBoundaryValue, upperBoundaryType);
 
         public static Interval<T, TComparer> Create<T, TComparer>(BoundaryType lowerBoundaryType, T lowerBoundaryValue, T upperBoundaryValue, BoundaryType upperBoundaryType) where TComparer : struct, IComparer<T> 
             => throw new NotImplementedException();
@@ -42,5 +42,10 @@ namespace Accretion.Intervals
         
         public static CompositeInterval<T, TComparer> Join<T, TComparer>(IReadOnlyCollection<Interval<T>> intervals) where T : IComparable<T> where TComparer : struct, IComparer<T>
             => throw new NotImplementedException();
+
+        internal static bool TryCreate<T, TComparer>(LowerBoundary<T, TComparer> lowerBoundary, UpperBoundary<T, TComparer> upperBoundary, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IComparer<T>
+        {
+            throw new NotImplementedException();
+        }
     }
 }

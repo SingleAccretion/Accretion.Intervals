@@ -25,7 +25,7 @@ namespace Accretion.Intervals
         public override bool Equals(object obj) => obj is UpperBoundary<T, TComparer> boundary && Equals(boundary);
         public override int GetHashCode() => HashCode.Combine(Value, Type);
 
-        public override string ToString() => $"{Value}{(IsClosed ? Symbols.GetSymbol(TokenType.EndClosed) : Symbols.GetSymbol(TokenType.EndOpen))}";
+        public override string ToString() => Serializer.Serialize(this);
 
         public static bool operator ==(UpperBoundary<T, TComparer> left, UpperBoundary<T, TComparer> right) => left.Equals(right);
         public static bool operator !=(UpperBoundary<T, TComparer> left, UpperBoundary<T, TComparer> right) => !left.Equals(right);
