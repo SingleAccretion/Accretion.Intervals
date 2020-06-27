@@ -8,7 +8,7 @@ namespace Accretion.Intervals.Tests
 {
     public class ContinuousIntervalIsEmptyTests
     {
-        public static IEnumerable<object[]> IntervalsOfDoubles { get; } = Make1ContinuousIntervalsData.OfDouble(new List<(string, bool)>
+        public static IEnumerable<object[]> IntervalsOfDoubles { get; } = MakeIntervalsData.OfDouble(new List<(string, bool)>
         {
             ("[0,0]", false), 
             ("[0,5]", false),
@@ -38,7 +38,7 @@ namespace Accretion.Intervals.Tests
             ($"({MinDouble},{MinDouble})", true),
         });
 
-        public static IEnumerable<object[]> IntervalsOfChar { get; } = Make1ContinuousIntervalsData.OfChar(new List<(string, bool)>
+        public static IEnumerable<object[]> IntervalsOfChar { get; } = MakeIntervalsData.OfChar(new List<(string, bool)>
         {
             ("['d','i']", false),
             ("['d','d']", false),
@@ -62,7 +62,7 @@ namespace Accretion.Intervals.Tests
             ($"({char.MaxValue},'d')", true),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDays { get; } = Make1ContinuousIntervalsData.OfDay(new List<(string, bool)>
+        public static IEnumerable<object[]> IntervalsOfDays { get; } = MakeIntervalsData.OfDay(new List<(string, bool)>
         {
             ($"[{Monday},{Friday}]", false),
             ($"({Monday},{Tuesday}]", false),
@@ -82,7 +82,7 @@ namespace Accretion.Intervals.Tests
             ($"({Friday},{Wednesday})", true),
         });
 
-        public static IEnumerable<object[]> IntervalsOfCoordinates { get; } = Make1ContinuousIntervalsData.OfCoordinate(new List<(string, bool)>
+        public static IEnumerable<object[]> IntervalsOfCoordinates { get; } = MakeIntervalsData.OfCoordinate(new List<(string, bool)>
         {
             ("[0,5]", false),
             ("[0,0]", false),

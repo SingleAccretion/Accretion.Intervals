@@ -1,5 +1,4 @@
-﻿using Accretion.Intervals.StringConversion;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Accretion.Intervals
@@ -8,7 +7,6 @@ namespace Accretion.Intervals
     {
         public static CompositeInterval<T, TComparer> Empty { get; }
 
-        #region Parsing
         public static bool TryParse(string input, TryParse<T> elementParser, out CompositeInterval<T, TComparer> interval)
         {
             if (input is null)
@@ -46,7 +44,11 @@ namespace Accretion.Intervals
             //return Parser.TryParseCompositeInterval(input, ElementParsers.GetTryElementParser<T>(), out interval);
         }
 
-        public static bool TryParse(ReadOnlySpan<char> input, out CompositeInterval<T, TComparer> interval) => Parser.TryParseInterval(input, ElementParsers.GetTrySpanElementParser<T>(), out interval);
+        public static bool TryParse(ReadOnlySpan<char> input, out CompositeInterval<T, TComparer> interval)
+        {
+            throw new NotImplementedException();
+            //return Parser.TryParseInterval(input, ElementParsers.GetTrySpanElementParser<T>(), out interval);
+        }
 
         public static CompositeInterval<T, TComparer> Parse(string input, Parse<T> elementParser)
         {
@@ -87,6 +89,5 @@ namespace Accretion.Intervals
 
         public static CompositeInterval<T, TComparer> Parse(ReadOnlySpan<char> input) => throw new NotImplementedException(); 
         //Parser.ParseCompositeInterval<T, TComparer>(input, ElementParsers.GetSpanElementParser<T>());
-        #endregion
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using static Accretion.Intervals.Tests.StringConstants;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using System.Linq;
 
 namespace Accretion.Intervals.Tests
 {
@@ -44,6 +40,7 @@ namespace Accretion.Intervals.Tests
 			("[-5,5]∪(10,15]∪(20,25)∪(30,35)", "(-5,0)∪(0,5)∪(7,10)∪[13,35]∪[40,45)", "[-5,5]∪(7,10)∪(10,35]∪[40,45)"),
 		});
 
+		/*
 		public static IEnumerable<object[]> IntervalsOfTwoOfDouble { get; } = IntervalsOfDouble.Select(x => new object[] { x[0], x[1] }).Concat(IntervalsOfDouble.Select(x => new object[] { x[0], x[2] })).Concat(IntervalsOfDouble.Select(x => new object[] { x[1], x[2] }));
 		public static IEnumerable<object[]> IntervalsOfOneOfDouble { get; } = IntervalsOfDouble.SelectMany(x => x).Select(x => new object[] { x });
 
@@ -78,5 +75,6 @@ namespace Accretion.Intervals.Tests
 		[MemberData(nameof(IntervalsOfCoordinate))]
 		public void TestCustomClassDiscreteUnion(Interval<Coordinate> firstInterval, Interval<Coordinate> secondInterval, Interval<Coordinate> expectedResult) => 
 			Assert.Equal(expectedResult, firstInterval.Union(secondInterval), Interval<Coordinate>.LinearComparerByValue);
+		*/
 	}
 }

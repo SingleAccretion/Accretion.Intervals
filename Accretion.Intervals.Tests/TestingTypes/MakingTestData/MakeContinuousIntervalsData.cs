@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Accretion.Intervals.Tests
 {
-    internal static class Make1ContinuousIntervalsData
+    internal static class MakeIntervalsData
     {
         public static IEnumerable<object[]> OfDouble<T>(IEnumerable<(string, string, T)> data) =>
             MakeArbitraryData.Of(data.Select(x => (ToIntervalOfDouble(x.Item1), ToIntervalOfDouble(x.Item2), x.Item3)));
@@ -70,10 +70,10 @@ namespace Accretion.Intervals.Tests
         public static IEnumerable<object[]> OfCoordinate<T1, T2>(IEnumerable<(string, T1, T2)> data) =>
             MakeArbitraryData.Of(data.Select(x => (ToIntervalOfCoordinate(x.Item1), x.Item2, x.Item3)));
 
-        private static ContinuousInterval<int> ToIntervalOfInt(string s) => ContinuousInterval<int>.Parse(s, int.Parse);
-        private static ContinuousInterval<char> ToIntervalOfChar(string s) => ContinuousInterval<char>.Parse(s, char.Parse);
-        private static ContinuousInterval<double> ToIntervalOfDouble(string s) => ContinuousInterval<double>.Parse(s, x => double.Parse(x, CultureInfo.InvariantCulture));
-        private static ContinuousInterval<Day> ToIntervalOfDay(string s) => ContinuousInterval<Day>.Parse(s, Day.Parse);
-        private static ContinuousInterval<Coordinate> ToIntervalOfCoordinate(string s) => ContinuousInterval<Coordinate>.Parse(s, Coordinate.Parse);
+        private static Interval<int> ToIntervalOfInt(string s) => Interval<int>.Parse(s, int.Parse);
+        private static Interval<char> ToIntervalOfChar(string s) => Interval<char>.Parse(s, char.Parse);
+        private static Interval<double> ToIntervalOfDouble(string s) => Interval<double>.Parse(s, x => double.Parse(x, CultureInfo.InvariantCulture));
+        private static Interval<Day> ToIntervalOfDay(string s) => Interval<Day>.Parse(s, Day.Parse);
+        private static Interval<Coordinate> ToIntervalOfCoordinate(string s) => Interval<Coordinate>.Parse(s, Coordinate.Parse);
     }
 }

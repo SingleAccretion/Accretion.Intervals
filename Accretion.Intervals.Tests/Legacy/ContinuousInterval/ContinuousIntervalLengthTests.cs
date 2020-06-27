@@ -57,7 +57,7 @@ namespace Accretion.Intervals.Tests
             (new ContinuousInterval<ushort>(ushort.MinValue, false, ushort.MaxValue, false), ushort.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfInt32 { get; } = Make1ContinuousIntervalsData.OfInt(new List<(string, long)>()
+        public static IEnumerable<object[]> IntervalsOfInt32 { get; } = MakeIntervalsData.OfInt(new List<(string, long)>()
         {
             (Empty, 0),
             ("[-1,1]", 2),
@@ -116,7 +116,7 @@ namespace Accretion.Intervals.Tests
             (new ContinuousInterval<float>(float.MinValue, false, float.MaxValue, false), float.PositiveInfinity),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDouble { get; } = Make1ContinuousIntervalsData.OfDouble(new List<(string, double)>()
+        public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeIntervalsData.OfDouble(new List<(string, double)>()
         {
             (Empty, 0),
             ("[-1,1]", 2),
@@ -164,7 +164,7 @@ namespace Accretion.Intervals.Tests
             (new ContinuousInterval<DateTimeOffset>(DateTimeOffset.MinValue, false, DateTimeOffset.MaxValue, false), TimeSpan.FromTicks(DateTime.MaxValue.Ticks)),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDayWithTimeSpanLength { get; } = Make1ContinuousIntervalsData.OfDay(new List<(string, TimeSpan)>()
+        public static IEnumerable<object[]> IntervalsOfDayWithTimeSpanLength { get; } = MakeIntervalsData.OfDay(new List<(string, TimeSpan)>()
         {
             (Empty, TimeSpan.Zero),
             ($"[{Monday},{Monday}]", TimeSpan.FromDays(1)),
@@ -176,7 +176,7 @@ namespace Accretion.Intervals.Tests
             ($"[{Monday},{Sunday}]", TimeSpan.FromDays(7)),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDayWithPeriodLength { get; } = Make1ContinuousIntervalsData.OfDay(new List<(string, Period)>()
+        public static IEnumerable<object[]> IntervalsOfDayWithPeriodLength { get; } = MakeIntervalsData.OfDay(new List<(string, Period)>()
         {
             (Empty, Period.FromDays(0)),
             ($"[{Monday},{Monday}]", Period.FromDays(1)),
@@ -188,7 +188,7 @@ namespace Accretion.Intervals.Tests
             ($"[{Monday},{Sunday}]", Period.FromDays(7)),
         });
 
-        public static IEnumerable<object[]> IntervalsOfCoordinateWithLongLength { get; } = Make1ContinuousIntervalsData.OfCoordinate(new List<(string, long)>()
+        public static IEnumerable<object[]> IntervalsOfCoordinateWithLongLength { get; } = MakeIntervalsData.OfCoordinate(new List<(string, long)>()
         {
             (Empty, 0),
             ("[-1,1]", 2),
@@ -199,7 +199,7 @@ namespace Accretion.Intervals.Tests
             ($"[{Coordinate.MinValue},{Coordinate.MaxValue}]", uint.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfCoordinateWithDistanceLength { get; } = Make1ContinuousIntervalsData.OfCoordinate(new List<(string, Distance)>()
+        public static IEnumerable<object[]> IntervalsOfCoordinateWithDistanceLength { get; } = MakeIntervalsData.OfCoordinate(new List<(string, Distance)>()
         {
             (Empty, Distance.Zero),
 

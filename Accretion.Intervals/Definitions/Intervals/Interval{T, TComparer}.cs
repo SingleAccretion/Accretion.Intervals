@@ -22,7 +22,6 @@ namespace Accretion.Intervals
         public LowerBoundary<T, TComparer> LowerBoundary => throw new NotImplementedException();
         public UpperBoundary<T, TComparer> UpperBoundary => throw new NotImplementedException();
         
-        #region Parsing
         public static bool TryParse(string input, TryParse<T> elementParser, out Interval<T, TComparer> interval)
         {
             if (input is null)
@@ -94,7 +93,6 @@ namespace Accretion.Intervals
         }
 
         public static Interval<T, TComparer> Parse(ReadOnlySpan<char> input) => Parser.ParseInterval<T, TComparer>(input, ElementParsers.GetSpanElementParser<T>());
-        #endregion Parsing
 
         public bool Contains(T value) => throw new NotImplementedException();
 
