@@ -73,8 +73,9 @@ namespace Accretion.Intervals
                     continiousIntervals[j] = new ContinuousInterval<double>(minBoundaryValue, minBoundaryIsOpen, maxBoundaryValue, maxBoundaryIsOpen);
                 }
 
-                minBoundForContiniousIntervals = minBound;
-                intervals.Add(new Interval<double>(continiousIntervals));
+                throw new NotImplementedException();
+                //minBoundForContiniousIntervals = minBound;
+                //intervals.Add(new Interval<double>(continiousIntervals));
             }
 
             return intervals;

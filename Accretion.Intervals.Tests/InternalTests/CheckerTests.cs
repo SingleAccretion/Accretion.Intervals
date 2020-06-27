@@ -415,10 +415,7 @@ namespace Accretion.Intervals.Tests
 
         [Theory]
         [MemberData(nameof(IsDefaultTestCases))]
-        public void TestIsDefault(dynamic value, bool expectedResult)
-        {
-            Assert.Equal(expectedResult, Checker.IsDefault(value));
-        }
+        public void TestIsDefault(dynamic value, bool expectedResult) => Assert.Equal(expectedResult, Checker.IsDefault(value));
 
         private unsafe struct StructOfSize1
         {

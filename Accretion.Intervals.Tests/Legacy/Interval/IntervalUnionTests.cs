@@ -9,7 +9,7 @@ namespace Accretion.Intervals.Tests
 {
     public class IntervalUnionTests
     {
-		public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeIntervalsData.OfDouble(new List<(string, string, string)>()
+		public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeCompositeIntervalsData.OfDouble(new List<(string, string, string)>()
 		{
 			(Empty, Empty, Empty),
 			("[-5,5]", Empty, "[-5,5]"),
@@ -47,7 +47,7 @@ namespace Accretion.Intervals.Tests
 		public static IEnumerable<object[]> IntervalsOfTwoOfDouble { get; } = IntervalsOfDouble.Select(x => new object[] { x[0], x[1] }).Concat(IntervalsOfDouble.Select(x => new object[] { x[0], x[2] })).Concat(IntervalsOfDouble.Select(x => new object[] { x[1], x[2] }));
 		public static IEnumerable<object[]> IntervalsOfOneOfDouble { get; } = IntervalsOfDouble.SelectMany(x => x).Select(x => new object[] { x });
 
-		public static IEnumerable<object[]> IntervalsOfCoordinate { get; } = MakeIntervalsData.OfCoordinate(new List<(string, string, string)>()
+		public static IEnumerable<object[]> IntervalsOfCoordinate { get; } = MakeCompositeIntervalsData.OfCoordinate(new List<(string, string, string)>()
 		{
 			(Empty, Empty, Empty),
 			("[-5,5]", Empty, "[-5,5]"),

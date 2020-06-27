@@ -17,19 +17,17 @@ namespace Accretion.Intervals.Tests
         public abstract T ZeroValueOfThisType { get; }
 
         [Fact]
-        public void TestTypeIsDiscrete() => Assert.Equal(TypeIsDiscrete, GenericSpecializer<T>.TypeIsDiscrete);
-        [Fact]
         public void TestTypeIsAddable() => Assert.Equal(TypeIsAddable, GenericSpecializer<T>.TypeIsAddable);
+
         [Fact]
         public void TestImplementsIDiscrete() => Assert.Equal(TypeImplementsIDiscrete, GenericSpecializer<T>.TypeImplementsIDiscrete);
+
         [Fact]
         public void TestImplementsIAddable() => Assert.Equal(TypeImplementsIAddable, GenericSpecializer<T>.TypeImplementsIAddable);
+
         [Fact]
         public void TestTypeInstanceCanBeNull() => Assert.Equal(TypeInstanceCanBeNull, GenericSpecializer<T>.TypeInstanceCanBeNull);
-        [Fact]
-        public void TestDefaultTypeValueCannotBeIncremented() => Assert.Equal(DefaultTypeValueCannotBeIncremented, GenericSpecializer<T>.DefaultTypeValueCannotBeIncremented);
-        [Fact]
-        public void TestDefaultTypeValueCannotBeDecremented() => Assert.Equal(DefaultTypeValueCannotBeDecremented, GenericSpecializer<T>.DefaultTypeValueCannotBeDecremented);
+
         [Fact]
         public void TestZeroValueOfThisType()
         {

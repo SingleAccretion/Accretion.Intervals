@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using static Accretion.Intervals.Tests.StringConstants;
-using System.Text;
-using Xunit;
 
 namespace Accretion.Intervals.Tests
 {
     public class IntervalConstructionTests
     {
-		public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeIntervalsData.OfDouble<string>(new List<(string, string)>()
+		public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeCompositeIntervalsData.OfDouble<string>(new List<(string, string)>()
 		{
 			("[-5,5]∪[0,10]", "[-5,10]"),
 			("[-5,5]∪[-10,0]", "[-10,5]"),
@@ -50,7 +47,7 @@ namespace Accretion.Intervals.Tests
 			($"[10,15)∪(0,2)∪{Empty}∪[-5,5]∪(-23,-2]∪(15,16)", "(-23,5]∪[10,15)∪(15,16)"),
 		});
 
-		public static IEnumerable<object[]> IntervalsOfInt { get; } = MakeIntervalsData.OfInt<string>(new List<(string, string)>()
+		public static IEnumerable<object[]> IntervalsOfInt { get; } = MakeCompositeIntervalsData.OfInt<string>(new List<(string, string)>()
 		{
 			("[-5,5]∪[0,10]", "[-5,10]"),
 			("[-5,5]∪[-10,0]", "[-10,5]"),
@@ -96,7 +93,7 @@ namespace Accretion.Intervals.Tests
 			("[10,15)∪(0,2)∪(-100,-98)∪[-5,5]∪(-23,-2]∪(15,16)", "(-100,-98)∪(-23,5]∪[10,15)"),
 		});
 
-		public static IEnumerable<object[]> IntervalsOfCoordinate { get; } = MakeIntervalsData.OfCoordinate<string>(new List<(string, string)>()
+		public static IEnumerable<object[]> IntervalsOfCoordinate { get; } = MakeCompositeIntervalsData.OfCoordinate<string>(new List<(string, string)>()
 		{
 			(Empty, Empty),
 			($"[-5,5]∪{Empty}", "[-5,5]"),
@@ -109,6 +106,7 @@ namespace Accretion.Intervals.Tests
 			($"{Empty}∪{Empty}∪{Empty}∪[5,10]", "[5,10]"),
 		});
 
+		/*
 		[Fact]
 		public void IntervalConstructedWithEmptyCollectionShouldBeEmpty() => Assert.True(new Interval<double>(Array.Empty<ContinuousInterval<double>>()).IsEmpty);
 
@@ -123,5 +121,6 @@ namespace Accretion.Intervals.Tests
 		[Theory]
 		[MemberData(nameof(IntervalsOfCoordinate))]
 		public void TestCustomClassDiscereteConstruction(Interval<Coordinate> interval, string expectedResult) => Assert.Equal(expectedResult, interval.ToString());
+		*/
 	}
 }

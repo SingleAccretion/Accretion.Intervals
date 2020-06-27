@@ -1,12 +1,10 @@
-﻿using System.Globalization;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Accretion.Intervals.Tests
 {
-    internal static class MakeContinuousIntervalsData
+    internal static class Make1ContinuousIntervalsData
     {
         public static IEnumerable<object[]> OfDouble<T>(IEnumerable<(string, string, T)> data) =>
             MakeArbitraryData.Of(data.Select(x => (ToIntervalOfDouble(x.Item1), ToIntervalOfDouble(x.Item2), x.Item3)));

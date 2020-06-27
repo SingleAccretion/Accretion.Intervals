@@ -19,6 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Public\" />
-    <Folder Include="Internal\" />
+    <Folder Include="PublicTests\" />
   </ItemGroup>
 </Project>
