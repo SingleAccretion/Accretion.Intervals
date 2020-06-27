@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("Accretion.Intervals.Experimental")]
 [assembly: InternalsVisibleTo("Accretion.Intervals.Tests")]
 [assembly: InternalsVisibleTo("Accretion.Profiling")]
 namespace Accretion.Intervals
-{    
+{
     public readonly struct ContinuousInterval<T> : IEquatable<ContinuousInterval<T>> where T : IComparable<T>
     {
         /// <summary>

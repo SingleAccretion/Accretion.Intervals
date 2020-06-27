@@ -162,6 +162,8 @@ namespace Accretion.Intervals
 
         internal static R IntervalLength<T, R>(Interval<T> interval) where T : IComparable<T>
         {
+            throw new NotImplementedException();
+            /*
             var intervals = interval.Intervals;
             var length = GenericSpecializer<R>.ZeroValueOfThisType;
 
@@ -171,6 +173,7 @@ namespace Accretion.Intervals
             }
 
             return length;
+            */
         }
 
         private static R ContinuousIntervalLength<T, R>(ContinuousInterval<T> interval) where T : IComparable<T>

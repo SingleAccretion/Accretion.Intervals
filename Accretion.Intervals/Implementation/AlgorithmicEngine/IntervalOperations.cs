@@ -280,7 +280,8 @@ namespace Accretion.Intervals
             }
         }
 
-        //NOT IMPLEMENTED YET
+        //NOT IMPLEMENTED
+        /*
         public static ReadOnlyArray<Interval<T, TComparer>> SymmetricDifference<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second)
             where TComparer : struct, IComparer<T>
         {
@@ -414,6 +415,7 @@ namespace Accretion.Intervals
                 goto UpperFirstLowerSecond;
             }
         }
+        */
 
         public static bool Contains<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> continuousIntervals, T value) where TComparer : struct, IComparer<T>
         {
@@ -471,6 +473,7 @@ namespace Accretion.Intervals
             return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, mergerIndex + length);
         }
 
+        /*
         public static ReadOnlyArray<Interval<T, TComparer>> Merge<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second)
             where TComparer : struct, IComparer<T>
         {
@@ -633,6 +636,6 @@ namespace Accretion.Intervals
 
             return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, mergerIndex);
         }
-
+        */
     }
 }

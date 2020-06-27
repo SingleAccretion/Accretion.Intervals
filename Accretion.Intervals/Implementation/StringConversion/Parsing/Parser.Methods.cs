@@ -106,6 +106,7 @@ namespace Accretion.Intervals.StringConversion
                 return false;
             }
 
+            interval = default;
             Token nextToken;
             if (!elementParser.TryParse(lowerBoundaryInput, out var lowerBoundaryValue, out exception)) { }
             else if (lexer.NextToken().Type != TokenType.Separator)
@@ -123,10 +124,7 @@ namespace Accretion.Intervals.StringConversion
             }
             else
             {
-                Interval<T, TComparer>.TryCreate(
-                    new LowerBoundary<T, TComparer>(lowerBoundaryValue, lowerBoundaryType),
-                    new UpperBoundary<T, TComparer>(upperBoundaryValue, upperBoundaryType),
-                    out interval, out exception);
+                Interval.TryCreate(lowerBoundaryType, lowerBoundaryValue, upperBoundaryValue, upperBoundaryType, out interval, out exception);
             }
 
             return exception is null;
@@ -152,7 +150,7 @@ namespace Accretion.Intervals.StringConversion
             }
             else
             {
-                Interval<T, TComparer>.TryCreate(new LowerBoundary<T, TComparer>(value, BoundaryType.Closed), new UpperBoundary<T, TComparer>(value, BoundaryType.Closed), out interval, out exception);
+                Interval.TryCreate(BoundaryType.Closed, value, value, BoundaryType.Closed, out interval, out exception);
             }
 
             return exception is null;

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using ObjectLayoutInspector;
-using Accretion.Intervals.Experimental;
+﻿using Accretion.Intervals.Experimental;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
-using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Running;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace Accretion.Intervals
 {
@@ -100,7 +95,8 @@ namespace Accretion.Intervals
             
             for (int i = 0; i < intervals.Length - 1; i++)
             {
-                intervals[i].Intersect(intervals[i + 1]);
+                throw new NotImplementedException();
+                //intervals[i].Intersect(intervals[i + 1]);
             }
         }
 
@@ -110,7 +106,8 @@ namespace Accretion.Intervals
 
             for (int i = 0; i < intervals.Length - 1; i++)
             {
-                intervals[i].SymmetricDifference(intervals[i + 1]);
+                throw new NotImplementedException();
+                //intervals[i].SymmetricDifference(intervals[i + 1]);
             }
         }
 
@@ -120,7 +117,8 @@ namespace Accretion.Intervals
 
             for (int i = 0; i < intervals.Length - 1; i++)
             {
-                intervals[i].Union(intervals[i + 1]);
+                throw new NotImplementedException();
+                //intervals[i].Union(intervals[i + 1]);
             }
         }
 
@@ -130,7 +128,8 @@ namespace Accretion.Intervals
 
             for (int i = 0; i < intervals.Length - 1; i++)
             {
-                intervals[i].Reduce();
+                throw new NotImplementedException();
+                //intervals[i].Reduce();
             }
         }
 

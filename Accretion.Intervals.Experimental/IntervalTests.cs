@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Accretion.Intervals
 {
@@ -42,7 +41,8 @@ namespace Accretion.Intervals
                 }
 
                 minBoundForContiniousIntervals = minBound;
-                intervals.Add(new Interval<int>(continiousIntervals));
+                throw new NotImplementedException();
+                //intervals.Add(new Interval<int>(continiousIntervals));
             }
 
             return intervals;

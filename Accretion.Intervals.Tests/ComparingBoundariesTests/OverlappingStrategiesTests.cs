@@ -1,118 +1,67 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
 namespace Accretion.Intervals.Tests
 {
     public class OverlappingStrategiesTests
     {
-		public static IEnumerable<object[]> InvariantOverlapTestCases { get; } = MakeBoundariesData.OfDouble(new List<(string, string, bool)>()
-		{
-			("[0", "(0", true),
-			("(0", "[0", false),
-			("0]", "0)", false),
-			("0)", "0]", true),
+        [Theory]
+        [InlineData(BoundaryType.Closed, BoundaryType.Closed, false)]
+        [InlineData(BoundaryType.Closed, BoundaryType.Open, true)]
+        [InlineData(BoundaryType.Open, BoundaryType.Closed, false)]
+        [InlineData(BoundaryType.Open, BoundaryType.Open, false)]
+        public void TestInvariantOverlapLowerIsLessThanLower(BoundaryType firstLowerBoundaryType, BoundaryType secondLowerBoundaryType, bool expectedResult) =>
+            Assert.Equal(expectedResult, default(Invariant).LowerIsLessThanLower(firstLowerBoundaryType, secondLowerBoundaryType));
 
-			("[0", "[0", false),
-			("(0", "(0", false),
-			("0]", "0]", false),
-			("0)", "0)", false)
-		});
+        [Theory]
+        [InlineData(BoundaryType.Closed, BoundaryType.Closed, false)]
+        [InlineData(BoundaryType.Closed, BoundaryType.Open, false)]
+        [InlineData(BoundaryType.Open, BoundaryType.Closed, true)]
+        [InlineData(BoundaryType.Open, BoundaryType.Open, false)]
+        public void TestInvariantOverlapUpperIsLessThanUpper(BoundaryType firstUpperBoundaryType, BoundaryType secondUpperBoundaryType, bool expectedResult) =>
+            Assert.Equal(expectedResult, default(Invariant).LowerIsLessThanLower(firstUpperBoundaryType, secondUpperBoundaryType));
 
-		public static IEnumerable<object[]> FullOverlapTestCases { get; } = MakeBoundariesData.OfDouble(new List<(string, string, bool)>()
-		{
-			("[0", "0]", true),
-			("(0", "0)", true),
-			("[0", "0)", true),
-			("(0", "0]", true),
+        [Theory]
+        [InlineData(BoundaryType.Closed, BoundaryType.Closed, true)]
+        [InlineData(BoundaryType.Closed, BoundaryType.Open, true)]
+        [InlineData(BoundaryType.Open, BoundaryType.Closed, true)]
+        [InlineData(BoundaryType.Open, BoundaryType.Open, true)]
+        public void TestFullOverlap(BoundaryType lowerBoundaryType, BoundaryType upperBoundaryType, bool overlaps)
+        {
+            Assert.Equal(overlaps, default(FullOverlap).LowerIsLessThanUpper(lowerBoundaryType, upperBoundaryType));
+            Assert.Equal(!overlaps, default(FullOverlap).UpperIsLessThanLower(upperBoundaryType, lowerBoundaryType));
+        }
 
-			("0]", "[0", false),
-			("0)", "(0", false),
-			("0]", "(0", false),
-			("0)", "[0", false),
-		});
+        [Theory]
+        [InlineData(BoundaryType.Closed, BoundaryType.Closed, false)]
+        [InlineData(BoundaryType.Closed, BoundaryType.Open, false)]
+        [InlineData(BoundaryType.Open, BoundaryType.Closed, false)]
+        [InlineData(BoundaryType.Open, BoundaryType.Open, false)]
+        public void TestNoOverlap(BoundaryType lowerBoundaryType, BoundaryType upperBoundaryType, bool overlaps)
+        {
+            Assert.Equal(overlaps, default(NoOverlap).LowerIsLessThanUpper(lowerBoundaryType, upperBoundaryType));
+            Assert.Equal(!overlaps, default(NoOverlap).UpperIsLessThanLower(upperBoundaryType, lowerBoundaryType));
+        }
 
-		public static IEnumerable<object[]> NoOverlapTestCases { get; } = MakeBoundariesData.OfDouble(new List<(string, string, bool)>()
-		{
-			("[0", "0]", false),
-			("(0", "0)", false),
-			("[0", "0)", false),
-			("(0", "0]", false),
+        [Theory]
+        [InlineData(BoundaryType.Closed, BoundaryType.Closed, true)]
+        [InlineData(BoundaryType.Closed, BoundaryType.Open, true)]
+        [InlineData(BoundaryType.Open, BoundaryType.Closed, true)]
+        [InlineData(BoundaryType.Open, BoundaryType.Open, false)]
+        public void TestOverlapClosed(BoundaryType lowerBoundaryType, BoundaryType upperBoundaryType, bool overlaps)
+        {
+            Assert.Equal(overlaps, default(OverlapClosed).LowerIsLessThanUpper(lowerBoundaryType, upperBoundaryType));
+            Assert.Equal(!overlaps, default(OverlapClosed).UpperIsLessThanLower(upperBoundaryType, lowerBoundaryType));
+        }
 
-			("0]", "[0", true),
-			("0)", "(0", true),
-			("0]", "(0", true),
-			("0)", "[0", true),
-		});
-
-		public static IEnumerable<object[]> OverlapClosedTestCases { get; } = MakeBoundariesData.OfDouble(new List<(string, string, bool)>()
-		{
-			("[0", "0]", true),
-			("(0", "0)", false),
-			("[0", "0)", true),
-			("(0", "0]", true),
-
-			("0]", "[0", false),
-			("0)", "(0", true),
-			("0]", "(0", false),
-			("0)", "[0", false),
-		});
-
-		public static IEnumerable<object[]> OverlapFullyClosedTestCases { get; } = MakeBoundariesData.OfDouble(new List<(string, string, bool)>()
-		{
-			("[0", "0]", true),
-			("(0", "0)", false),
-			("[0", "0)", false),
-			("(0", "0]", false),
-
-			("0]", "[0", false),
-			("0)", "(0", true),
-			("0]", "(0", true),
-			("0)", "[0", true),
-		});
-
-		[Theory]
-		[MemberData(nameof(InvariantOverlapTestCases))]
-		public void TestInvariantOverlap(object firstBoundary, object secondBoundary, bool expectedResult)
-		{
-			if (firstBoundary is LowerBoundary<double>)
-			{
-				Assert.Equal(expectedResult, OverlapStrategies<double>.Invariant.IsLess((LowerBoundary<double>)firstBoundary, (LowerBoundary<double>)secondBoundary));
-			}
-			else
-			{
-				Assert.Equal(expectedResult,  OverlapStrategies<double>.Invariant.IsLess((UpperBoundary<double>)firstBoundary, (UpperBoundary<double>)secondBoundary));
-			}
-		}
-
-		[Theory]
-		[MemberData(nameof(FullOverlapTestCases))]
-		public void TestFullOverlap(object firstBoundary, object secondBoundary, bool expectedResult) => TestOverlap(firstBoundary, secondBoundary, expectedResult, OverlapStrategies<double>.FullOverlap);
-
-		[Theory]
-		[MemberData(nameof(NoOverlapTestCases))]
-		public void TestNoOverlap(object firstBoundary, object secondBoundary, bool expectedResult) => TestOverlap(firstBoundary, secondBoundary, expectedResult, OverlapStrategies<double>.NoOverlap);
-
-		[Theory]
-		[MemberData(nameof(OverlapClosedTestCases))]
-		public void TestOverlapClosed(object firstBoundary, object secondBoundary, bool expectedResult) => TestOverlap(firstBoundary, secondBoundary, expectedResult, OverlapStrategies<double>.OverlapClosed);
-
-		[Theory]
-		[MemberData(nameof(OverlapFullyClosedTestCases))]
-		public void TestOverlapFullyClosed(object firstBoundary, object secondBoundary, bool expectedResult) => TestOverlap(firstBoundary, secondBoundary, expectedResult, OverlapStrategies<double>.OverlapFullyClosed);
-
-		private void TestOverlap(object firstBoundary, object secondBoundary, bool expectedResult, IOverlappingStrategy<double> strategy)
-		{
-			if (firstBoundary is LowerBoundary<double>)
-			{
-				Assert.Equal(expectedResult, strategy.IsLess((LowerBoundary<double>)firstBoundary, (UpperBoundary<double>)secondBoundary));
-			}
-			else
-			{
-				Assert.Equal(expectedResult, strategy.IsLess((UpperBoundary<double>)firstBoundary, (LowerBoundary<double>)secondBoundary));
-			}
-		}
-	}
+        [Theory]
+        [InlineData(BoundaryType.Closed, BoundaryType.Closed, true)]
+        [InlineData(BoundaryType.Closed, BoundaryType.Open, false)]
+        [InlineData(BoundaryType.Open, BoundaryType.Closed, false)]
+        [InlineData(BoundaryType.Open, BoundaryType.Open, false)]
+        public void TestOverlapFullyClosedLowerIsLessThanUpper(BoundaryType lowerBoundaryType, BoundaryType upperBoundaryType, bool overlaps)
+        {
+            Assert.Equal(overlaps, default(OverlapFullyClosed).LowerIsLessThanUpper(lowerBoundaryType, upperBoundaryType));
+            Assert.Equal(!overlaps, default(OverlapFullyClosed).UpperIsLessThanLower(upperBoundaryType, lowerBoundaryType));
+        }
+    }
 }
