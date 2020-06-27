@@ -7,7 +7,7 @@ namespace Accretion.Intervals
     internal static class Checker
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNull<T>(T obj) => GenericSpecializer<T>.TypeInstanceCanBeNull ? obj is null : false;
+        public static bool IsNull<T>(T value) => value is null;
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe static bool IsDefault<T>(T value)
@@ -73,5 +73,38 @@ namespace Accretion.Intervals
 
 			return true;
 		}
-    }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNaN<T>(T value)
+        {
+            if (typeof(T) == typeof(double))
+            {
+				return double.IsNaN((double)(object)value);
+			}
+            if (typeof(T) == typeof(float))
+            {
+				return float.IsNaN((float)(object)value);
+            }
+
+			return true;
+        }
+
+		//We have to basically copy this from the BCL because otherwise the codegen is surprisingly suboptimal.
+		//This will have to be indpependently tested against BCL for correctness.
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsUtcDateTime<T>(T value)
+		{
+			if (typeof(T) == typeof(DateTime))
+			{
+				const ulong KindUtc = 0x4000000000000000;
+				const ulong FlagsMask = 0xC000000000000000;
+
+				var dateTime = (DateTime)(object)value;
+				var dateTimeData = Unsafe.As<DateTime, ulong>(ref dateTime);
+				return (dateTimeData & FlagsMask) == KindUtc;
+			}
+
+			return false;
+		}
+	}
 }

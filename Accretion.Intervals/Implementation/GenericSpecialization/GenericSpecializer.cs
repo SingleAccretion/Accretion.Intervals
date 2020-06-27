@@ -59,7 +59,8 @@ namespace Accretion.Intervals
             var staticProperties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             var staticFields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             
-            var zeroProperty = staticProperties.FirstOrDefault(x => Attribute.IsDefined(x, typeof(ZeroValueAttribute)));
+            var zeroProperty = staticProperties.FirstOrDefault(x 
+                Attribute.IsDefined(x, typeof(ZeroValueAttribute)));
             var zeroField = staticFields.FirstOrDefault(x => Attribute.IsDefined(x, typeof(ZeroValueAttribute)));
             
             if (zeroProperty != null)
