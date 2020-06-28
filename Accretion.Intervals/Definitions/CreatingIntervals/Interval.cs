@@ -30,11 +30,9 @@ namespace Accretion.Intervals
         public static Interval<T, TComparer> CreateSingleton<T, TComparer>(T value) where TComparer : struct, IComparer<T> =>
             Create<T, TComparer>(BoundaryType.Closed, value, value, BoundaryType.Closed);
 
-        public static CompositeInterval<T> Join<T>(IReadOnlyCollection<Interval<T>> intervals) where T : IComparable<T>
-            => throw new NotImplementedException();
+        public static CompositeInterval<T> Join<T>(IReadOnlyCollection<Interval<T>> intervals) where T : IComparable<T> => throw new NotImplementedException();
 
-        public static CompositeInterval<T, TComparer> Join<T, TComparer>(IReadOnlyCollection<Interval<T, TComparer>> intervals) where TComparer : struct, IComparer<T>
-            => throw new NotImplementedException();
+        public static CompositeInterval<T, TComparer> Join<T, TComparer>(IReadOnlyCollection<Interval<T, TComparer>> intervals) where TComparer : struct, IComparer<T> => throw new NotImplementedException();
 
         internal static bool TryCreate<T, TComparer>(BoundaryType lowerBoundaryType, T lowerBoundaryValue, T upperBoundaryValue, BoundaryType upperBoundaryType, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IComparer<T>
         {

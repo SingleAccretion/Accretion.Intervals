@@ -468,7 +468,7 @@ namespace Accretion.Intervals
         public static ReadOnlyArray<Interval<T, TComparer>> MergeTail<T, TComparer>(Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer : struct, IComparer<T>
         {
             var length = maxSourceIndex - sourceIndex + 1;
-            Copying.Copy(sourceIntervals, sourceIndex, mergedIntervals, mergerIndex, length);
+            Array.Copy(sourceIntervals, sourceIndex, mergedIntervals, mergerIndex, length);
 
             return new ReadOnlyArray<Interval<T, TComparer>>(mergedIntervals, mergerIndex + length);
         }
