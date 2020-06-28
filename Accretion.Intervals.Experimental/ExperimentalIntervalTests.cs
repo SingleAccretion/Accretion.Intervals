@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Accretion.Intervals.Experimental
 {
+    /*
     public static class ExperimentalIntervalsTests
     {
         private const int NumberOfIntervals = IntervalsTests.NumberOfIntervals;
@@ -260,5 +261,5 @@ namespace Accretion.Intervals.Experimental
 
             return (testResult, difference);
         }
-    }
+    }*/
 }

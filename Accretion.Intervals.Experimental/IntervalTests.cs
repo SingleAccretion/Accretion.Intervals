@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Accretion.Intervals
 {
+    /*
     public static class IntervalsTests
     {
         public const int NumberOfIntervals = 100000;        
@@ -81,5 +82,5 @@ namespace Accretion.Intervals
             return intervals;
         }
 
-    }
+    }*/
 }

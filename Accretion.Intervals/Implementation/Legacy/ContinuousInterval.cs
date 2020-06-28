@@ -14,38 +14,6 @@ namespace Accretion.Intervals
         public static readonly ContinuousInterval<T> EmptyInterval = new ContinuousInterval<T>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContinuousInterval{T}"/> class with the specified boundaries.         
-        /// </summary>
-        /// <param name="lowerBoundaryValue">Value of the lower boundary. Null, NaN or PositiveInfinity will result in an empty interval.</param>
-        /// <param name="lowerBoundaryIsOpen">Specifies whether lower boundary will be open. Intervals with open boundaries don't contain values of these boundaries.</param>
-        /// <param name="upperBoundaryValue">Value of the upper boundary. Null, NaN or NegativeInfinity will result in an empty interval.</param>
-        /// <param name="upperBoundaryIsOpen">Specifies whether upper boundary will be open. Intervals with open boundaries don't contain values of these boundaries.</param>
-        public ContinuousInterval(T lowerBoundaryValue, bool lowerBoundaryIsOpen, T upperBoundaryValue, bool upperBoundaryIsOpen) : this()
-        {
-            /*
-            var lowerBoundary = LowerBoundary<T>.CreateChecked(lowerBoundaryValue, lowerBoundaryIsOpen, out var lowerBoundaryIsValid);
-            var upperBoundary = UpperBoundary<T>.CreateChecked(upperBoundaryValue, upperBoundaryIsOpen, out var upperBoundaryIsValid);
-
-            if (lowerBoundaryIsValid && upperBoundaryIsValid && !BoundariesProduceEmptyInterval(lowerBoundary, upperBoundary))
-            {
-                LowerBoundary = lowerBoundary;
-                UpperBoundary = upperBoundary;
-            }
-            else
-            {
-                UpperBoundary = default;
-                LowerBoundary = default;
-            }*/
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal ContinuousInterval(in LowerBoundary<T> lowerBoundary, in UpperBoundary<T> upperBoundary) 
-        {
-            LowerBoundary = lowerBoundary;
-            UpperBoundary = upperBoundary;
-        }
-
-        /// <summary>
         /// Specifies whether this interval is empty. Empty intervals contain no values.
         /// </summary>
         public bool IsEmpty => Checker.IsDefault(this);

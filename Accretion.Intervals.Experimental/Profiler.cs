@@ -162,16 +162,6 @@ namespace Accretion.Intervals
                 intervals[i].Union(intervals[i + 1]);
             }
         }
-
-        private void TestExperimentalIntReduce()
-        {
-            var intervals = ExperimentalIntIntervals;
-
-            for (int i = 0; i < intervals.Length - 1; i++)
-            {
-                intervals[i].Reduce();
-            }
-        }
     }
 }
 

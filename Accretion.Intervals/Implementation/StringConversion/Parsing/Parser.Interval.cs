@@ -50,14 +50,14 @@ namespace Accretion.Intervals.StringConversion
         {
             interval = default;
             var lexer = new Lexer(input);
-            var nextToken = lexer.NextToken();
+            var nextToken = lexer.ConsumeNext();
             if (nextToken.Type == TokenType.StartSingleton)
             {
                 return TryCompletingSingletonInterval(lexer, elementParser, out interval, out exception);
             }
             else if (nextToken.Type == TokenType.StartOpen)
             {
-                nextToken = lexer.NextToken();
+                nextToken = lexer.ConsumeNext();
 
                 if (nextToken.Type == TokenType.EndOpen)
                 {
@@ -74,7 +74,7 @@ namespace Accretion.Intervals.StringConversion
             }
             else if (nextToken.Type == TokenType.StartClosed)
             {
-                nextToken = lexer.NextToken();
+                nextToken = lexer.ConsumeNext();
                 if (nextToken.Type == TokenType.Text)
                 {
                     return TryCompletingRegularInterval(lexer, elementParser, nextToken.Content, BoundaryType.Closed, out interval, out exception);
@@ -109,16 +109,16 @@ namespace Accretion.Intervals.StringConversion
             interval = default;
             Token nextToken;
             if (!elementParser.TryParse(lowerBoundaryInput, out var lowerBoundaryValue, out exception)) { }
-            else if (lexer.NextToken().Type != TokenType.Separator)
+            else if (lexer.ConsumeNext().Type != TokenType.Separator)
             {
                 exception = ParsingExceptions.BoundariesMustBeSeparated;
             }
-            else if ((nextToken = lexer.NextToken()).Type != TokenType.Text)
+            else if ((nextToken = lexer.ConsumeNext()).Type != TokenType.Text)
             {
                 exception = ParsingExceptions.IntervalMustHaveUpperBoundary;
             }
             else if (!elementParser.TryParse(nextToken.Content, out var upperBoundaryValue, out exception)) { }
-            else if (!TryParseUpperBoundaryType(lexer.NextToken().Type, out var upperBoundaryType))
+            else if (!TryParseUpperBoundaryType(lexer.ConsumeNext().Type, out var upperBoundaryType))
             {
                 exception = ParsingExceptions.IntervalMustEndWithEndClosedOrEndOpen;
             }
@@ -134,17 +134,17 @@ namespace Accretion.Intervals.StringConversion
         {
             interval = default;
 
-            var nextToken = lexer.NextToken();
+            var nextToken = lexer.ConsumeNext();
             if (nextToken.Type != TokenType.Text)
             {
                 exception = ParsingExceptions.IntervalMustHaveBoundaries;
             }
             else if (!elementParser.TryParse(nextToken.Content, out T value, out exception)) { }
-            else if (lexer.NextToken().Type != TokenType.EndSingleton)
+            else if (lexer.ConsumeNext().Type != TokenType.EndSingleton)
             {
                 exception = ParsingExceptions.SingletonIntervalMustEndWithSingletonEnd;
             }
-            else if (lexer.NextToken().Type != TokenType.End)
+            else if (lexer.ConsumeNext().Type != TokenType.End)
             {
                 exception = ParsingExceptions.InputMustNotHaveTrailingCharacters;
             }
@@ -158,7 +158,7 @@ namespace Accretion.Intervals.StringConversion
 
         private static bool TryCompletingEmptyInterval<T, TComparer>(Lexer lexer, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IComparer<T>
         {
-            if (lexer.NextToken().Type == TokenType.End)
+            if (lexer.ConsumeNext().Type == TokenType.End)
             {
                 exception = null;
                 interval = Interval<T, TComparer>.Empty;

@@ -1,60 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using static Accretion.Intervals.Tests.StringConstants;
-using System.Text;
 using Xunit;
-using System.Linq;
+using static Accretion.Intervals.Tests.StringConstants;
 
 namespace Accretion.Intervals.Tests
 {
-    public class ContinuousIntervalLengthTests
+    public class IntervalLengthTests
     {
-        public static IEnumerable<object[]> IntervalsOfSByte { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<sbyte>, int)>()
+        public static IEnumerable<object[]> IntervalsOfSByte { get; } = MakeArbitraryData.Of(new List<(Interval<sbyte>, int)>()
         {
-            (ContinuousInterval<sbyte>.EmptyInterval, 0),
+            (Interval<sbyte>.Empty, 0),
 
-            (new ContinuousInterval<sbyte>(-1, false, 1, false), 2),
-            (new ContinuousInterval<sbyte>(-1, true, 1, false), 2),
-            (new ContinuousInterval<sbyte>(-1, false, 1, true), 2),
-            (new ContinuousInterval<sbyte>(-1, true, 1, true), 2),
+            (Interval.Create<sbyte>(BoundaryType.Closed, -1, 1, BoundaryType.Closed), 2),
+            (Interval.Create<sbyte>(BoundaryType.Closed, -1, 1, BoundaryType.Open), 2),
+            (Interval.Create<sbyte>(BoundaryType.Open, -1, 1, BoundaryType.Closed), 2),
+            (Interval.Create<sbyte>(BoundaryType.Open, -1, 1, BoundaryType.Open), 2),
 
-            (new ContinuousInterval<sbyte>(sbyte.MinValue, false, sbyte.MaxValue, false), byte.MaxValue),
+            (Interval.Create(BoundaryType.Closed, sbyte.MinValue, sbyte.MaxValue, BoundaryType.Closed), byte.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfByte { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<byte>, int)>()
+        public static IEnumerable<object[]> IntervalsOfByte { get; } = MakeArbitraryData.Of(new List<(Interval<byte>, int)>()
         {
-            (ContinuousInterval<byte>.EmptyInterval, 0),
+            (Interval<byte>.Empty, 0),
 
-			(new ContinuousInterval<byte>(0, false, 2, false), 2),
-            (new ContinuousInterval<byte>(0, true, 2, false), 2),
-            (new ContinuousInterval<byte>(0, false, 2, true), 2),
-            (new ContinuousInterval<byte>(0, true, 2, true), 2),
+            (Interval.Create<byte>(BoundaryType.Closed, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<byte>(BoundaryType.Closed, 0, 2, BoundaryType.Open), 2),
+            (Interval.Create<byte>(BoundaryType.Open, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<byte>(BoundaryType.Open, 0, 2, BoundaryType.Open), 2),
 
-            (new ContinuousInterval<byte>(byte.MinValue, false, byte.MaxValue, false), byte.MaxValue),
+            (Interval.Create(BoundaryType.Closed, byte.MinValue, byte.MaxValue, BoundaryType.Closed), byte.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfInt16 { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<short>, int)>()
+        public static IEnumerable<object[]> IntervalsOfInt16 { get; } = MakeArbitraryData.Of(new List<(Interval<short>, int)>()
         {
-            (ContinuousInterval<short>.EmptyInterval, 0),
+            (Interval<short>.Empty, 0),
 
-            (new ContinuousInterval<short>(-1, false, 1, false), 2),
-            (new ContinuousInterval<short>(-1, true, 1, false), 2),
-            (new ContinuousInterval<short>(-1, false, 1, true), 2),
-            (new ContinuousInterval<short>(-1, true, 1, true), 2),
+            (Interval.Create<short>(BoundaryType.Closed, -1, 1, BoundaryType.Closed), 2),
+            (Interval.Create<short>(BoundaryType.Closed, -1, 1, BoundaryType.Open), 2),
+            (Interval.Create<short>(BoundaryType.Open, -1, 1, BoundaryType.Closed), 2),
+            (Interval.Create<short>(BoundaryType.Open, -1, 1, BoundaryType.Open), 2),
 
-            (new ContinuousInterval<short>(short.MinValue, false, short.MaxValue, false), ushort.MaxValue),
+            (Interval.Create(BoundaryType.Closed, short.MinValue, short.MaxValue, BoundaryType.Closed), ushort.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfUInt16 { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<ushort>, int)>()
+        public static IEnumerable<object[]> IntervalsOfUInt16 { get; } = MakeArbitraryData.Of(new List<(Interval<ushort>, int)>()
         {
-            (ContinuousInterval<ushort>.EmptyInterval, 0),
+            (Interval<ushort>.Empty, 0),
 
-			(new ContinuousInterval<ushort>(0, false, 2, false), 2),
-            (new ContinuousInterval<ushort>(0, true, 2, false), 2),
-            (new ContinuousInterval<ushort>(0, false, 2, true), 2),
-            (new ContinuousInterval<ushort>(0, true, 2, true), 2),
+            (Interval.Create<ushort>(BoundaryType.Closed, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<ushort>(BoundaryType.Closed, 0, 2, BoundaryType.Open), 2),
+            (Interval.Create<ushort>(BoundaryType.Open, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<ushort>(BoundaryType.Open, 0, 2, BoundaryType.Open), 2),
 
-            (new ContinuousInterval<ushort>(ushort.MinValue, false, ushort.MaxValue, false), ushort.MaxValue),
+            (Interval.Create(BoundaryType.Closed, ushort.MinValue, ushort.MaxValue, BoundaryType.Closed), ushort.MaxValue),
         });
 
         public static IEnumerable<object[]> IntervalsOfInt32 { get; } = MakeIntervalsData.OfInt(new List<(string, long)>()
@@ -68,52 +66,52 @@ namespace Accretion.Intervals.Tests
             ($"[{int.MinValue},{int.MaxValue}]", uint.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfUInt32 { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<uint>, long)>()
+        public static IEnumerable<object[]> IntervalsOfUInt32 { get; } = MakeArbitraryData.Of(new List<(Interval<uint>, long)>()
         {
-            (ContinuousInterval<uint>.EmptyInterval, 0),
+            (Interval<uint>.Empty, 0),
 
-			(new ContinuousInterval<uint>(0, false, 2, false), 2),
-            (new ContinuousInterval<uint>(0, true, 2, false), 2),
-            (new ContinuousInterval<uint>(0, false, 2, true), 2),
-            (new ContinuousInterval<uint>(0, true, 2, true), 2),
+            (Interval.Create<uint>(BoundaryType.Closed, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<uint>(BoundaryType.Closed, 0, 2, BoundaryType.Open), 2),
+            (Interval.Create<uint>(BoundaryType.Open, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<uint>(BoundaryType.Open, 0, 2, BoundaryType.Open), 2),
 
-            (new ContinuousInterval<uint>(uint.MinValue, false, uint.MaxValue, false), uint.MaxValue),
+            (Interval.Create(BoundaryType.Closed, uint.MinValue, uint.MaxValue, BoundaryType.Closed), uint.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfInt64 { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<long>, ulong)>()
+        public static IEnumerable<object[]> IntervalsOfInt64 { get; } = MakeArbitraryData.Of(new List<(Interval<long>, ulong)>()
         {
-            (ContinuousInterval<long>.EmptyInterval, 0),
+            (Interval<long>.Empty, 0),
 
-			(new ContinuousInterval<long>(-1, false, 1, false), 2),
-            (new ContinuousInterval<long>(-1, true, 1, false), 2),
-            (new ContinuousInterval<long>(-1, false, 1, true), 2),
-            (new ContinuousInterval<long>(-1, true, 1, true), 2),
+            (Interval.Create<long>(BoundaryType.Closed, -1, 1, BoundaryType.Closed), 2),
+            (Interval.Create<long>(BoundaryType.Closed, -1, 1, BoundaryType.Open), 2),
+            (Interval.Create<long>(BoundaryType.Open, -1, 1, BoundaryType.Closed), 2),
+            (Interval.Create<long>(BoundaryType.Open, -1, 1, BoundaryType.Open), 2),
 
-            (new ContinuousInterval<long>(long.MinValue, false, long.MaxValue, false), ulong.MaxValue),
+            (Interval.Create(BoundaryType.Closed, long.MinValue, long.MaxValue, BoundaryType.Closed), ulong.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfUInt64 { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<ulong>, ulong)>()
+        public static IEnumerable<object[]> IntervalsOfUInt64 { get; } = MakeArbitraryData.Of(new List<(Interval<ulong>, ulong)>()
         {
-            (ContinuousInterval<ulong>.EmptyInterval, 0),
+            (Interval<ulong>.Empty, 0),
 
-			(new ContinuousInterval<ulong>(0, false, 2, false), 2),
-            (new ContinuousInterval<ulong>(0, true, 2, false), 2),
-            (new ContinuousInterval<ulong>(0, false, 2, true), 2),
-            (new ContinuousInterval<ulong>(0, true, 2, true), 2),
+            (Interval.Create<ulong>(BoundaryType.Closed, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<ulong>(BoundaryType.Closed, 0, 2, BoundaryType.Open), 2),
+            (Interval.Create<ulong>(BoundaryType.Open, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<ulong>(BoundaryType.Open, 0, 2, BoundaryType.Open), 2),
 
-            (new ContinuousInterval<ulong>(ulong.MinValue, false, ulong.MaxValue, false), ulong.MaxValue),
+            (Interval.Create(BoundaryType.Closed, ulong.MinValue, ulong.MaxValue, BoundaryType.Closed), ulong.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfSingle { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<float>, float)>()
+        public static IEnumerable<object[]> IntervalsOfSingle { get; } = MakeArbitraryData.Of(new List<(Interval<float>, float)>()
         {
-            (ContinuousInterval<float>.EmptyInterval, 0),
+            (Interval<float>.Empty, 0),
 
-			(new ContinuousInterval<float>(0, false, 2, false), 2),
-            (new ContinuousInterval<float>(0, true, 2, false), 2),
-            (new ContinuousInterval<float>(0, false, 2, true), 2),
-            (new ContinuousInterval<float>(0, true, 2, true), 2),
+            (Interval.Create<float>(BoundaryType.Closed, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<float>(BoundaryType.Closed, 0, 2, BoundaryType.Open), 2),
+            (Interval.Create<float>(BoundaryType.Open, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<float>(BoundaryType.Open, 0, 2, BoundaryType.Open), 2),
 
-            (new ContinuousInterval<float>(float.MinValue, false, float.MaxValue, false), float.PositiveInfinity),
+            (Interval.Create(BoundaryType.Closed, float.MinValue, float.MaxValue, BoundaryType.Closed), float.PositiveInfinity),
         });
 
         public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeIntervalsData.OfDouble(new List<(string, double)>()
@@ -130,38 +128,38 @@ namespace Accretion.Intervals.Tests
             ($"({MinDouble},{MaxDouble})", double.PositiveInfinity),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDecimal { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<decimal>, decimal)>()
+        public static IEnumerable<object[]> IntervalsOfDecimal { get; } = MakeArbitraryData.Of(new List<(Interval<decimal>, decimal)>()
         {
-            (ContinuousInterval<decimal>.EmptyInterval, 0),
+            (Interval<decimal>.Empty, 0),
 
-			(new ContinuousInterval<decimal>(0, false, 2, false), 2),
-            (new ContinuousInterval<decimal>(0, true, 2, false), 2),
-            (new ContinuousInterval<decimal>(0, false, 2, true), 2),
-            (new ContinuousInterval<decimal>(0, true, 2, true), 2),
+            (Interval.Create<decimal>(BoundaryType.Closed, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<decimal>(BoundaryType.Closed, 0, 2, BoundaryType.Open), 2),
+            (Interval.Create<decimal>(BoundaryType.Open, 0, 2, BoundaryType.Closed), 2),
+            (Interval.Create<decimal>(BoundaryType.Open, 0, 2, BoundaryType.Open), 2),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDateTime { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<DateTime>, TimeSpan)>()
+        public static IEnumerable<object[]> IntervalsOfDateTime { get; } = MakeArbitraryData.Of(new List<(Interval<DateTime>, TimeSpan)>()
         {
-            (ContinuousInterval<DateTime>.EmptyInterval, TimeSpan.Zero),
+            (Interval<DateTime>.Empty, TimeSpan.Zero),
 
-			(new ContinuousInterval<DateTime>(new DateTime(0), false, new DateTime(2), false), TimeSpan.FromTicks(2)),
-            (new ContinuousInterval<DateTime>(new DateTime(0), true, new DateTime(2), false), TimeSpan.FromTicks(2)),
-            (new ContinuousInterval<DateTime>(new DateTime(0), false, new DateTime(2), true), TimeSpan.FromTicks(2)),
-            (new ContinuousInterval<DateTime>(new DateTime(0), true, new DateTime(2), true), TimeSpan.FromTicks(2)),
+            (Interval.Create(BoundaryType.Closed, new DateTime(0), new DateTime(2), BoundaryType.Closed), TimeSpan.FromTicks(2)),
+            (Interval.Create(BoundaryType.Closed, new DateTime(0), new DateTime(2), BoundaryType.Open), TimeSpan.FromTicks(2)),
+            (Interval.Create(BoundaryType.Open, new DateTime(0), new DateTime(2), BoundaryType.Closed), TimeSpan.FromTicks(2)),
+            (Interval.Create(BoundaryType.Open, new DateTime(0), new DateTime(2), BoundaryType.Open), TimeSpan.FromTicks(2)),
 
-            (new ContinuousInterval<DateTime>(DateTime.MinValue, false, DateTime.MaxValue, false), TimeSpan.FromTicks(DateTime.MaxValue.Ticks)),
+            (Interval.Create(BoundaryType.Closed, DateTime.MinValue, DateTime.MaxValue, BoundaryType.Closed), TimeSpan.FromTicks(DateTime.MaxValue.Ticks)),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDateTimeOffset { get; } = MakeArbitraryData.Of(new List<(ContinuousInterval<DateTimeOffset>, TimeSpan)>()
+        public static IEnumerable<object[]> IntervalsOfDateTimeOffset { get; } = MakeArbitraryData.Of(new List<(Interval<DateTimeOffset>, TimeSpan)>()
         {
-            (ContinuousInterval<DateTimeOffset>.EmptyInterval, TimeSpan.Zero),
+            (Interval<DateTimeOffset>.Empty, TimeSpan.Zero),
 
-			(new ContinuousInterval<DateTimeOffset>(new DateTimeOffset(0, TimeSpan.Zero), false, new DateTimeOffset(2, TimeSpan.Zero), false), TimeSpan.FromTicks(2)),
-            (new ContinuousInterval<DateTimeOffset>(new DateTimeOffset(0, TimeSpan.Zero), true, new DateTimeOffset(2, TimeSpan.Zero), false), TimeSpan.FromTicks(2)),
-            (new ContinuousInterval<DateTimeOffset>(new DateTimeOffset(0, TimeSpan.Zero), false, new DateTimeOffset(2, TimeSpan.Zero), true), TimeSpan.FromTicks(2)),
-            (new ContinuousInterval<DateTimeOffset>(new DateTimeOffset(0, TimeSpan.Zero), true, new DateTimeOffset(2, TimeSpan.Zero), true), TimeSpan.FromTicks(2)),
+            (Interval.Create(BoundaryType.Closed, new DateTimeOffset(0, TimeSpan.Zero),  new DateTimeOffset(2, TimeSpan.Zero), BoundaryType.Closed), TimeSpan.FromTicks(2)),
+            (Interval.Create(BoundaryType.Open, new DateTimeOffset(0, TimeSpan.Zero), new DateTimeOffset(2, TimeSpan.Zero), BoundaryType.Closed), TimeSpan.FromTicks(2)),
+            (Interval.Create(BoundaryType.Closed, new DateTimeOffset(0, TimeSpan.Zero), new DateTimeOffset(2, TimeSpan.Zero), BoundaryType.Open), TimeSpan.FromTicks(2)),
+            (Interval.Create(BoundaryType.Open, new DateTimeOffset(0, TimeSpan.Zero), new DateTimeOffset(2, TimeSpan.Zero), BoundaryType.Open), TimeSpan.FromTicks(2)),
 
-            (new ContinuousInterval<DateTimeOffset>(DateTimeOffset.MinValue, false, DateTimeOffset.MaxValue, false), TimeSpan.FromTicks(DateTime.MaxValue.Ticks)),
+            (Interval.Create(BoundaryType.Closed, DateTimeOffset.MinValue, DateTimeOffset.MaxValue, BoundaryType.Closed), TimeSpan.FromTicks(DateTime.MaxValue.Ticks)),
         });
 
         public static IEnumerable<object[]> IntervalsOfDayWithTimeSpanLength { get; } = MakeIntervalsData.OfDay(new List<(string, TimeSpan)>()
@@ -213,73 +211,77 @@ namespace Accretion.Intervals.Tests
 
         [Theory]
         [MemberData(nameof(IntervalsOfSByte))]
-        public void TestSByteLength(ContinuousInterval<sbyte> interval, int expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestSByteLength(Interval<sbyte> interval, int expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfByte))]
-        public void TestByteLength(ContinuousInterval<byte> interval, int expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestByteLength(Interval<byte> interval, int expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfInt16))]
-        public void TestInt16Length(ContinuousInterval<short> interval, int expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestInt16Length(Interval<short> interval, int expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfUInt16))]
-        public void TestUInt16Length(ContinuousInterval<ushort> interval, int expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestUInt16Length(Interval<ushort> interval, int expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfInt32))]
-        public void TestInt32Length(ContinuousInterval<int> interval, long expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestInt32Length(Interval<int> interval, long expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfUInt32))]
-        public void TestUInt32Length(ContinuousInterval<uint> interval, long expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestUInt32Length(Interval<uint> interval, long expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfInt64))]
-        public void TestInt64Length(ContinuousInterval<long> interval, ulong expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestInt64Length(Interval<long> interval, ulong expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfUInt64))]
-        public void TestUInt64Length(ContinuousInterval<ulong> interval, ulong expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestUInt64Length(Interval<ulong> interval, ulong expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfSingle))]
-        public void TestSingleLength(ContinuousInterval<float> interval, float expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestSingleLength(Interval<float> interval, float expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfDouble))]
-        public void TestPrimitiveContinuousLength(ContinuousInterval<double> interval, double expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestPrimitiveContinuousLength(Interval<double> interval, double expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfDecimal))]
-        public void TestDecimalLength(ContinuousInterval<decimal> interval, decimal expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestDecimalLength(Interval<decimal> interval, decimal expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
-        [Fact]        
-        public void DecimalLengthShouldOverflow() => Assert.Throws<OverflowException>(() => new ContinuousInterval<decimal>(decimal.MinValue, false, decimal.MaxValue, false).Length());
+        [Fact]
+        public void DecimalLengthShouldOverflow() => Assert.Throws<OverflowException>(() => Interval.Create(BoundaryType.Closed, decimal.MinValue, decimal.MaxValue, BoundaryType.Closed).Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfDateTime))]
-        public void TestDateTimeLength(ContinuousInterval<DateTime> interval, TimeSpan expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestDateTimeLength(Interval<DateTime> interval, TimeSpan expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
         [Theory]
         [MemberData(nameof(IntervalsOfDateTimeOffset))]
-        public void TestDateTimeOffsetLength(ContinuousInterval<DateTimeOffset> interval, TimeSpan expectedResult) => Assert.Equal(expectedResult, interval.Length());
+        public void TestDateTimeOffsetLength(Interval<DateTimeOffset> interval, TimeSpan expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
+        /*
         [Theory]
         [MemberData(nameof(IntervalsOfDayWithTimeSpanLength))]
-        public void TestCustomStructDiscreteLengthWithPrimitiveResult(ContinuousInterval<Day> interval, TimeSpan expectedResult) => Assert.Equal(expectedResult, interval.Length<Day, TimeSpan>());
+        public void TestCustomStructDiscreteLengthWithPrimitiveResult(Interval<Day> interval, TimeSpan expectedResult) => Assert.Equal(expectedResult, interval.Length<Day, TimeSpan>());
+        */
 
         [Theory]
         [MemberData(nameof(IntervalsOfDayWithPeriodLength))]
-        public void TestCustomStructDiscreteLengthWithCustomStructResult(ContinuousInterval<Day> interval, Period expectedResult) => Assert.Equal(expectedResult, interval.Length<Day, Period>());
+        public void TestCustomStructDiscreteLengthWithCustomStructResult(Interval<Day> interval, Period expectedResult) => Assert.Equal(expectedResult, interval.Length<Day, Period>());
 
+        /*
         [Theory]
         [MemberData(nameof(IntervalsOfCoordinateWithLongLength))]
-        public void TestCustomClassDiscereteLengthWithPrimitiveResult(ContinuousInterval<Coordinate> interval, long expectedResult) => Assert.Equal(expectedResult, interval.Length<Coordinate, long>());
+        public void TestCustomClassDiscereteLengthWithPrimitiveResult(Interval<Coordinate> interval, long expectedResult) => Assert.Equal(expectedResult, interval.Length<Coordinate, long>());
+        */
 
         [Theory]
         [MemberData(nameof(IntervalsOfCoordinateWithDistanceLength))]
-        public void TestCustomClassDiscereteLengthWithCustomClassResult(ContinuousInterval<Coordinate> interval, Distance expectedResult) => Assert.Equal(expectedResult, interval.Length<Coordinate, Distance>());
+        public void TestCustomClassDiscereteLengthWithCustomClassResult(Interval<Coordinate> interval, Distance expectedResult) => Assert.Equal(expectedResult, interval.Length<Coordinate, Distance>());
     }
 }

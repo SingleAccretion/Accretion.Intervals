@@ -2,7 +2,7 @@
 
 namespace Accretion.Intervals.StringConversion
 {
-    internal static class Serializer
+    internal static class StringSerializer
     {
         public static string Serialize<T, TComparer>(Interval<T, TComparer> interval) where TComparer : struct, IComparer<T>
         {
