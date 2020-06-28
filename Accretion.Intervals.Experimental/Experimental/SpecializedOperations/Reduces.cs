@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Accretion.Intervals.Experimental
 {
+    /*
     public static class Reduces
     {
         /// <summary>
@@ -158,4 +159,5 @@ namespace Accretion.Intervals.Experimental
             return new Interval<T>(new ArraySegment<Boundary<T>>(packedBoundaries, 0, j), sorted: true, mayOverlap: false);
         }
     }
+    */
 }

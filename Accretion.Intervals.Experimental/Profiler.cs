@@ -1,9 +1,7 @@
-﻿using Accretion.Intervals.Experimental;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
 using BenchmarkDotNet.Running;
 using System;
-using System.Linq;
 using System.Text;
 
 namespace Accretion.Intervals
@@ -47,10 +45,10 @@ namespace Accretion.Intervals
         //[Params(1, 10, 100, 1000, 10_000)]
         public int IntervalsComplexity;
 
-        public Experimental.Interval<int>[] ExperimentalIntIntervals;
+        //public Experimental.Interval<int>[] ExperimentalIntIntervals;
         public Interval<int>[] IntIntervals;
 
-        public Experimental.Interval<double>[] ExperimentalDoubleIntervals;
+        //public Experimental.Interval<double>[] ExperimentalDoubleIntervals;
         public Interval<double>[] DoubleIntervals;
 
         //internal ExperimentalBoundary<int>[] Boundaries1;
@@ -59,12 +57,13 @@ namespace Accretion.Intervals
         [GlobalSetup]
         public void Setup()
         {
+            /*
             ExperimentalIntIntervals = ExperimentalIntervalsTests.MakeIntervals(N, -200 * IntervalsComplexity, 200 * IntervalsComplexity, IntervalsComplexity).ToArray();
             IntIntervals = IntervalsTests.MakeIntervals(N, -200 * IntervalsComplexity, 200 * IntervalsComplexity, IntervalsComplexity).ToArray();
 
             ExperimentalDoubleIntervals = ExperimentalIntervalsTests.MakeDoubleIntervals(N, -200 * IntervalsComplexity, 200 * IntervalsComplexity, IntervalsComplexity).ToArray();
             DoubleIntervals = IntervalsTests.MakeDoubleIntervals(N, -200 * IntervalsComplexity, 200 * IntervalsComplexity, IntervalsComplexity).ToArray();
-
+            */
             //Boundaries1 = Boundaries.MakeExperimentalBoundaries(IntervalsComplexity);
             //Boundaries2 = Boundaries.MakeExperimentalBoundaries(IntervalsComplexity);
         }
@@ -82,7 +81,8 @@ namespace Accretion.Intervals
         //[Benchmark(Baseline = true)]
         public void TestExperimental()
         {
-            TestExperimentalIntIntersect();
+            //TestExperimentalIntIntersect();
+            
             //TestExperimentalIntSymmetricDifference();
             //TestExperimentalIntUnion();
 
@@ -132,7 +132,7 @@ namespace Accretion.Intervals
                 //intervals[i].Reduce();
             }
         }
-
+        /*
         private void TestExperimentalIntIntersect()
         {
             var intervals = ExperimentalIntIntervals;
@@ -162,6 +162,7 @@ namespace Accretion.Intervals
                 intervals[i].Union(intervals[i + 1]);
             }
         }
+        */
     }
 }
 

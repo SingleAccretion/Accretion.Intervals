@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Accretion.Intervals.Experimental
-{    
+{
+    /*
     public static class Complements
     {
         public static Interval<byte> AllBytes { get; } = new Interval<byte>(new ContinuousInterval<byte>(byte.MinValue, false, byte.MaxValue, false));
@@ -96,4 +97,5 @@ namespace Accretion.Intervals.Experimental
         /// <exception cref="ArgumentNullException" />
         public static Interval<DateTimeOffset> Complement(this Interval<DateTimeOffset> interval) => (interval ?? throw new ArgumentNullException(nameof(interval))).SymmetricDifference(AllDateTimeOffsets);
     }
+    */
 }

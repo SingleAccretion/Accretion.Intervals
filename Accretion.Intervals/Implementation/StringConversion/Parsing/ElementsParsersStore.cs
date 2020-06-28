@@ -16,21 +16,25 @@ namespace Accretion.Intervals.StringConversion
         private static Dictionary<Type, Delegate> _tryElementParsers;
         private static Dictionary<Type, Delegate> _trySpanElementParsers;
 
+        private static Dictionary<Type, Delegate> ElementParsersStore => _elementParsers ??= new Dictionary<Type, Delegate>();
+        private static Dictionary<Type, Delegate> SpanElementParsers => _spanElementParsers ??= new Dictionary<Type, Delegate>();
+        private static Dictionary<Type, Delegate> TryElementParsers => _tryElementParsers ??= new Dictionary<Type, Delegate>();
+        private static Dictionary<Type, Delegate> TrySpanElementParsers => _trySpanElementParsers ??= new Dictionary<Type, Delegate>();
+
         public static Parse<T> GetElementParser<T>() => 
-            GetParser<Parse<T>>(_elementParsers, () => DiscoverParser<T, Parse<T>>(ParserName));
+            GetParser<Parse<T>>(ElementParsersStore, () => DiscoverParser<T, Parse<T>>(ParserName));
 
         public static ParseSpan<T> GetSpanElementParser<T>() => 
-            GetParser<ParseSpan<T>>(_spanElementParsers, () => DiscoverParser<T, ParseSpan<T>>(ParserName));
+            GetParser<ParseSpan<T>>(SpanElementParsers, () => DiscoverParser<T, ParseSpan<T>>(ParserName));
 
         public static TryParse<T> GetTryElementParser<T>() =>
-            GetParser<TryParse<T>>(_tryElementParsers, () => DiscoverParser<T, TryParse<T>>(TryParserName));
+            GetParser<TryParse<T>>(TryElementParsers, () => DiscoverParser<T, TryParse<T>>(TryParserName));
 
         public static TryParseSpan<T> GetTrySpanElementParser<T>() =>
-            GetParser<TryParseSpan<T>>(_trySpanElementParsers, () => DiscoverParser<T, TryParseSpan<T>>(TryParserName));
+            GetParser<TryParseSpan<T>>(TrySpanElementParsers, () => DiscoverParser<T, TryParseSpan<T>>(TryParserName));
 
         private static T GetParser<T>(Dictionary<Type, Delegate> store, Func<Delegate> parserDiscoverer) where T : Delegate
-        {
-            store ??= new Dictionary<Type, Delegate>();
+        {            
             if (store.TryGetValue(typeof(T), out var parser)) { }
             else
             {

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Accretion.Intervals.Experimental
 {
+    /*
     public readonly struct ContinuousInterval<T> : IEquatable<ContinuousInterval<T>> where T : IComparable<T>
     {
         private static readonly Parser<ContinuousInterval<T>, T> _parser = new Parser<ContinuousInterval<T>, T>(TryParse);
@@ -232,4 +233,5 @@ namespace Accretion.Intervals.Experimental
 
         public static bool operator !=(ContinuousInterval<T> first, ContinuousInterval<T> second) => !first.Equals(second);
     }
+    */
 }

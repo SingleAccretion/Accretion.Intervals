@@ -2,6 +2,7 @@ using System;
 
 namespace Accretion.Intervals.Experimental
 {
+    /*
     public static class Lengths
     {
         /// <summary>
@@ -178,5 +179,5 @@ namespace Accretion.Intervals.Experimental
         {
             return interval.UpperBoundary.Value - interval.LowerBoundary.Value;
         }        
-    }
+    }*/
 }

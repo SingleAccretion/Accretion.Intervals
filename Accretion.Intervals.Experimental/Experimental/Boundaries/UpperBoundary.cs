@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Accretion.Intervals.Experimental
 {
+    /*
     internal readonly struct UpperBoundary<T> : IBoundary<T>, IEquatable<UpperBoundary<T>> where T : IComparable<T>
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0052:Remove unread private members", Justification = "Layout compatibility with Boundary<T>")]
@@ -178,4 +179,5 @@ namespace Accretion.Intervals.Experimental
 
         public static bool operator !=(UpperBoundary<T> left, UpperBoundary<T> right) => !left.Equals(right);
     }
+    */
 }

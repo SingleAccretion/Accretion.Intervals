@@ -90,7 +90,7 @@ namespace Accretion.Intervals
         }
 
 		//We have to basically copy this from the BCL because otherwise the codegen is surprisingly suboptimal.
-		//This will have to be indpependently tested against BCL for correctness.
+		//This will have to be independently tested against BCL for correctness.
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsUtcDateTime<T>(T value)
 		{

@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Accretion.Intervals.Experimental
 {
+    /*
     public class Interval<T> where T : IComparable<T>
     {
         /// <summary>
@@ -469,4 +470,5 @@ namespace Accretion.Intervals.Experimental
             }
         }
     }
+    */
 }
