@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Accretion.Intervals
 {
     [Serializable]
-    public class IntervalFormatException : Exception
+    public class IntervalFormatException : ArgumentException
     {
         public IntervalFormatException() { }
         public IntervalFormatException(string message) : base(message) { }

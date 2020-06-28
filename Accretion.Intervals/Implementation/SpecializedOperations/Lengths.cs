@@ -8,175 +8,175 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static int Length(this Interval<sbyte> interval) => IntervalLength<sbyte, int>(interval);
+        public static int Length(this CompositeInterval<sbyte> interval) => CompositeIntervalLength<sbyte, int>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static int Length(this Interval<byte> interval) => IntervalLength<byte, int>(interval);
+        public static int Length(this CompositeInterval<byte> interval) => CompositeIntervalLength<byte, int>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static int Length(this Interval<short> interval) => IntervalLength<short, int>(interval);
+        public static int Length(this CompositeInterval<short> interval) => CompositeIntervalLength<short, int>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static int Length(this Interval<ushort> interval) => IntervalLength<ushort, int>(interval);
+        public static int Length(this CompositeInterval<ushort> interval) => CompositeIntervalLength<ushort, int>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static long Length(this Interval<int> interval) => IntervalLength<int, long>(interval);
+        public static long Length(this CompositeInterval<int> interval) => CompositeIntervalLength<int, long>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static long Length(this Interval<uint> interval) => IntervalLength<uint, long>(interval);
+        public static long Length(this CompositeInterval<uint> interval) => CompositeIntervalLength<uint, long>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static ulong Length(this Interval<long> interval) => IntervalLength<long, ulong>(interval);
+        public static ulong Length(this CompositeInterval<long> interval) => CompositeIntervalLength<long, ulong>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static ulong Length(this Interval<ulong> interval) => IntervalLength<ulong, ulong>(interval);
+        public static ulong Length(this CompositeInterval<ulong> interval) => CompositeIntervalLength<ulong, ulong>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static float Length(this Interval<float> interval) => IntervalLength<float, float>(interval);
+        public static float Length(this CompositeInterval<float> interval) => CompositeIntervalLength<float, float>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static double Length(this Interval<double> interval) => IntervalLength<double, double>(interval);
+        public static double Length(this CompositeInterval<double> interval) => CompositeIntervalLength<double, double>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents. May overflow!
         /// </summary>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="OverflowException" />
-        public static decimal Length(this Interval<decimal> interval) => IntervalLength<decimal, decimal>(interval);
+        public static decimal Length(this CompositeInterval<decimal> interval) => CompositeIntervalLength<decimal, decimal>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static TimeSpan Length(this Interval<DateTime> interval) => IntervalLength<DateTime, TimeSpan>(interval);
+        public static TimeSpan Length(this CompositeInterval<DateTime> interval) => CompositeIntervalLength<DateTime, TimeSpan>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static TimeSpan Length(this Interval<DateTimeOffset> interval) => IntervalLength<DateTimeOffset, TimeSpan>(interval);
+        public static TimeSpan Length(this CompositeInterval<DateTimeOffset> interval) => CompositeIntervalLength<DateTimeOffset, TimeSpan>(interval);
 
         /// <summary>
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static R Length<T, R>(this Interval<T> interval) where T : ISubtractable<T, R> where R : IAddable<R> => IntervalLength<T, R>(interval);
+        public static R Length<T, R>(this CompositeInterval<T> interval) where T : ISubtractable<T, R> where R : IAddable<R> => CompositeIntervalLength<T, R>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between reduced values of its boundaries.
         /// </summary>
-        public static int Length(this ContinuousInterval<sbyte> interval) => ContinuousIntervalLength<sbyte, int>(interval);
+        public static int Length(this Interval<sbyte> interval) => IntervalLength<sbyte, int>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between reduced values of its boundaries.
         /// </summary>
-        public static int Length(this ContinuousInterval<byte> interval) => ContinuousIntervalLength<byte, int>(interval);
+        public static int Length(this Interval<byte> interval) => IntervalLength<byte, int>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between reduced values of its boundaries.
         /// </summary>
-        public static int Length(this ContinuousInterval<short> interval) => ContinuousIntervalLength<short, int>(interval);
+        public static int Length(this Interval<short> interval) => IntervalLength<short, int>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference reduced between values of its boundaries.
         /// </summary>
-        public static int Length(this ContinuousInterval<ushort> interval) => ContinuousIntervalLength<ushort, int>(interval);
+        public static int Length(this Interval<ushort> interval) => IntervalLength<ushort, int>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between reduced values of its boundaries.
         /// </summary>
-        public static long Length(this ContinuousInterval<int> interval) => ContinuousIntervalLength<int, long>(interval);
+        public static long Length(this Interval<int> interval) => IntervalLength<int, long>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between reduced values of its boundaries.
         /// </summary>
-        public static long Length(this ContinuousInterval<uint> interval) => ContinuousIntervalLength<uint, long>(interval);
+        public static long Length(this Interval<uint> interval) => IntervalLength<uint, long>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between reduced values of its boundaries.
         /// </summary>
-        public static ulong Length(this ContinuousInterval<long> interval) => ContinuousIntervalLength<long, ulong>(interval);
+        public static ulong Length(this Interval<long> interval) => IntervalLength<long, ulong>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between reduced values of its boundaries.
         /// </summary>
-        public static ulong Length(this ContinuousInterval<ulong> interval) => ContinuousIntervalLength<ulong, ulong>(interval);
+        public static ulong Length(this Interval<ulong> interval) => IntervalLength<ulong, ulong>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between values of its boundaries, irrespective of them being open or closed.
         /// </summary>
-        public static float Length(this ContinuousInterval<float> interval) => ContinuousIntervalLength<float, float>(interval);
+        public static float Length(this Interval<float> interval) => IntervalLength<float, float>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between values of its boundaries, irrespective of them being open or closed.
         /// </summary>
-        public static double Length(this ContinuousInterval<double> interval) => ContinuousIntervalLength<double, double>(interval);
+        public static double Length(this Interval<double> interval) => IntervalLength<double, double>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between values of its boundaries, irrespective of them being open or closed. May overflow!
         /// </summary>
         /// <exception cref="OverflowException" />
-        public static decimal Length(this ContinuousInterval<decimal> interval) => ContinuousIntervalLength<decimal, decimal>(interval);
+        public static decimal Length(this Interval<decimal> interval) => IntervalLength<decimal, decimal>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between values of its boundaries, irrespective of them being open or closed.
         /// </summary>
-        public static TimeSpan Length(this ContinuousInterval<DateTime> interval) => ContinuousIntervalLength<DateTime, TimeSpan>(interval);
+        public static TimeSpan Length(this Interval<DateTime> interval) => IntervalLength<DateTime, TimeSpan>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between values of its boundaries, irrespective of them being open or closed.
         /// </summary>
-        public static TimeSpan Length(this ContinuousInterval<DateTimeOffset> interval) => ContinuousIntervalLength<DateTimeOffset, TimeSpan>(interval);
+        public static TimeSpan Length(this Interval<DateTimeOffset> interval) => IntervalLength<DateTimeOffset, TimeSpan>(interval);
 
         /// <summary>
         /// Computes the length of this interval: difference between values of its boundaries.
         /// </summary>
-        public static R Length<T, R>(this ContinuousInterval<T> interval) where T : ISubtractable<T, R> => ContinuousIntervalLength<T, R>(interval);
+        public static R Length<T, R>(this Interval<T> interval) where T : ISubtractable<T, R> => IntervalLength<T, R>(interval);
 
-        internal static R IntervalLength<T, R>(Interval<T> interval) where T : IComparable<T>
+        internal static R CompositeIntervalLength<T, R>(CompositeInterval<T> interval) where T : IComparable<T>
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Generic length cannot inferred! This has to be worked around somehow.");
             /*
-            var intervals = interval.Intervals;
+            var intervals = interval.CompositeIntervals;
             var length = GenericSpecializer<R>.ZeroValueOfThisType;
 
             for (int i = 0; i < intervals.Count; i++)
             {
-                length = Add(length, ContinuousIntervalLength<T, R>(intervals[i]));
+                length = Add(length, IntervalLength<T, R>(intervals[i]));
             }
 
             return length;
             */
         }
 
-        private static R ContinuousIntervalLength<T, R>(ContinuousInterval<T> interval) where T : IComparable<T>
+        private static R IntervalLength<T, R>(Interval<T> interval) where T : IComparable<T>
         {
             if (interval.IsEmpty)
             {
@@ -319,7 +319,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static sbyte Length<T>(this Interval<T> interval) where T : ISubtractable<T, sbyte> => Lengths.IntervalLength<T, sbyte>(interval);
+        public static sbyte Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, sbyte> => Lengths.CompositeIntervalLength<T, sbyte>(interval);
     }
 
     public static class ByteLength
@@ -328,7 +328,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static byte Length<T>(this Interval<T> interval) where T : ISubtractable<T, byte> => Lengths.IntervalLength<T, byte>(interval);
+        public static byte Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, byte> => Lengths.CompositeIntervalLength<T, byte>(interval);
     }
     
     public static class Int16Length
@@ -337,7 +337,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static short Length<T>(this Interval<T> interval) where T : ISubtractable<T, short> => Lengths.IntervalLength<T, short>(interval);
+        public static short Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, short> => Lengths.CompositeIntervalLength<T, short>(interval);
     }
 
     public static class UInt16Length
@@ -346,7 +346,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static ushort Length<T>(this Interval<T> interval) where T : ISubtractable<T, ushort> => Lengths.IntervalLength<T, ushort>(interval);
+        public static ushort Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, ushort> => Lengths.CompositeIntervalLength<T, ushort>(interval);
     }
 
     public static class Int32Length
@@ -355,7 +355,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static int Length<T>(this Interval<T> interval) where T : ISubtractable<T, int> => Lengths.IntervalLength<T, int>(interval);
+        public static int Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, int> => Lengths.CompositeIntervalLength<T, int>(interval);
     }
 
     public static class UInt32Length
@@ -364,7 +364,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static uint Length<T>(this Interval<T> interval) where T : ISubtractable<T, uint> => Lengths.IntervalLength<T, uint>(interval);
+        public static uint Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, uint> => Lengths.CompositeIntervalLength<T, uint>(interval);
     }
 
     public static class Int64Length
@@ -373,7 +373,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static long Length<T>(this Interval<T> interval) where T : ISubtractable<T, long> => Lengths.IntervalLength<T, long>(interval);
+        public static long Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, long> => Lengths.CompositeIntervalLength<T, long>(interval);
     }
 
     public static class UInt64Length
@@ -382,7 +382,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static ulong Length<T>(this Interval<T> interval) where T : ISubtractable<T, ulong> => Lengths.IntervalLength<T, ulong>(interval);
+        public static ulong Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, ulong> => Lengths.CompositeIntervalLength<T, ulong>(interval);
     }
 
     public static class SingleLength
@@ -391,7 +391,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static float Length<T>(this Interval<T> interval) where T : ISubtractable<T, float> => Lengths.IntervalLength<T, float>(interval);
+        public static float Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, float> => Lengths.CompositeIntervalLength<T, float>(interval);
     }
 
     public static class DoubleLength
@@ -400,7 +400,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static double Length<T>(this Interval<T> interval) where T : ISubtractable<T, double> => Lengths.IntervalLength<T, double>(interval);
+        public static double Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, double> => Lengths.CompositeIntervalLength<T, double>(interval);
     }
 
     public static class DecimalLength
@@ -409,7 +409,7 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static decimal Length<T>(this Interval<T> interval) where T : ISubtractable<T, decimal> => Lengths.IntervalLength<T, decimal>(interval);
+        public static decimal Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, decimal> => Lengths.CompositeIntervalLength<T, decimal>(interval);
     }
 
     public static class TimeSpanLength
@@ -418,6 +418,6 @@ namespace Accretion.Intervals
         /// Computes the length of this interval: sum of the lengths of the continuous intervals it represents.
         /// </summary>
         /// <exception cref="ArgumentNullException" />
-        public static TimeSpan Length<T>(this Interval<T> interval) where T : ISubtractable<T, TimeSpan> => Lengths.IntervalLength<T, TimeSpan>(interval);
+        public static TimeSpan Length<T>(this CompositeInterval<T> interval) where T : ISubtractable<T, TimeSpan> => Lengths.CompositeIntervalLength<T, TimeSpan>(interval);
     }
 }
