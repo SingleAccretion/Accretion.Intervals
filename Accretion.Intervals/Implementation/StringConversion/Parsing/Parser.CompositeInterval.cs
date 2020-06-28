@@ -38,8 +38,8 @@ namespace Accretion.Intervals.StringConversion
                 }
             }
 
-            compositeInterval = Interval.Join(intervals);
             exception = null;
+            compositeInterval = Interval.Join(intervals);
             return true;
         }
     }
