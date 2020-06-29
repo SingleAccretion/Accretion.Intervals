@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using FsCheck;
+﻿using FsCheck;
 using FsCheck.Xunit;
-using Xunit;
 
 namespace Accretion.Intervals.Tests
 {
-    public class LowerBoundaryWithComparerTests
+    public class LowerBoundaryWithComparerTests : TestBase
     {
         [Property]
         public Property EqualityIsCommutative(LowerBoundary<double, DoubleComparerByExponent> left, LowerBoundary<double, DoubleComparerByExponent> right) => 
