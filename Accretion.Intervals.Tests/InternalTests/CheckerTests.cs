@@ -7,7 +7,7 @@ namespace Accretion.Intervals.Tests
 {
     public class CheckerTests
     {
-        public static IEnumerable<object[]> IsDefaultTestCases { get; } = MakeArbitraryData.Of(new List<(dynamic, bool)>()
+        public static IEnumerable<object[]> IsDefaultTestCases { get; } = Make.Data(new List<(dynamic, bool)>()
         {
             (new object(), false),
 

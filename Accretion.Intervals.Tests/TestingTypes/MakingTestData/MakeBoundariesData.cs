@@ -10,16 +10,16 @@ namespace Accretion.Intervals.Tests
     public static class MakeBoundariesData
     {
         public static IEnumerable<object[]> OfDouble<T>(IEnumerable<(string, string, T)> data) =>
-            MakeArbitraryData.Of(data.Select(x => (ToBoundaryOfDouble(x.Item1), ToBoundaryOfDouble(x.Item2), x.Item3)));
+            Make.Data(data.Select(x => (ToBoundaryOfDouble(x.Item1), ToBoundaryOfDouble(x.Item2), x.Item3)));
 
         public static IEnumerable<object[]> OfDouble(IEnumerable<(string, string)> data) =>
-            MakeArbitraryData.Of(data.Select(x => (ToBoundaryOfDouble(x.Item1), ToBoundaryOfDouble(x.Item2))));
+            Make.Data(data.Select(x => (ToBoundaryOfDouble(x.Item1), ToBoundaryOfDouble(x.Item2))));
 
         public static IEnumerable<object[]> OfDouble<T>(IEnumerable<(string, T)> data) =>
-            MakeArbitraryData.Of(data.Select(x => (ToBoundaryOfDouble(x.Item1), x.Item2)));
+            Make.Data(data.Select(x => (ToBoundaryOfDouble(x.Item1), x.Item2)));
 
         public static IEnumerable<object[]> OfDouble<T1, T2>(IEnumerable<(string, T1, T2)> data) =>
-            MakeArbitraryData.Of(data.Select(x => (ToBoundaryOfDouble(x.Item1), x.Item2, x.Item3)));
+            Make.Data(data.Select(x => (ToBoundaryOfDouble(x.Item1), x.Item2, x.Item3)));
         
         private static object ToBoundaryOfDouble(string s)
         {

@@ -7,7 +7,7 @@ namespace Accretion.Intervals.Tests
 {
     public class IntervalLengthTests
     {
-        public static IEnumerable<object[]> IntervalsOfSByte { get; } = MakeArbitraryData.Of(new List<(Interval<sbyte>, int)>()
+        public static IEnumerable<object[]> IntervalsOfSByte { get; } = Make.Data(new List<(Interval<sbyte>, int)>()
         {
             (Interval<sbyte>.Empty, 0),
 
@@ -19,7 +19,7 @@ namespace Accretion.Intervals.Tests
             (Interval.Create(BoundaryType.Closed, sbyte.MinValue, sbyte.MaxValue, BoundaryType.Closed), byte.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfByte { get; } = MakeArbitraryData.Of(new List<(Interval<byte>, int)>()
+        public static IEnumerable<object[]> IntervalsOfByte { get; } = Make.Data(new List<(Interval<byte>, int)>()
         {
             (Interval<byte>.Empty, 0),
 
@@ -31,7 +31,7 @@ namespace Accretion.Intervals.Tests
             (Interval.Create(BoundaryType.Closed, byte.MinValue, byte.MaxValue, BoundaryType.Closed), byte.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfInt16 { get; } = MakeArbitraryData.Of(new List<(Interval<short>, int)>()
+        public static IEnumerable<object[]> IntervalsOfInt16 { get; } = Make.Data(new List<(Interval<short>, int)>()
         {
             (Interval<short>.Empty, 0),
 
@@ -43,7 +43,7 @@ namespace Accretion.Intervals.Tests
             (Interval.Create(BoundaryType.Closed, short.MinValue, short.MaxValue, BoundaryType.Closed), ushort.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfUInt16 { get; } = MakeArbitraryData.Of(new List<(Interval<ushort>, int)>()
+        public static IEnumerable<object[]> IntervalsOfUInt16 { get; } = Make.Data(new List<(Interval<ushort>, int)>()
         {
             (Interval<ushort>.Empty, 0),
 
@@ -66,7 +66,7 @@ namespace Accretion.Intervals.Tests
             ($"[{int.MinValue},{int.MaxValue}]", uint.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfUInt32 { get; } = MakeArbitraryData.Of(new List<(Interval<uint>, long)>()
+        public static IEnumerable<object[]> IntervalsOfUInt32 { get; } = Make.Data(new List<(Interval<uint>, long)>()
         {
             (Interval<uint>.Empty, 0),
 
@@ -78,7 +78,7 @@ namespace Accretion.Intervals.Tests
             (Interval.Create(BoundaryType.Closed, uint.MinValue, uint.MaxValue, BoundaryType.Closed), uint.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfInt64 { get; } = MakeArbitraryData.Of(new List<(Interval<long>, ulong)>()
+        public static IEnumerable<object[]> IntervalsOfInt64 { get; } = Make.Data(new List<(Interval<long>, ulong)>()
         {
             (Interval<long>.Empty, 0),
 
@@ -90,7 +90,7 @@ namespace Accretion.Intervals.Tests
             (Interval.Create(BoundaryType.Closed, long.MinValue, long.MaxValue, BoundaryType.Closed), ulong.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfUInt64 { get; } = MakeArbitraryData.Of(new List<(Interval<ulong>, ulong)>()
+        public static IEnumerable<object[]> IntervalsOfUInt64 { get; } = Make.Data(new List<(Interval<ulong>, ulong)>()
         {
             (Interval<ulong>.Empty, 0),
 
@@ -102,7 +102,7 @@ namespace Accretion.Intervals.Tests
             (Interval.Create(BoundaryType.Closed, ulong.MinValue, ulong.MaxValue, BoundaryType.Closed), ulong.MaxValue),
         });
 
-        public static IEnumerable<object[]> IntervalsOfSingle { get; } = MakeArbitraryData.Of(new List<(Interval<float>, float)>()
+        public static IEnumerable<object[]> IntervalsOfSingle { get; } = Make.Data(new List<(Interval<float>, float)>()
         {
             (Interval<float>.Empty, 0),
 
@@ -128,7 +128,7 @@ namespace Accretion.Intervals.Tests
             ($"({MinDouble},{MaxDouble})", double.PositiveInfinity),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDecimal { get; } = MakeArbitraryData.Of(new List<(Interval<decimal>, decimal)>()
+        public static IEnumerable<object[]> IntervalsOfDecimal { get; } = Make.Data(new List<(Interval<decimal>, decimal)>()
         {
             (Interval<decimal>.Empty, 0),
 
@@ -138,7 +138,7 @@ namespace Accretion.Intervals.Tests
             (Interval.Create<decimal>(BoundaryType.Open, 0, 2, BoundaryType.Open), 2),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDateTime { get; } = MakeArbitraryData.Of(new List<(Interval<DateTime>, TimeSpan)>()
+        public static IEnumerable<object[]> IntervalsOfDateTime { get; } = Make.Data(new List<(Interval<DateTime>, TimeSpan)>()
         {
             (Interval<DateTime>.Empty, TimeSpan.Zero),
 
@@ -150,7 +150,7 @@ namespace Accretion.Intervals.Tests
             (Interval.Create(BoundaryType.Closed, DateTime.MinValue, DateTime.MaxValue, BoundaryType.Closed), TimeSpan.FromTicks(DateTime.MaxValue.Ticks)),
         });
 
-        public static IEnumerable<object[]> IntervalsOfDateTimeOffset { get; } = MakeArbitraryData.Of(new List<(Interval<DateTimeOffset>, TimeSpan)>()
+        public static IEnumerable<object[]> IntervalsOfDateTimeOffset { get; } = Make.Data(new List<(Interval<DateTimeOffset>, TimeSpan)>()
         {
             (Interval<DateTimeOffset>.Empty, TimeSpan.Zero),
 
