@@ -7,7 +7,6 @@ namespace Accretion.Intervals.Tests
     {
         public int Compare(double x, double y)
         {
-
             var rawResult = Math.Round(Math.Log10(x) - Math.Log10(y), MidpointRounding.AwayFromZero);
             return double.IsNaN(rawResult) ? 0 : (int)rawResult;
         }

@@ -18,7 +18,7 @@ namespace Accretion.Intervals.Tests
         [InlineData(BoundaryType.Open, BoundaryType.Closed, true)]
         [InlineData(BoundaryType.Open, BoundaryType.Open, false)]
         public void TestInvariantOverlapUpperIsLessThanUpper(BoundaryType firstUpperBoundaryType, BoundaryType secondUpperBoundaryType, bool expectedResult) =>
-            Assert.Equal(expectedResult, default(Invariant).LowerIsLessThanLower(firstUpperBoundaryType, secondUpperBoundaryType));
+            Assert.Equal(expectedResult, default(Invariant).UpperIsLessThanUpper(firstUpperBoundaryType, secondUpperBoundaryType));
 
         [Theory]
         [InlineData(BoundaryType.Closed, BoundaryType.Closed, true)]

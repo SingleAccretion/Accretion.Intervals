@@ -181,7 +181,7 @@ namespace Accretion.Intervals
                 return (DateTimeOffset)(object)that == (DateTimeOffset)(object)other;
             }
 
-            return ((IComparable<T>)that).CompareTo(other) == 0;
+            return that is null ? other is null : ((IComparable<T>)that).CompareTo(other) == 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
