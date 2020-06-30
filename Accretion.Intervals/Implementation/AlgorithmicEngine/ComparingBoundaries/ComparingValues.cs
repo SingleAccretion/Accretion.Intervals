@@ -27,8 +27,6 @@ namespace Accretion.Intervals
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEqualTo<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
         {
-            Debug.Assert(that != null && other != null);
-
             if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
             {
                 return IsEqualTo(that, other);
@@ -122,8 +120,6 @@ namespace Accretion.Intervals
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsEqualTo<T>(T that, T other)
         {
-            Debug.Assert(that != null && other != null);
-
             if (typeof(T) == typeof(sbyte))
             {
                 return (sbyte)(object)that == (sbyte)(object)other;
