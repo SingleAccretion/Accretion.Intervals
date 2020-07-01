@@ -2,7 +2,7 @@
 
 namespace Accretion.Intervals
 {
-    public readonly struct UpperBoundary<T> : IEquatable<UpperBoundary<T>>, IBoundary<T, DefaultValueComparer<T>> where T : IComparable<T>
+    public readonly struct UpperBoundary<T> : IEquatable<UpperBoundary<T>>, IBoundary<T> where T : IComparable<T>
     {
         private readonly UpperBoundary<T, DefaultValueComparer<T>> _boundary;
 

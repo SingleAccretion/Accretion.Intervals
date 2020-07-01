@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Accretion.Intervals
 {
-    public readonly struct LowerBoundary<T, TComparer> : IEquatable<LowerBoundary<T, TComparer>>, IBoundary<T, TComparer> where TComparer : struct, IComparer<T>
+    public readonly struct LowerBoundary<T, TComparer> : IEquatable<LowerBoundary<T, TComparer>>, IBoundary<T> where TComparer : struct, IComparer<T>
     {
         private readonly BoundaryType _type;
         private readonly T _value;
