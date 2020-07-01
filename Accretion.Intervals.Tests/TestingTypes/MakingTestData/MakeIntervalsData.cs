@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Accretion.Intervals.Tests
 {
+    /*
     public static class MakeCompositeIntervalsData
     {
         public static IEnumerable<object[]> OfDouble(IEnumerable<(string, string, string)> data) =>
@@ -74,4 +75,5 @@ namespace Accretion.Intervals.Tests
         private static CompositeInterval<Day> ToCompositeIntervalOfDay(string s) => CompositeInterval<Day>.Parse(s, Day.Parse);
         private static CompositeInterval<Coordinate> ToCompositeIntervalOfCoordinate(string s) => CompositeInterval<Coordinate>.Parse(s, Coordinate.Parse);
     }
+    */
 }

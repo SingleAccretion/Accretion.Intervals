@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Accretion.Intervals.Tests
+namespace Accretion.Intervals.Tests.Internal
 {
-    public class CheckerTests
+    public class CheckerIsDefaultTests
     {
-        public static IEnumerable<object[]> IsDefaultTestCases { get; } = Make.Data(new List<(dynamic, bool)>()
-        {
+        public static IEnumerable<object[]> IsDefaultTestCases { get; } = Make.Data(
             (new object(), false),
 
             (new byte(), true),
@@ -404,8 +403,8 @@ namespace Accretion.Intervals.Tests
             (new StructOfSize64(0b_0001_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000), false),
             (new StructOfSize64(0b_0010_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000), false),
             (new StructOfSize64(0b_0100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000), false),
-            (new StructOfSize64(0b_1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000), false),
-        });
+            (new StructOfSize64(0b_1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000), false)
+        );
 
         [Fact]
         public void NullShouldBeTheDefaultForReferenceTypes() => Assert.True(Checker.IsDefault<object>(null));

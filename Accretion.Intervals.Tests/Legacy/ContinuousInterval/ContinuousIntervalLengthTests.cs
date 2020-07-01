@@ -5,6 +5,7 @@ using static Accretion.Intervals.Tests.StringConstants;
 
 namespace Accretion.Intervals.Tests
 {
+    /*
     public class IntervalLengthTests
     {
         public static IEnumerable<object[]> IntervalsOfSByte { get; } = Make.Data(new List<(Interval<sbyte>, int)>()
@@ -264,24 +265,21 @@ namespace Accretion.Intervals.Tests
         [MemberData(nameof(IntervalsOfDateTimeOffset))]
         public void TestDateTimeOffsetLength(Interval<DateTimeOffset> interval, TimeSpan expectedResult) => Assert.Equal(expectedResult, interval.Length());
 
-        /*
         [Theory]
         [MemberData(nameof(IntervalsOfDayWithTimeSpanLength))]
         public void TestCustomStructDiscreteLengthWithPrimitiveResult(Interval<Day> interval, TimeSpan expectedResult) => Assert.Equal(expectedResult, interval.Length<Day, TimeSpan>());
-        */
 
         [Theory]
         [MemberData(nameof(IntervalsOfDayWithPeriodLength))]
         public void TestCustomStructDiscreteLengthWithCustomStructResult(Interval<Day> interval, Period expectedResult) => Assert.Equal(expectedResult, interval.Length<Day, Period>());
 
-        /*
         [Theory]
         [MemberData(nameof(IntervalsOfCoordinateWithLongLength))]
         public void TestCustomClassDiscereteLengthWithPrimitiveResult(Interval<Coordinate> interval, long expectedResult) => Assert.Equal(expectedResult, interval.Length<Coordinate, long>());
-        */
 
         [Theory]
         [MemberData(nameof(IntervalsOfCoordinateWithDistanceLength))]
         public void TestCustomClassDiscereteLengthWithCustomClassResult(Interval<Coordinate> interval, Distance expectedResult) => Assert.Equal(expectedResult, interval.Length<Coordinate, Distance>());
     }
+    */
 }

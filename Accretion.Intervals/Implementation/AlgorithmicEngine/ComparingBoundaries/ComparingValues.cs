@@ -162,10 +162,20 @@ namespace Accretion.Intervals
             }
             else if (typeof(T) == typeof(float))
             {
+                if (that is float.NaN)
+                {
+                    return other is float.NaN;
+                }
+
                 return (float)(object)that == (float)(object)other;
             }
             else if (typeof(T) == typeof(double))
             {
+                if (that is double.NaN)
+                {
+                    return other is double.NaN;
+                }
+
                 return (double)(object)that == (double)(object)other;
             }
             else if (typeof(T) == typeof(decimal))

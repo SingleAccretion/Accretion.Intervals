@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Accretion.Intervals.Tests
 {
+    /*
     internal static class MakeIntervalsData
     {
         public static IEnumerable<object[]> OfDouble<T>(IEnumerable<(string, string, T)> data) =>
@@ -76,4 +77,5 @@ namespace Accretion.Intervals.Tests
         private static Interval<Day> ToIntervalOfDay(string s) => Interval<Day>.Parse(s, Day.Parse);
         private static Interval<Coordinate> ToIntervalOfCoordinate(string s) => Interval<Coordinate>.Parse(s, Coordinate.Parse);
     }
+    */
 }

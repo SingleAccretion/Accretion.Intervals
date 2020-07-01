@@ -3,6 +3,7 @@ using static Accretion.Intervals.Tests.StringConstants;
 
 namespace Accretion.Intervals.Tests
 {
+    /*
     public class IntervalContainsTests
     {
         public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeCompositeIntervalsData.OfDouble(new List<(string, double, bool)>()
@@ -189,7 +190,6 @@ namespace Accretion.Intervals.Tests
             ("(-12,-10]∪[-6,-4]∪(-1,1)∪(4,6)∪[8,10]", 11, false),
         });
 
-        /*
         [Theory]
         [MemberData(nameof(IntervalsOfDouble))]
         public void TestPrimitiveContinuousContains(Interval<double> interval, double value, bool expectedResult) => Assert.Equal(expectedResult, interval.Contains(value));
@@ -197,6 +197,6 @@ namespace Accretion.Intervals.Tests
         [Theory]
         [MemberData(nameof(IntervalsOfInt))]
         public void TestPrimitiveDiscreteContains(Interval<int> interval, int value, bool expectedResult) => Assert.Equal(expectedResult, interval.Contains(value));
-        */
     }
+    */
 }

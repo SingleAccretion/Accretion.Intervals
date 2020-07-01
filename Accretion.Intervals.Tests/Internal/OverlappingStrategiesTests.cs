@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Accretion.Intervals.Tests
+namespace Accretion.Intervals.Tests.Internal
 {
     public class OverlappingStrategiesTests
     {

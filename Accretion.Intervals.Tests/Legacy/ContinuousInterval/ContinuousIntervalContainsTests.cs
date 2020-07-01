@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using static Accretion.Intervals.Tests.StringConstants;
-using Xunit;
-
-namespace Accretion.Intervals.Tests
+﻿namespace Accretion.Intervals.Tests
 {
+    /*
     public class ContinuousIntervalContainsTests
     {
         public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeIntervalsData.OfDouble(new List<(string, double, bool)>()
@@ -137,4 +132,5 @@ namespace Accretion.Intervals.Tests
         [MemberData(nameof(IntervalsOfCoordinate))]
         public void TestCustomClassDiscreteContains(ContinuousInterval<Coordinate> interval, Coordinate value, bool expectedResult) => Assert.Equal(expectedResult, interval.Contains(value));
     }
+    */
 }

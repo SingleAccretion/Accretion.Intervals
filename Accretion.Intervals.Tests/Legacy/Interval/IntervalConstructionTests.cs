@@ -3,6 +3,7 @@ using static Accretion.Intervals.Tests.StringConstants;
 
 namespace Accretion.Intervals.Tests
 {
+	/*
     public class IntervalConstructionTests
     {
 		public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeCompositeIntervalsData.OfDouble<string>(new List<(string, string)>()
@@ -106,7 +107,6 @@ namespace Accretion.Intervals.Tests
 			($"{Empty}∪{Empty}∪{Empty}∪[5,10]", "[5,10]"),
 		});
 
-		/*
 		[Fact]
 		public void IntervalConstructedWithEmptyCollectionShouldBeEmpty() => Assert.True(new Interval<double>(Array.Empty<ContinuousInterval<double>>()).IsEmpty);
 
@@ -121,6 +121,6 @@ namespace Accretion.Intervals.Tests
 		[Theory]
 		[MemberData(nameof(IntervalsOfCoordinate))]
 		public void TestCustomClassDiscereteConstruction(Interval<Coordinate> interval, string expectedResult) => Assert.Equal(expectedResult, interval.ToString());
-		*/
 	}
+	*/
 }

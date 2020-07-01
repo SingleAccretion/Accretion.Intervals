@@ -20,8 +20,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Accretion.Intervals\Accretion.Intervals.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="PublicTests\" />
-  </ItemGroup>
 </Project>

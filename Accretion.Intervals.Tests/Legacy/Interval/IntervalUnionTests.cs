@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using static Accretion.Intervals.Tests.StringConstants;
-
-namespace Accretion.Intervals.Tests
+﻿namespace Accretion.Intervals.Tests
 {
+    /*
     public class IntervalUnionTests
     {
 		public static IEnumerable<object[]> IntervalsOfDouble { get; } = MakeCompositeIntervalsData.OfDouble(new List<(string, string, string)>()
@@ -75,6 +73,6 @@ namespace Accretion.Intervals.Tests
 		[MemberData(nameof(IntervalsOfCoordinate))]
 		public void TestCustomClassDiscreteUnion(Interval<Coordinate> firstInterval, Interval<Coordinate> secondInterval, Interval<Coordinate> expectedResult) => 
 			Assert.Equal(expectedResult, firstInterval.Union(secondInterval), Interval<Coordinate>.LinearComparerByValue);
-		*/
 	}
+	*/
 }

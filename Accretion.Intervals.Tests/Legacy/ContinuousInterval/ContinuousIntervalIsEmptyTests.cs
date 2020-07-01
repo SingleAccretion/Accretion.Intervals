@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using static Accretion.Intervals.Tests.StringConstants;
-using Xunit;
-
-namespace Accretion.Intervals.Tests
+﻿namespace Accretion.Intervals.Tests
 {
+    /*
     public class ContinuousIntervalIsEmptyTests
     {
         public static IEnumerable<object[]> IntervalsOfDoubles { get; } = MakeIntervalsData.OfDouble(new List<(string, bool)>
@@ -123,4 +118,5 @@ namespace Accretion.Intervals.Tests
         [MemberData(nameof(IntervalsOfCoordinates))]
         public void TestCustomDiscreteClassIsEmpty(ContinuousInterval<Coordinate> interval, bool expectedValue) => Assert.Equal(expectedValue, interval.IsEmpty);
     }
+    */
 }

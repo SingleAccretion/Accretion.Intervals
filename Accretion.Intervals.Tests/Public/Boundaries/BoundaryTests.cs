@@ -3,9 +3,9 @@ using FsCheck.Xunit;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Accretion.Intervals.Tests
+namespace Accretion.Intervals.Tests.Boundaries
 {
-    public abstract class BoundaryTests<TBoundary, T, TComparer> : BaseTests where TComparer : struct, IComparer<T> where TBoundary : IBoundary<T>
+    public abstract class BoundaryTests<TBoundary, T, TComparer> : TestsBase where TComparer : struct, IComparer<T> where TBoundary : IBoundary<T>
     {
         [Property]
         public Property EqualityIsCommutative(TBoundary left, TBoundary right) =>
@@ -29,6 +29,6 @@ namespace Accretion.Intervals.Tests
 
         [Property]
         public Property ValuePropertyIsIdempotent(TBoundary boundary) =>
-            (boundary.Value.IsEqualTo<T, TComparer>(boundary.Value) || boundary.Value is double.NaN).ToProperty();
+            boundary.Value.IsEqualTo<T, TComparer>(boundary.Value).ToProperty();
     }
 }

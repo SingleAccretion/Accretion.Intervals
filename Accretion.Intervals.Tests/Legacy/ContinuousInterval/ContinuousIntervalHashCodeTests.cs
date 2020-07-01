@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Accretion.Intervals.Tests
 {
+    /*
     public class ContinuousIntervalHashCodeTests
     {
         public static IEnumerable<object[]> IntervalsOfDoubles { get; } = MakeIntervalsData.OfDouble(new List<(string, string, bool)>()
@@ -74,4 +75,5 @@ namespace Accretion.Intervals.Tests
         [MemberData(nameof(IntervalsOfCoordinates))]
         public void TestCustomClassDiscreteHashCode(ContinuousInterval<Coordinate> first, ContinuousInterval<Coordinate> second, bool hashCodesAreEqual) => Assert.Equal(hashCodesAreEqual, first.GetHashCode() == second.GetHashCode());
     }
+    */
 }

@@ -3,7 +3,7 @@ using FsCheck.Xunit;
 using System;
 using System.Collections.Generic;
 
-namespace Accretion.Intervals.Tests
+namespace Accretion.Intervals.Tests.Boundaries
 {
     public class LowerBoundaryOfDoubleWithComparerTests : LowerBoundaryTests<double, DoubleComparerByExponent> { }
     public class LowerBoundaryOfValueClassWithComparerTests : LowerBoundaryTests<ValueClass, ValueClassBackwardsComparer> { }

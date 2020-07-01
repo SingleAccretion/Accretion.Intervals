@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Accretion.Intervals.Tests
 {
+    /*
     public class ContinuousIntervalEqualityTests
     {
         public static IEnumerable<object[]> IntervalsOfDoubles { get; } = MakeIntervalsData.OfDouble(new List<(string, string, bool)>
@@ -66,4 +67,5 @@ namespace Accretion.Intervals.Tests
         [MemberData(nameof(IntervalsOfCoordinates))]
         public void TestCustomClassDiscreteEquality(ContinuousInterval<Coordinate> first, ContinuousInterval<Coordinate> second, bool expectedResult) => Assert.Equal(expectedResult, first.Equals(second));
     }
+    */
 }
