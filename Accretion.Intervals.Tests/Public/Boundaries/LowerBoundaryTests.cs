@@ -1,7 +1,7 @@
-﻿using FsCheck;
-using FsCheck.Xunit;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using FsCheck;
+using FsCheck.Xunit;
 
 namespace Accretion.Intervals.Tests.Boundaries
 {

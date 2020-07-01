@@ -86,7 +86,7 @@ namespace Accretion.Intervals
 				return float.IsNaN((float)(object)value);
             }
 
-			return true;
+			return false;
         }
 
 		//We have to basically copy this from the BCL because otherwise the codegen is surprisingly suboptimal.
