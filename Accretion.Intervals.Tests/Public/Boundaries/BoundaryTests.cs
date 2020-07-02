@@ -21,7 +21,7 @@ namespace Accretion.Intervals.Tests.Boundaries
 
         [Property]
         public Property ToStringEqualityIsBoundToBoundaryEquality(TBoundary left, TBoundary right) =>
-            (left.ToString().Equals(right.ToString()) == left.Equals(right)).ToProperty();
+            (left.Equals(right) == left.ToString().Equals(right.ToString())).ToProperty();
 
         [Property]
         public Property TypePropertyIsIdempotent(TBoundary boundary) =>

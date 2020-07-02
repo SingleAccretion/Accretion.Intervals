@@ -92,7 +92,7 @@ namespace Accretion.Intervals
 		//We have to basically copy this from the BCL because otherwise the codegen is surprisingly suboptimal.
 		//This will have to be independently tested against BCL for correctness.
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsUtcDateTime<T>(T value)
+		public static bool IsNonUtcDateTime<T>(T value)
 		{
 			if (typeof(T) == typeof(DateTime))
 			{
@@ -101,10 +101,10 @@ namespace Accretion.Intervals
 
 				var dateTime = (DateTime)(object)value;
 				var dateTimeData = Unsafe.As<DateTime, ulong>(ref dateTime);
-				return (dateTimeData & FlagsMask) == KindUtc;
+				return (dateTimeData & FlagsMask) != KindUtc;
 			}
 
-			return false;
+			return true;
 		}
 	}
 }

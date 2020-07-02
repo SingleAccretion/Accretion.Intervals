@@ -9,14 +9,14 @@ namespace Accretion.Intervals.Tests
         {
             if (y is null)
             {
-                return x is null ? 0 : -1;
+                return x is null ? ComparingValues.IsEqual : ComparingValues.IsLess;
             }
             if (x is null)
             {
-                return y is null ? 0 : 1;
+                return y is null ? ComparingValues.IsEqual : ComparingValues.IsGreater;
             }
 
-            return Math.Clamp(y.Value - x.Value, -1, 1);
+            return Math.Clamp(y.Value - x.Value, ComparingValues.IsLess, ComparingValues.IsGreater);
         }
     }
 }

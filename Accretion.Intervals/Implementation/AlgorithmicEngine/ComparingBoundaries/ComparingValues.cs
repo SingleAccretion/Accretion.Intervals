@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Accretion.Intervals
@@ -14,8 +13,6 @@ namespace Accretion.Intervals
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLessThan<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
         {
-            Debug.Assert(that != null && other != null);
-
             if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
             {
                 return IsLessThan(that, other);
@@ -38,8 +35,6 @@ namespace Accretion.Intervals
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsGreaterThan<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
         {
-            Debug.Assert(that != null && other != null);
-
             if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
             {
                 return IsGreaterThan(that, other);
@@ -51,8 +46,6 @@ namespace Accretion.Intervals
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsLessThan<T>(T that, T other)
         {
-            Debug.Assert(that != null && other != null);
-
             if (typeof(T) == typeof(sbyte))
             {
                 return (sbyte)(object)that < (sbyte)(object)other;
@@ -107,14 +100,14 @@ namespace Accretion.Intervals
             }
             else if (typeof(T) == typeof(DateTime))
             {
-                return (DateTime)(object)that < (DateTime)(object)other;
+                return Checker.IsNonUtcDateTime(that) ? !Checker.IsNonUtcDateTime(other) : (DateTime)(object)that < (DateTime)(object)other;
             }
             else if (typeof(T) == typeof(DateTimeOffset))
             {
                 return (DateTimeOffset)(object)that < (DateTimeOffset)(object)other;
             }
-
-            return ((IComparable<T>)that).CompareTo(other) < 0;
+            
+            return Checker.IsNull(that) ? !Checker.IsNull(other) : ((IComparable<T>)that).CompareTo(other) < 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -162,21 +155,11 @@ namespace Accretion.Intervals
             }
             else if (typeof(T) == typeof(float))
             {
-                if (that is float.NaN)
-                {
-                    return other is float.NaN;
-                }
-
-                return (float)(object)that == (float)(object)other;
+                return Checker.IsNaN(that) ? Checker.IsNaN(other) : (float)(object)that == (float)(object)other;
             }
             else if (typeof(T) == typeof(double))
             {
-                if (that is double.NaN)
-                {
-                    return other is double.NaN;
-                }
-
-                return (double)(object)that == (double)(object)other;
+                return Checker.IsNaN(that) ? Checker.IsNaN(other) : (double)(object)that == (double)(object)other;
             }
             else if (typeof(T) == typeof(decimal))
             {
@@ -184,21 +167,19 @@ namespace Accretion.Intervals
             }
             else if (typeof(T) == typeof(DateTime))
             {
-                return (DateTime)(object)that == (DateTime)(object)other;
+                return Checker.IsNonUtcDateTime(that) ? Checker.IsNonUtcDateTime(other) : (DateTime)(object)that == (DateTime)(object)other;
             }
             else if (typeof(T) == typeof(DateTimeOffset))
             {
                 return (DateTimeOffset)(object)that == (DateTimeOffset)(object)other;
             }
 
-            return that is null ? other is null : ((IComparable<T>)that).CompareTo(other) == 0;
+            return Checker.IsNull(that) ? Checker.IsNull(other) : ((IComparable<T>)that).CompareTo(other) == 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsGreaterThan<T>(T that, T other)
         {
-            Debug.Assert(that != null && other != null);
-
             if (typeof(T) == typeof(sbyte))
             {
                 return (sbyte)(object)that > (sbyte)(object)other;
@@ -253,14 +234,14 @@ namespace Accretion.Intervals
             }
             else if (typeof(T) == typeof(DateTime))
             {
-                return (DateTime)(object)that > (DateTime)(object)other;
+                return !Checker.IsNonUtcDateTime(that) && (DateTime)(object)that > (DateTime)(object)other;
             }
             else if (typeof(T) == typeof(DateTimeOffset))
             {
                 return (DateTimeOffset)(object)that > (DateTimeOffset)(object)other;
             }
 
-            return ((IComparable<T>)that).CompareTo(other) > 0;
+            return !Checker.IsNull(that) && ((IComparable<T>)that).CompareTo(other) > 0;
         }
     }
 }

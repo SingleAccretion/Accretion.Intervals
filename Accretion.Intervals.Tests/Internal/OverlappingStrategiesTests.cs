@@ -2,7 +2,7 @@
 
 namespace Accretion.Intervals.Tests.Internal
 {
-    public class OverlappingStrategiesTests
+    public class OverlappingStrategiesTests : TestsBase
     {
         [Theory]
         [InlineData(BoundaryType.Closed, BoundaryType.Closed, false)]

@@ -46,7 +46,7 @@ namespace Accretion.Intervals
             {
                 exception = IntervalCreationExceptions.BoundariesCannotBeNaN;
             }
-            else if (typeof(T) == typeof(DateTime) && !(Checker.IsUtcDateTime(lowerBoundaryValue) && Checker.IsUtcDateTime(upperBoundaryValue)))
+            else if (typeof(T) == typeof(DateTime) && Checker.IsNonUtcDateTime(lowerBoundaryValue) && Checker.IsNonUtcDateTime(upperBoundaryValue))
             {
                 exception = IntervalCreationExceptions.DateTimeBoundariesMustBeUtc;
             }

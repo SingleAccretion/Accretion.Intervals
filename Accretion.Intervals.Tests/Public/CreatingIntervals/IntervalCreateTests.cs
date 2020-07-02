@@ -22,8 +22,7 @@ namespace Accretion.Intervals.Tests.CreatingIntervals
             }
             else
             {
-                return IsForbiddenBoundaryValue(lowerBoundaryValue) || IsForbiddenBoundaryValue(upperBoundaryValue) ||
-                       BoundariesProduceEmptyInterval(lowerBoundaryType, lowerBoundaryValue, upperBoundaryValue, upperBoundaryType) ?
+                return !Facts.BoundariesAreValid(new LowerBoundary<T, TComparer>(lowerBoundaryValue, lowerBoundaryType), new UpperBoundary<T, TComparer>(upperBoundaryValue, upperBoundaryType)) ?
                        (result.Exception is ArgumentException).ToProperty() :
                        false.ToProperty();
             }
@@ -42,30 +41,6 @@ namespace Accretion.Intervals.Tests.CreatingIntervals
         [Property]
         public Property CreateSingletonIsTheSameAsCreateWithClosedBoundariesAndOneValue(T value) =>
             Result.From(() => Interval.Create<T, TComparer>(BoundaryType.Closed, value, value, BoundaryType.Closed)).
-            Equals(Result.From(() => Interval.CreateSingleton<T, TComparer>(value))).ToProperty();
-
-        private static bool BoundariesProduceEmptyInterval(BoundaryType lowerBoundaryType, T lowerBoundaryValue, T upperBoundaryValue, BoundaryType upperBoundaryType)
-        {
-            if (upperBoundaryValue.IsLessThan<T, TComparer>(lowerBoundaryValue))
-            {
-                return true;
-            }
-            else if (upperBoundaryValue.IsEqualTo<T, TComparer>(lowerBoundaryValue))
-            {
-                return lowerBoundaryType == BoundaryType.Open || upperBoundaryType == BoundaryType.Open;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private static bool IsForbiddenBoundaryValue(T value) => value switch
-        {
-            float.NaN => true,
-            double.NaN => true,
-            DateTime dateTime when dateTime.Kind != DateTimeKind.Utc => true,
-            _ => false
-        };
+            Equals(Result.From(() => Interval.CreateSingleton<T, TComparer>(value))).ToProperty();        
     }
 }

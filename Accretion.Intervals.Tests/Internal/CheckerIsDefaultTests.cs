@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Accretion.Intervals.Tests.Internal
 {
-    public class CheckerIsDefaultTests
+    public class CheckerIsDefaultTests : TestsBase
     {
         public static IEnumerable<object[]> IsDefaultTestCases { get; } = Make.Data(
             (new object(), false),

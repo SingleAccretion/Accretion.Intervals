@@ -19,9 +19,9 @@ namespace Accretion.Intervals
 
         public bool IsEmpty => Checker.IsDefault(this);
 
-        public LowerBoundary<T, TComparer> LowerBoundary => throw new NotImplementedException();
-        public UpperBoundary<T, TComparer> UpperBoundary => throw new NotImplementedException();
-        
+        public LowerBoundary<T, TComparer> LowerBoundary => !IsEmpty ? _lowerBoundary : Throw.Exception<LowerBoundary<T, TComparer>>(IntervalExceptions.EmptyIntervalsDoNotHaveBoundaries);
+        public UpperBoundary<T, TComparer> UpperBoundary => !IsEmpty ? _upperBoundary : Throw.Exception<UpperBoundary<T, TComparer>>(IntervalExceptions.EmptyIntervalsDoNotHaveBoundaries);
+
         public static bool TryParse(string input, TryParse<T> elementParser, out Interval<T, TComparer> interval)
         {
             if (input is null)
@@ -94,7 +94,17 @@ namespace Accretion.Intervals
 
         public static Interval<T, TComparer> Parse(ReadOnlySpan<char> input) => Parser.ParseInterval<T, TComparer>(input, ElementParsers.GetSpanElementParser<T>());
 
-        public bool Contains(T value) => throw new NotImplementedException();
+        public bool Contains(T value)
+        {
+            if (IsEmpty)
+            {
+                return false;
+            }
+
+            return (value.IsGreaterThan<T, TComparer>(LowerBoundary.Value) && value.IsLessThan<T, TComparer>(UpperBoundary.Value)) ||
+                   (value.IsEqualTo<T, TComparer>(LowerBoundary.Value) && LowerBoundary.IsClosed) ||
+                   (value.IsEqualTo<T, TComparer>(UpperBoundary.Value) && UpperBoundary.IsClosed);
+        }
 
         public override bool Equals(object obj) => obj is Interval<T, TComparer> interval && Equals(interval);
         public bool Equals(Interval<T, TComparer> other) => _lowerBoundary == other._lowerBoundary && _upperBoundary == other._upperBoundary;

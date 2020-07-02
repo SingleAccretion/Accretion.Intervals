@@ -52,6 +52,8 @@ namespace Accretion.Intervals
 
         public static Interval<T> Parse(ReadOnlySpan<char> input) => Interval<T, DefaultValueComparer<T>>.Parse(input);
 
+        public bool Contains(T value) => _interval.Contains(value);
+
         public override bool Equals(object obj) => obj is Interval<T> interval && Equals(interval);
         public bool Equals(Interval<T> other) => _interval == other._interval;
         public override int GetHashCode() => HashCode.Combine(_interval);
