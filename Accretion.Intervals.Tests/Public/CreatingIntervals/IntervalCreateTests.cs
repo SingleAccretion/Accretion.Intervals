@@ -12,20 +12,19 @@ namespace Accretion.Intervals.Tests.CreatingIntervals
         {
             var result = Result.From(() => Interval.Create<T, TComparer>(lowerBoundaryType, lowerBoundaryValue, upperBoundaryValue, upperBoundaryType));
 
-            if (result.HasValue)
+            if (lowerBoundaryValue is null || upperBoundaryValue is null)
             {
-                return (!result.Value.IsEmpty).ToProperty();
+                return (!result.HasValue && result.Exception is ArgumentNullException).ToProperty();
             }
-            else if (lowerBoundaryValue is null || upperBoundaryValue is null)
+            else if (InvalidBoundaryValue.IsInvalidBoundaryValue<T, TComparer>(lowerBoundaryValue) ||
+                     InvalidBoundaryValue.IsInvalidBoundaryValue<T, TComparer>(upperBoundaryValue) ||
+                     BoundariesProduceEmptyInterval(lowerBoundaryType, lowerBoundaryValue, upperBoundaryValue, upperBoundaryType))
             {
-                return (result.Exception is ArgumentNullException).ToProperty();
+                return (!result.HasValue && result.Exception is ArgumentException).ToProperty();
             }
             else
             {
-                return ((Spec.IsInvalidBoundaryValue<T, TComparer>(lowerBoundaryValue) || 
-                         Spec.IsInvalidBoundaryValue<T, TComparer>(upperBoundaryValue) ||
-                         BoundariesProduceEmptyInterval(lowerBoundaryType, lowerBoundaryValue, upperBoundaryValue, upperBoundaryType)) &&
-                        (result.Exception is ArgumentException)).ToProperty();
+                return (result.HasValue && !result.Value.IsEmpty).ToProperty();
             }
         }
 

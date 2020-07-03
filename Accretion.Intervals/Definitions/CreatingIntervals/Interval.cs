@@ -51,6 +51,10 @@ namespace Accretion.Intervals
             {
                 exception = IntervalCreationExceptions.DateTimeBoundariesMustBeUtc;
             }
+            else if (default(TComparer).IsInvalidBoundaryValue(lowerBoundaryValue) || default(TComparer).IsInvalidBoundaryValue(upperBoundaryValue))
+            {
+                exception = IntervalCreationExceptions.BoundariesMustBeValid;
+            }
             else
             {
                 var lowerBoundary = new LowerBoundary<T, TComparer>(lowerBoundaryValue, lowerBoundaryType);

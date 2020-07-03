@@ -1,11 +1,9 @@
-﻿using Accretion.Intervals.Tests;
+﻿using System;
+using System.Text;
+using Accretion.Intervals.Tests;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
 using BenchmarkDotNet.Running;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 
 namespace Accretion.Intervals
 {
@@ -20,12 +18,9 @@ namespace Accretion.Intervals
 
         private static void Main()
         {
-            var interval = Interval.CreateClosed(new DateTime(1963, 1, 1, 1, 1, 1, (DateTimeKind)3), new DateTime(1900, 1, 1, 1, 1, 1, DateTimeKind.Unspecified));
+            var interval = Interval.CreateClosed<ValueClass, PositiveValueClassComparer>(new ValueClass(-1), new ValueClass(2));
 
-            Console.WriteLine(interval.Contains(new DateTime(2077, 1, 1, 1, 1, 1, DateTimeKind.Local)));
-            Console.WriteLine(interval.Contains(new DateTime(2077, 1, 1, 1, 1, 1, DateTimeKind.Unspecified)));
-            var a = 1.ToString();
-            //InfiniteLoop();
+            Console.WriteLine(interval);
 
             BenchmarkRunner.Run<Profiled>();
             //Console.ReadLine();
