@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Accretion.Intervals.Tests.AtomicInterval
 {
-    public abstract class IntervalTests<T, TComparer> : TestsBase where TComparer : struct, IComparer<T>
+    public abstract class IntervalTests<T, TComparer> : TestsBase where TComparer : struct, IBoundaryValueComparer<T>
     {
         [Fact]
         public void DefaultIntervalIsEmptyInterval() => Assert.Equal(default, Interval<T, TComparer>.Empty);
@@ -31,8 +31,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             }
             else
             {
-                return (lowerBoundaryResult.HasValue && upperBoundaryResult.HasValue &&
-                        Facts.BoundariesAreValid(lowerBoundaryResult.Value, upperBoundaryResult.Value)).ToProperty();
+                return (lowerBoundaryResult.HasValue && upperBoundaryResult.HasValue).ToProperty();
             }
         }
 
@@ -87,7 +86,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             (value.IsLessThan<T, TComparer>(interval.UpperBoundary.Value) && value.IsGreaterThan<T, TComparer>(interval.LowerBoundary.Value)).Implies(interval.Contains(value));
 
         [Property]
-        public Property IntervalsDoNotContainForbiddenValues(Interval<T, TComparer> interval, ForbiddenBoundaryValue<T> value) =>
+        public Property IntervalsDoNotContainForbiddenValues(Interval<T, TComparer> interval, InvalidBoundaryValue<T, TComparer> value) =>
             (value.DoesExist && !interval.Contains(value.Value)).Or(!value.DoesExist);
     }
 }

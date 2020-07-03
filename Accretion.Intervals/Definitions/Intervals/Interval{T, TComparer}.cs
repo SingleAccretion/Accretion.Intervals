@@ -1,6 +1,6 @@
-﻿using Accretion.Intervals.StringConversion;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Accretion.Intervals.StringConversion;
 
 namespace Accretion.Intervals
 {

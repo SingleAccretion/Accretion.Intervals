@@ -5,12 +5,12 @@
     <Authors>Accretion</Authors>
     <Company />
     <Product />
-    <PackageLicenseExpression>MIT-0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/RtmK/Accretion/tree/master/Accretion.Intervals</PackageProjectUrl>
     <PackageReleaseNotes>Fixed a bug where some intervals of integral types would have incorrect IsEmty values. BoolExtensions is no longer a part of the public API.</PackageReleaseNotes>
     <Description>Intervals that represent a set of valid values between generic IComparables and can have an arbitrary number of pairs of lower and upper bounds, closed or open (for example: (-9,10]∪(80,100]). Support Contains - O(log n), Union, SymmetricDifference, Intersect, Complement and Length - O(n) operations.</Description>
-    <PackageTags>intervals ranges</PackageTags>
-    <LangVersion>8</LangVersion>    
+    <PackageTags>intervals Ranges</PackageTags>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -34,4 +34,7 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Implementation\NullableAttributes\" />
+  </ItemGroup>
 </Project>

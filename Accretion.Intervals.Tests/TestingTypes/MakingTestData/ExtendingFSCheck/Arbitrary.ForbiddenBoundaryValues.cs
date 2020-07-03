@@ -4,10 +4,10 @@ namespace Accretion.Intervals.Tests
 {
     public partial class Arbitrary
     {
-        public static Arbitrary<ForbiddenBoundaryValue<T>> Values<T>() =>
-            Arb.From(!Facts.HasForbiddenValues<T>() ? Gen.Constant(new ForbiddenBoundaryValue<T>()) :
+        public static Arbitrary<InvalidBoundaryValue<T, TComparer>> Values<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> =>
+            Arb.From(!Spec.HasInvalidValues<T, TComparer>() ? Gen.Constant(new InvalidBoundaryValue<T, TComparer>()) :
                       from value in Arb.Generate<T>()
-                      where Facts.IsForbiddenBoundaryValue(value)
-                      select new ForbiddenBoundaryValue<T>(value));
+                      where Spec.IsInvalidBoundaryValue<T, TComparer>(value)
+                      select new InvalidBoundaryValue<T, TComparer>(value));
     }
 }

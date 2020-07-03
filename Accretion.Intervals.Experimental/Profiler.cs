@@ -1,8 +1,11 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using Accretion.Intervals.Tests;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
 using BenchmarkDotNet.Running;
 using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace Accretion.Intervals
 {
@@ -17,24 +20,15 @@ namespace Accretion.Intervals
 
         private static void Main()
         {
-            void InfiniteLoop()
-            {
-                var a = new Profiled() { IntervalsComplexity = 10 };
-                a.Setup();
-
-                while (true)
-                {
-                    a.TestNormal();
-                    //a.TestExperimental();
-                }
-            }
-
+            var interval = Interval.Create<double, DoubleComparerByExponent>(BoundaryType.Closed, double.PositiveInfinity, double.Epsilon, BoundaryType.Open);
+            Console.WriteLine(interval);
+            var a = 1.ToString();
             //InfiniteLoop();
 
             BenchmarkRunner.Run<Profiled>();
             //Console.ReadLine();
         }
-    }    
+    }
 
     //[HardwareCounters(HardwareCounter.BranchInstructions, HardwareCounter.BranchMispredictions, HardwareCounter.CacheMisses, HardwareCounter.InstructionRetired)]
     [InliningDiagnoser(logFailuresOnly: true, allowedNamespaces: new[] { "Accretion.Intervals" })]

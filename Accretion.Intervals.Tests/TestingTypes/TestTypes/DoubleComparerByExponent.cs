@@ -3,32 +3,34 @@ using System.Collections.Generic;
 
 namespace Accretion.Intervals.Tests
 {
-    public readonly struct DoubleComparerByExponent : IComparer<double>
+    public readonly struct DoubleComparerByExponent : IBoundaryValueComparer<double>
     {
         public int Compare(double x, double y)
         {
-            var xExp = Math.Log10(x);
-            var yExp = Math.Log10(y);
+            static double Normalize(double exp) => exp switch
+            {
+                double.PositiveInfinity => Math.Log10(double.MaxValue),
+                double.NegativeInfinity => Math.Log10(double.MinValue),
+                _ => exp
+            };
+
+            var xExp = Normalize(Math.Log10(x));
+            var yExp = Normalize(Math.Log10(y));
 
             return (xExp, yExp) switch
             {
-                (double.PositiveInfinity, double.NegativeInfinity) => ComparingValues.IsGreater,
-                (double.PositiveInfinity, double.PositiveInfinity) => ComparingValues.IsEqual,
-                (double.PositiveInfinity, double.NaN) => ComparingValues.IsGreater,
-                (double.PositiveInfinity, _) => ComparingValues.IsGreater,
-
-                (double.NegativeInfinity, double.NegativeInfinity) => ComparingValues.IsEqual,
-                (double.NegativeInfinity, double.PositiveInfinity) => ComparingValues.IsLess,
-                (double.NegativeInfinity, double.NaN) => ComparingValues.IsGreater,
-                (double.NegativeInfinity, _) => ComparingValues.IsLess,
-
-                (double.NaN, double.PositiveInfinity) => ComparingValues.IsLess,
-                (double.NaN, double.NegativeInfinity) => ComparingValues.IsLess,
                 (double.NaN, double.NaN) => ComparingValues.IsEqual,
                 (double.NaN, _) => ComparingValues.IsLess,
+                (_, double.NaN) => ComparingValues.IsGreater,
 
-                (_, _) => (int)(xExp - yExp)
+                _ => (int)xExp - (int)yExp
             };
         }
+
+        public int GetHashCode(double value) => (int)Math.Log10(value);
+
+        public bool IsInvalidBoundaryValue(double value) => false;
+        
+        public string ToString(double value, string format, IFormatProvider formatProvider) => Math.Truncate(Math.Log10(value)).ToString(format, formatProvider);
     }
 }

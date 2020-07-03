@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Accretion.Intervals.Tests
 {
-    public readonly struct SingleComparerByExponent : IComparer<float>
+    public readonly struct SingleComparerByExponent : IBoundaryValueComparer<float>
     {
         public int Compare(float x, float y) => default(DoubleComparerByExponent).Compare(x, y);
+        public int GetHashCode(float value) => default(DoubleComparerByExponent).GetHashCode(value);
+        public bool IsInvalidBoundaryValue(float value) => default(DoubleComparerByExponent).IsInvalidBoundaryValue(value);
+        public string ToString(float value, string format, IFormatProvider formatProvider) => default(DoubleComparerByExponent).ToString(value, format, formatProvider);
     }
 }

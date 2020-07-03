@@ -5,7 +5,7 @@ using FsCheck.Xunit;
 
 namespace Accretion.Intervals.Tests.CreatingIntervals
 {
-    public abstract class IntervalCreateTests<T, TComparer> : TestsBase where TComparer : struct, IComparer<T>
+    public abstract class IntervalCreateTests<T, TComparer> : TestsBase where TComparer : struct, IBoundaryValueComparer<T>
     {
         [Property]
         public Property IntervalCreatesValidIntervalsOrThrows(BoundaryType lowerBoundaryType, T lowerBoundaryValue, T upperBoundaryValue, BoundaryType upperBoundaryType)
@@ -22,9 +22,10 @@ namespace Accretion.Intervals.Tests.CreatingIntervals
             }
             else
             {
-                return !Facts.BoundariesAreValid(new LowerBoundary<T, TComparer>(lowerBoundaryValue, lowerBoundaryType), new UpperBoundary<T, TComparer>(upperBoundaryValue, upperBoundaryType)) ?
-                       (result.Exception is ArgumentException).ToProperty() :
-                       false.ToProperty();
+                return ((Spec.IsInvalidBoundaryValue<T, TComparer>(lowerBoundaryValue) || 
+                         Spec.IsInvalidBoundaryValue<T, TComparer>(upperBoundaryValue) ||
+                         BoundariesProduceEmptyInterval(lowerBoundaryType, lowerBoundaryValue, upperBoundaryValue, upperBoundaryType)) &&
+                         result.Exception is ArgumentException).ToProperty();
             }
         }
 
@@ -41,6 +42,22 @@ namespace Accretion.Intervals.Tests.CreatingIntervals
         [Property]
         public Property CreateSingletonIsTheSameAsCreateWithClosedBoundariesAndOneValue(T value) =>
             Result.From(() => Interval.Create<T, TComparer>(BoundaryType.Closed, value, value, BoundaryType.Closed)).
-            Equals(Result.From(() => Interval.CreateSingleton<T, TComparer>(value))).ToProperty();        
+            Equals(Result.From(() => Interval.CreateSingleton<T, TComparer>(value))).ToProperty();
+
+        private static bool BoundariesProduceEmptyInterval(BoundaryType lowerBoundaryType, T lowerBoundaryValue, T upperBoundaryValue, BoundaryType upperBoundaryType)
+        {
+            if (upperBoundaryValue.IsLessThan<T, TComparer>(lowerBoundaryValue))
+            {
+                return true;
+            }
+            else if (upperBoundaryValue.IsEqualTo<T, TComparer>(lowerBoundaryValue))
+            {
+                return lowerBoundaryType == BoundaryType.Open || upperBoundaryType == BoundaryType.Open;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
