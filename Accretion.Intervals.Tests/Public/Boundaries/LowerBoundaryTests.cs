@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using FsCheck;
 using FsCheck.Xunit;
 
@@ -8,7 +7,7 @@ namespace Accretion.Intervals.Tests.Boundaries
     public class LowerBoundaryOfDoubleWithComparerTests : LowerBoundaryTests<double, DoubleComparerByExponent> { }
     public class LowerBoundaryOfValueClassWithComparerTests : LowerBoundaryTests<ValueClass, ValueClassBackwardsComparer> { }
 
-    public abstract class LowerBoundaryTests<T, TComparer> : BoundaryTests<LowerBoundary<T, TComparer>, T, TComparer> where TComparer : struct, IComparer<T> { }
+    public abstract class LowerBoundaryTests<T, TComparer> : BoundaryTests<LowerBoundary<T, TComparer>, T, TComparer> where TComparer : struct, IBoundaryValueComparer<T> { }
 
     public class LowerBoundaryOfDoubleWithDefaultComparerTests : LowerBoundaryTests<double, DefaultValueComparer<double>> { }
     public class LowerBoundaryOfInt32WithDefaultComparerTests : LowerBoundaryTests<int, DefaultValueComparer<int>> { }

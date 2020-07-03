@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Globalization;
 using System.Linq;
 using FsCheck;
 using FsCheck.Xunit;
 
 namespace Accretion.Intervals.Tests.Boundaries
 {
-    public abstract class BoundaryTests<TBoundary, T, TComparer> : TestsBase where TComparer : struct, IComparer<T> where TBoundary : IBoundary<T>
+    public abstract class BoundaryTests<TBoundary, T, TComparer> : TestsBase where TComparer : struct, IBoundaryValueComparer<T> where TBoundary : IBoundary<T>
     {
         [Property]
         public Property EqualityIsCommutative(TBoundary left, TBoundary right) =>
@@ -22,6 +22,19 @@ namespace Accretion.Intervals.Tests.Boundaries
         [Property]
         public Property ToStringEqualityIsBoundToBoundaryEquality(TBoundary left, TBoundary right) =>
             (left.Equals(right) == left.ToString().Equals(right.ToString())).ToProperty();
+
+        [Property]
+        public Property ToStringDefaultDoesNotChangeWithCulture(TBoundary boundary, CultureInfo cultureInfo)
+        {
+            var inititalString = boundary.ToString();
+            var initialCulture = CultureInfo.CurrentCulture;
+
+            CultureInfo.CurrentCulture = cultureInfo;
+            var changedString = boundary.ToString();
+            CultureInfo.CurrentCulture = initialCulture;
+
+            return inititalString.Equals(changedString).ToProperty();
+        }
 
         [Property]
         public Property TypePropertyIsIdempotent(TBoundary boundary) =>

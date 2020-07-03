@@ -25,7 +25,7 @@ namespace Accretion.Intervals.Tests.CreatingIntervals
                 return ((Spec.IsInvalidBoundaryValue<T, TComparer>(lowerBoundaryValue) || 
                          Spec.IsInvalidBoundaryValue<T, TComparer>(upperBoundaryValue) ||
                          BoundariesProduceEmptyInterval(lowerBoundaryType, lowerBoundaryValue, upperBoundaryValue, upperBoundaryType)) &&
-                         result.Exception is ArgumentException).ToProperty();
+                        (result.Exception is ArgumentException)).ToProperty();
             }
         }
 

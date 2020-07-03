@@ -8,7 +8,7 @@ namespace Accretion.Intervals.Tests.Boundaries
     public class UpperBoundaryOfDoubleWithComparerTests : UpperBoundaryTests<double, DoubleComparerByExponent> { }
     public class UpperBoundaryOfValueClassWithComparerTests : UpperBoundaryTests<ValueClass, ValueClassBackwardsComparer> { }
 
-    public abstract class UpperBoundaryTests<T, TComparer> : BoundaryTests<UpperBoundary<T, TComparer>, T, TComparer> where TComparer : struct, IComparer<T> { }
+    public abstract class UpperBoundaryTests<T, TComparer> : BoundaryTests<UpperBoundary<T, TComparer>, T, TComparer> where TComparer : struct, IBoundaryValueComparer<T> { }
 
     public class UpperBoundaryOfDoubleWithDefaultComparerTests : UpperBoundaryTests<double, DefaultValueComparer<double>> { }
     public class UpperBoundaryOfInt32WithDefaultComparerTests : UpperBoundaryTests<int, DefaultValueComparer<int>> { }

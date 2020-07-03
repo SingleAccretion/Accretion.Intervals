@@ -32,21 +32,21 @@ namespace Accretion.Intervals.StringConversion
     {
         private static readonly Exception _elementParsingFailedMarker = new Exception();
 
-        public static bool TryParseInterval<T, TComparer>(string input, TryParse<T> elementParser, out Interval<T, TComparer> interval) where TComparer : struct, IComparer<T> => 
+        public static bool TryParseInterval<T, TComparer>(string input, TryParse<T> elementParser, out Interval<T, TComparer> interval) where TComparer : struct, IBoundaryValueComparer<T> => 
             TryParseInterval(input.AsSpan(), new StringElementTryParser<T>(elementParser), out interval, out _);
 
-        public static bool TryParseInterval<T, TComparer>(ReadOnlySpan<char> input, TryParseSpan<T> elementParser, out Interval<T, TComparer> interval) where TComparer : struct, IComparer<T> =>
+        public static bool TryParseInterval<T, TComparer>(ReadOnlySpan<char> input, TryParseSpan<T> elementParser, out Interval<T, TComparer> interval) where TComparer : struct, IBoundaryValueComparer<T> =>
             TryParseInterval(input, new SpanElementTryParser<T>(elementParser), out interval, out _);
 
-        public static Interval<T, TComparer> ParseInterval<T, TComparer>(string input, Parse<T> elementParser) where TComparer : struct, IComparer<T> =>
+        public static Interval<T, TComparer> ParseInterval<T, TComparer>(string input, Parse<T> elementParser) where TComparer : struct, IBoundaryValueComparer<T> =>
             TryParseInterval<T, TComparer, StringElementParser<T>>(input.AsSpan(), new StringElementParser<T>(elementParser), out var interval, out var exception) ? 
             interval : Throw.Exception<Interval<T, TComparer>>(exception);
 
-        public static Interval<T, TComparer> ParseInterval<T, TComparer>(ReadOnlySpan<char> input, ParseSpan<T> elementParser) where TComparer : struct, IComparer<T> =>
+        public static Interval<T, TComparer> ParseInterval<T, TComparer>(ReadOnlySpan<char> input, ParseSpan<T> elementParser) where TComparer : struct, IBoundaryValueComparer<T> =>
             TryParseInterval<T, TComparer, SpanElementParser<T>>(input, new SpanElementParser<T>(elementParser), out var interval, out var exception) ?
             interval : Throw.Exception<Interval<T, TComparer>>(exception);
 
-        private static bool TryParseInterval<T, TComparer, TParser>(ReadOnlySpan<char> input, TParser elementParser, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IComparer<T> where TParser : IElementParser<T>
+        private static bool TryParseInterval<T, TComparer, TParser>(ReadOnlySpan<char> input, TParser elementParser, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IBoundaryValueComparer<T> where TParser : IElementParser<T>
         {
             interval = default;
             var lexer = new Lexer(input);
@@ -92,7 +92,7 @@ namespace Accretion.Intervals.StringConversion
             return exception is null;
         }
 
-        private static bool TryCompletingRegularInterval<T, TComparer, TParser>(Lexer lexer, TParser elementParser, ReadOnlySpan<char> lowerBoundaryInput, BoundaryType lowerBoundaryType, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IComparer<T> where TParser : IElementParser<T>
+        private static bool TryCompletingRegularInterval<T, TComparer, TParser>(Lexer lexer, TParser elementParser, ReadOnlySpan<char> lowerBoundaryInput, BoundaryType lowerBoundaryType, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IBoundaryValueComparer<T> where TParser : IElementParser<T>
         {
             static bool TryParseUpperBoundaryType(TokenType tokenType, out BoundaryType boundaryType)
             {
@@ -130,7 +130,7 @@ namespace Accretion.Intervals.StringConversion
             return exception is null;
         }
 
-        private static bool TryCompletingSingletonInterval<T, TComparer, TParser>(Lexer lexer, TParser elementParser, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IComparer<T> where TParser : IElementParser<T>
+        private static bool TryCompletingSingletonInterval<T, TComparer, TParser>(Lexer lexer, TParser elementParser, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IBoundaryValueComparer<T> where TParser : IElementParser<T>
         {
             interval = default;
 
@@ -156,7 +156,7 @@ namespace Accretion.Intervals.StringConversion
             return exception is null;
         }
 
-        private static bool TryCompletingEmptyInterval<T, TComparer>(Lexer lexer, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IComparer<T>
+        private static bool TryCompletingEmptyInterval<T, TComparer>(Lexer lexer, out Interval<T, TComparer> interval, out Exception exception) where TComparer : struct, IBoundaryValueComparer<T>
         {
             if (lexer.ConsumeNext().Type == TokenType.End)
             {

@@ -6,7 +6,7 @@ namespace Accretion.Intervals
 {
     internal static class IntervalOperations
     {
-        public static ReadOnlyArray<Interval<T, TComparer>> Merge<T, TComparer>(IEnumerable<Interval<T, TComparer>> continuousIntervals) where TComparer : struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> Merge<T, TComparer>(IEnumerable<Interval<T, TComparer>> continuousIntervals) where TComparer : struct, IBoundaryValueComparer<T>
         {
             var sortedIntervals = continuousIntervals.ToArray();
             if (sortedIntervals.Length == 0)
@@ -50,7 +50,7 @@ namespace Accretion.Intervals
             return new ReadOnlyArray<Interval<T, TComparer>>(sortedIntervals, length);
         }
 
-        public static ReadOnlyArray<Interval<T, TComparer>> Union<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second) where TComparer : struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> Union<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second) where TComparer : struct, IBoundaryValueComparer<T>
         {
             var firstArray = first.AsArrayUnchecked();
             var secondArray = second.AsArrayUnchecked();
@@ -166,7 +166,7 @@ namespace Accretion.Intervals
             }
         }
 
-        public static ReadOnlyArray<Interval<T, TComparer>> Intersect<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second) where TComparer : struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> Intersect<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second) where TComparer : struct, IBoundaryValueComparer<T>
         {
             var firstArray = first.AsArrayUnchecked();
             var secondArray = second.AsArrayUnchecked();
@@ -283,7 +283,7 @@ namespace Accretion.Intervals
         //NOT IMPLEMENTED
         /*
         public static ReadOnlyArray<Interval<T, TComparer>> SymmetricDifference<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second)
-            where TComparer : struct, IComparer<T>
+            where TComparer : struct, IBoundaryValueComparer<T>
         {
             var firstArray = first.AsArrayUnchecked();
             var secondArray = second.AsArrayUnchecked();
@@ -417,7 +417,7 @@ namespace Accretion.Intervals
         }
         */
 
-        public static bool Contains<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> continuousIntervals, T value) where TComparer : struct, IComparer<T>
+        public static bool Contains<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> continuousIntervals, T value) where TComparer : struct, IBoundaryValueComparer<T>
         {
             bool ValueIsBetweenThesePivots(int leftPivot, int rightPivot) => 
                 new Interval<T, TComparer>(continuousIntervals[leftPivot].LowerBoundary, continuousIntervals[rightPivot].UpperBoundary).Contains(value);
@@ -458,14 +458,14 @@ namespace Accretion.Intervals
             return ValueIsBetweenThesePivots(leftPivot, leftPivot) || ValueIsBetweenThesePivots(rightPivot, rightPivot);
         }
 
-        public static ReadOnlyArray<Interval<T, TComparer>> MergeTailStartingWithUpperBoundary<T, TComparer>(Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, in LowerBoundary<T, TComparer> lowerBoundary, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer : struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> MergeTailStartingWithUpperBoundary<T, TComparer>(Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, in LowerBoundary<T, TComparer> lowerBoundary, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer : struct, IBoundaryValueComparer<T>
         {
             mergedIntervals[mergerIndex] = new Interval<T, TComparer>(lowerBoundary, sourceIntervals[sourceIndex].UpperBoundary);
 
             return MergeTail(mergedIntervals, sourceIntervals, sourceIndex + 1, maxSourceIndex, mergerIndex + 1);
         }
 
-        public static ReadOnlyArray<Interval<T, TComparer>> MergeTail<T, TComparer>(Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer : struct, IComparer<T>
+        public static ReadOnlyArray<Interval<T, TComparer>> MergeTail<T, TComparer>(Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, int sourceIndex, int maxSourceIndex, int mergerIndex) where TComparer : struct, IBoundaryValueComparer<T>
         {
             var length = maxSourceIndex - sourceIndex + 1;
             Array.Copy(sourceIntervals, sourceIndex, mergedIntervals, mergerIndex, length);
@@ -475,7 +475,7 @@ namespace Accretion.Intervals
 
         /*
         public static ReadOnlyArray<Interval<T, TComparer>> Merge<T, TComparer>(ReadOnlyArray<Interval<T, TComparer>> first, ReadOnlyArray<Interval<T, TComparer>> second)
-            where TComparer : struct, IComparer<T>
+            where TComparer : struct, IBoundaryValueComparer<T>
         {
             var firstArray = first.AsArrayUnchecked();
             var secondArray = second.AsArrayUnchecked();
@@ -610,7 +610,7 @@ namespace Accretion.Intervals
 
         public static ReadOnlyArray<Interval<T, TComparer>> MergeTailStartingWithUpperBoundary<T, TComparer>(
             Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, in LowerBoundary<T, TComparer> lowerBoundary, int sourceIndex, int maxSourceIndex, int mergerIndex)
-            where TComparer : struct, IComparer<T>
+            where TComparer : struct, IBoundaryValueComparer<T>
         {
             if (description.OperationStateMatchesTheEndOfInterval(OperationState.Lowest))
             {
@@ -624,7 +624,7 @@ namespace Accretion.Intervals
 
         public static ReadOnlyArray<Interval<T, TComparer>> MergeTail<T, TComparer>(
             Interval<T, TComparer>[] mergedIntervals, Interval<T, TComparer>[] sourceIntervals, int sourceIndex, int maxSourceIndex, int mergerIndex)
-            where TComparer : struct, IComparer<T>
+            where TComparer : struct, IBoundaryValueComparer<T>
         {
             if (description.OperationStateMatchesTheBeginningOfInterval(OperationState.Middle, OperationStatus.Up) &&
                 description.OperationStateMatchesTheEndOfInterval(OperationState.Lowest))

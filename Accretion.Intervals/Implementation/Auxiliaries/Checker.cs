@@ -7,6 +7,10 @@ namespace Accretion.Intervals
     internal static class Checker
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsDefaultComparer<T, TComparer>() where T : IComparable<T> =>
+			typeof(TComparer) == typeof(DefaultValueComparer<T>);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNull<T>(T value) => value is null;
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
@@ -104,7 +108,7 @@ namespace Accretion.Intervals
 				return (dateTimeData & FlagsMask) != KindUtc;
 			}
 
-			return true;
+			return false;
 		}
-	}
+    }
 }

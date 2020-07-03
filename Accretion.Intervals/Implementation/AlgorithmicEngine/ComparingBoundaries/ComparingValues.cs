@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Accretion.Intervals
@@ -11,38 +10,17 @@ namespace Accretion.Intervals
         public const int IsGreater = 1;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLessThan<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
-        {
-            if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
-            {
-                return IsLessThan(that, other);
-            }
-
-            return default(TComparer).Compare(that, other) < 0;
-        }
+        public static bool IsLessThan<T, TComparer>(this T that, T other) where TComparer : struct, IBoundaryValueComparer<T> =>
+            Checker.IsNull(that) || Checker.IsNull(other) ? Checker.IsNull(that) && !Checker.IsNull(other) : default(TComparer).Compare(that, other) < 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsEqualTo<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
-        {
-            if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
-            {
-                return IsEqualTo(that, other);
-            }
-
-            return default(TComparer).Compare(that, other) == 0;
-        }
+        public static bool IsEqualTo<T, TComparer>(this T that, T other) where TComparer : struct, IBoundaryValueComparer<T> =>
+            Checker.IsNull(that) || Checker.IsNull(other) ? Checker.IsNull(that) && Checker.IsNull(other) : default(TComparer).Compare(that, other) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsGreaterThan<T, TComparer>(this T that, T other) where TComparer : struct, IComparer<T>
-        {
-            if (GenericSpecializer<TComparer>.TypeIsDefaultValueComparer)
-            {
-                return IsGreaterThan(that, other);
-            }
-            
-            return default(TComparer).Compare(that, other) > 0;
-        }
-        
+        public static bool IsGreaterThan<T, TComparer>(this T that, T other) where TComparer : struct, IBoundaryValueComparer<T> =>
+            Checker.IsNull(that) || Checker.IsNull(other) ? !Checker.IsNull(that) && Checker.IsNull(other) : default(TComparer).Compare(that, other) > 0;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsLessThan<T>(T that, T other)
         {

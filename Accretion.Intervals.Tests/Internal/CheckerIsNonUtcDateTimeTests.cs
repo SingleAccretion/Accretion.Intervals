@@ -8,19 +8,19 @@ namespace Accretion.Intervals.Tests.Internal
     public class CheckerIsNonUtcDateTimeTests : TestsBase
     {
         [Property]
-        public Property IsUtcDateTimeAgreesWithTheFrameworkImplementation(DateTime dateTime) =>
+        public Property IsNonUtcDateTimeAgreesWithTheFrameworkImplementation(DateTime dateTime) =>
             (Checker.IsNonUtcDateTime(dateTime) == (dateTime.Kind != DateTimeKind.Utc)).ToProperty();
 
         [Fact]
-        public void IsUtcDateTimeAlwaysReturnsFalseForTypesOtherThanDateTime()
+        public void IsNonUtcDateTimeAlwaysReturnsFalseForTypesOtherThanDateTime()
         {
-            Assert.True(Checker.IsNonUtcDateTime(new object()));
-            Assert.True(Checker.IsNonUtcDateTime(string.Empty));
-            Assert.True(Checker.IsNonUtcDateTime(0));
-            Assert.True(Checker.IsNonUtcDateTime(0.0));
-            Assert.True(Checker.IsNonUtcDateTime(new ValueClass(0)));
-            Assert.True(Checker.IsNonUtcDateTime<DateTime?>(null));
-            Assert.True(Checker.IsNonUtcDateTime<DateTime?>(new DateTime()));
+            Assert.False(Checker.IsNonUtcDateTime(new object()));
+            Assert.False(Checker.IsNonUtcDateTime(string.Empty));
+            Assert.False(Checker.IsNonUtcDateTime(0));
+            Assert.False(Checker.IsNonUtcDateTime(0.0));
+            Assert.False(Checker.IsNonUtcDateTime(new ValueClass(0)));
+            Assert.False(Checker.IsNonUtcDateTime<DateTime?>(null));
+            Assert.False(Checker.IsNonUtcDateTime<DateTime?>(new DateTime()));
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using Accretion.Intervals.StringConversion;
 
 namespace Accretion.Intervals
 {
-    public readonly struct Interval<T, TComparer> : IEquatable<Interval<T, TComparer>> where TComparer : struct, IComparer<T>
+    public readonly struct Interval<T, TComparer> : IEquatable<Interval<T, TComparer>> where TComparer : struct, IBoundaryValueComparer<T>
     {
         private readonly LowerBoundary<T, TComparer> _lowerBoundary;
         private readonly UpperBoundary<T, TComparer> _upperBoundary;
@@ -106,11 +106,12 @@ namespace Accretion.Intervals
                    (value.IsEqualTo<T, TComparer>(UpperBoundary.Value) && UpperBoundary.IsClosed);
         }
 
-        public override bool Equals(object obj) => obj is Interval<T, TComparer> interval && Equals(interval);
         public bool Equals(Interval<T, TComparer> other) => _lowerBoundary == other._lowerBoundary && _upperBoundary == other._upperBoundary;
+
+        public override bool Equals(object obj) => obj is Interval<T, TComparer> interval && Equals(interval);
         public override int GetHashCode() => HashCode.Combine(_lowerBoundary, _upperBoundary);
 
-        public override string ToString() => StringSerializer.Serialize(this);
+        public override string ToString() => StringSerializer.Serialize(this, StringSerializer.GeneralFormat, CultureInfo.InvariantCulture);
 
         public static bool operator ==(Interval<T, TComparer> left, Interval<T, TComparer> right) => left.Equals(right);
         public static bool operator !=(Interval<T, TComparer> left, Interval<T, TComparer> right) => !(left == right);

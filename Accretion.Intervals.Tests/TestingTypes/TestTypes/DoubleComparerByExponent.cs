@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Accretion.Intervals.Tests
 {
@@ -9,8 +8,8 @@ namespace Accretion.Intervals.Tests
         {
             static double Normalize(double exp) => exp switch
             {
-                double.PositiveInfinity => Math.Log10(double.MaxValue),
-                double.NegativeInfinity => Math.Log10(double.MinValue),
+                double.PositiveInfinity => Math.Log10(double.MaxValue) + 1,
+                double.NegativeInfinity => Math.Log10(double.MinValue) - 1,
                 _ => exp
             };
 

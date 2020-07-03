@@ -1,10 +1,9 @@
-﻿using Accretion.Intervals.StringConversion;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Accretion.Intervals.StringConversion;
 
 namespace Accretion.Intervals
 {
-    public readonly struct CompositeInterval<T, TComparer> where TComparer : struct, IComparer<T> 
+    public readonly struct CompositeInterval<T, TComparer> where TComparer : struct, IBoundaryValueComparer<T> 
     {
         public static CompositeInterval<T, TComparer> Empty { get; }
 

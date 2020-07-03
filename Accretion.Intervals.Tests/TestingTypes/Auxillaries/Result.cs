@@ -32,7 +32,8 @@ namespace Accretion.Intervals.Tests
         public bool HasValue => _exception is null;
 
         public override bool Equals(object obj) => throw new InvalidOperationException("This method is not supported by the Result<T> type.");
-        public bool Equals(Result<T> other) => EqualityComparer<T>.Default.Equals(_value, other._value) && _exception?.GetType() == other._exception?.GetType();
+        public bool Equals(Result<T> other) => Equals(_value, other._value) && _exception?.GetType() == other._exception?.GetType();
+
         public override int GetHashCode() => HashCode.Combine(_value, _exception);
 
         public static bool operator ==(Result<T> left, Result<T> right) => left.Equals(right);

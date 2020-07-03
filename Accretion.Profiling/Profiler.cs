@@ -13,6 +13,7 @@ namespace Accretion.Profiling
     {
         public static void Main(string[] args)
         {
+
             Inli("s");
             Ninli("h");
         }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using FsCheck;
 using FsCheck.Xunit;
@@ -16,7 +16,8 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         public void EmptyIntervalIsEmpty() => Assert.True(Interval<T, TComparer>.Empty.IsEmpty);
 
         [Property]
-        public void AllIntervalsNotEqualToEmptyIntervalAreNotEmpty(Interval<T, TComparer> interval) => (interval.IsEmpty || !interval.Equals(Interval<T, TComparer>.Empty)).ToProperty();
+        public void AllIntervalsNotEqualToEmptyIntervalAreNotEmpty(Interval<T, TComparer> interval) => 
+            (interval.IsEmpty || !interval.Equals(Interval<T, TComparer>.Empty)).ToProperty();
 
         [Property]
         public Property AllNotEmptyIntervalsHaveBoundariesWhileEmptyOnesDont(Interval<T, TComparer> interval)
@@ -62,6 +63,19 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             (left.Equals(rigth) == left.ToString().Equals(rigth.ToString())).ToProperty();
 
         [Property]
+        public Property ToStringDefaultDoesNotChangeWithCulture(Interval<T, TComparer> interval, CultureInfo cultureInfo)
+        {
+            var inititalString = interval.ToString();
+            var initialCulture = CultureInfo.CurrentCulture;
+
+            CultureInfo.CurrentCulture = cultureInfo;
+            var changedString = interval.ToString();
+            CultureInfo.CurrentCulture = initialCulture;
+
+            return inititalString.Equals(changedString).ToProperty();
+        }
+
+        [Property]
         public Property EmptyIntervalsContainNoValues(T value) =>
             (!Interval<T, TComparer>.Empty.Contains(value)).ToProperty();
 
@@ -83,10 +97,11 @@ namespace Accretion.Intervals.Tests.AtomicInterval
 
         [Property]
         public Property IntervalsContainValuesBetweenTheirBoundaries(Interval<T, TComparer> interval, T value) => interval.IsEmpty ? true.ToProperty() :
-            (value.IsLessThan<T, TComparer>(interval.UpperBoundary.Value) && value.IsGreaterThan<T, TComparer>(interval.LowerBoundary.Value)).Implies(interval.Contains(value));
+            (value.IsLessThan<T, TComparer>(interval.UpperBoundary.Value) && value.IsGreaterThan<T, TComparer>(interval.LowerBoundary.Value)).
+            Implies(interval.Contains(value));
 
         [Property]
-        public Property IntervalsDoNotContainForbiddenValues(Interval<T, TComparer> interval, InvalidBoundaryValue<T, TComparer> value) =>
+        public Property IntervalsDoNotContainInvalidValues(Interval<T, TComparer> interval, InvalidBoundaryValue<T, TComparer> value) =>
             (value.DoesExist && !interval.Contains(value.Value)).Or(!value.DoesExist);
     }
 }

@@ -9,19 +9,21 @@ using System.Xml;
 
 namespace Accretion.Intervals
 {
-    public static class Profiler
+    public static class Program
     {
         public static readonly int P = Environment.ProcessorCount;
 
-        static Profiler()
+        static Program()
         {
             Console.OutputEncoding = Encoding.UTF8;
         }
 
         private static void Main()
         {
-            var interval = Interval.Create<double, DoubleComparerByExponent>(BoundaryType.Closed, double.PositiveInfinity, double.Epsilon, BoundaryType.Open);
-            Console.WriteLine(interval);
+            var interval = Interval.CreateClosed(new DateTime(1963, 1, 1, 1, 1, 1, (DateTimeKind)3), new DateTime(1900, 1, 1, 1, 1, 1, DateTimeKind.Unspecified));
+
+            Console.WriteLine(interval.Contains(new DateTime(2077, 1, 1, 1, 1, 1, DateTimeKind.Local)));
+            Console.WriteLine(interval.Contains(new DateTime(2077, 1, 1, 1, 1, 1, DateTimeKind.Unspecified)));
             var a = 1.ToString();
             //InfiniteLoop();
 
