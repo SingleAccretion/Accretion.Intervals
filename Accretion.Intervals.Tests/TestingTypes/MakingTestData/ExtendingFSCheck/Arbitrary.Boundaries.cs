@@ -1,10 +1,9 @@
-﻿using FsCheck;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using FsCheck;
 
 namespace Accretion.Intervals.Tests
 {
-    public partial class Arbitrary
+    public static partial class Arbitrary
     {
         public static Arbitrary<LowerBoundary<T, TComparer>> LowerBoundary<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> =>
             Arb.From(from value in Arb.Generate<T>()

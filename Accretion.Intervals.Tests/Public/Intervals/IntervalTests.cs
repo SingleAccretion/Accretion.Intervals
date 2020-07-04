@@ -16,7 +16,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         public void EmptyIntervalIsEmpty() => Assert.True(Interval<T, TComparer>.Empty.IsEmpty);
 
         [Property]
-        public void AllIntervalsNotEqualToEmptyIntervalAreNotEmpty(Interval<T, TComparer> interval) => 
+        public void AllIntervalsNotEqualToEmptyIntervalAreNotEmpty(Interval<T, TComparer> interval) =>
             (interval.IsEmpty || !interval.Equals(Interval<T, TComparer>.Empty)).ToProperty();
 
         [Property]
@@ -37,12 +37,12 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         }
 
         [Property]
-        public Property LowerBoundaryPropertyIsIdempotent(Interval<T, TComparer> boundary) =>
-            Result.From(() => boundary.LowerBoundary).Equals(Result.From(() => boundary.LowerBoundary)).ToProperty();
+        public Property LowerBoundaryPropertyIsIdempotent(Interval<T, TComparer> interval) =>
+            Result.From(() => interval.LowerBoundary).Equals(Result.From(() => interval.LowerBoundary)).ToProperty();
 
         [Property]
-        public Property UpperBoundaryPropertyIsIdempotent(Interval<T, TComparer> boundary) =>
-            Result.From(() => boundary.UpperBoundary).Equals(Result.From(() => boundary.UpperBoundary)).ToProperty();
+        public Property UpperBoundaryPropertyIsIdempotent(Interval<T, TComparer> interval) =>
+            Result.From(() => interval.UpperBoundary).Equals(Result.From(() => interval.UpperBoundary)).ToProperty();
 
         [Property]
         public Property EqualityIsCommutative(Interval<T, TComparer> left, Interval<T, TComparer> right) =>
@@ -54,7 +54,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             (!Result.From(() => left.LowerBoundary).Equals(Result.From(() => right.LowerBoundary)) ||
              !Result.From(() => left.UpperBoundary).Equals(Result.From(() => right.UpperBoundary)));
 
-        [Property(StartSize = 0, EndSize = 100)]
+        [Property(EndSize = 100)]
         public Property EqualIntervalsMustHaveEqualHashCodes(Interval<T, TComparer>[] intervals) =>
             intervals.All(x => intervals.All(y => !x.Equals(y) || x.GetHashCode() == y.GetHashCode())).ToProperty();
 

@@ -15,7 +15,7 @@ namespace Accretion.Intervals.Tests.Boundaries
         public Property UnequalBoundariesMustBeDifferent(TBoundary left, TBoundary right) =>
             (left.Type != right.Type || !left.Value.IsEqualTo<T, TComparer>(right.Value)).When(!left.Equals(right));
 
-        [Property(StartSize = 0, EndSize = 100)]
+        [Property(EndSize = 100)]
         public Property EqualBoundariesMustHaveEqualHashCodes(TBoundary[] boundaries) =>
             boundaries.All(x => boundaries.All(y => !x.Equals(y) || x.GetHashCode() == y.GetHashCode())).ToProperty();
 

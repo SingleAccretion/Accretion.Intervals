@@ -30,7 +30,7 @@ namespace Accretion.Intervals.Tests
         public override bool Equals(object obj) => obj is InvalidBoundaryValue<T, TComparer> value && Equals(value);
         public bool Equals(InvalidBoundaryValue<T, TComparer> other) => EqualityComparer<T>.Default.Equals(Value, other.Value);
         public override int GetHashCode() => HashCode.Combine(Value);
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value?.ToString() ?? "null";
 
         public static bool operator ==(InvalidBoundaryValue<T, TComparer> left, InvalidBoundaryValue<T, TComparer> right) => left.Equals(right);
         public static bool operator !=(InvalidBoundaryValue<T, TComparer> left, InvalidBoundaryValue<T, TComparer> right) => !(left == right);

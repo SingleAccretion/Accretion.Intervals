@@ -3,7 +3,7 @@ using FsCheck;
 
 namespace Accretion.Intervals.Tests
 {
-    public partial class Arbitrary
+    public static partial class Arbitrary
     {
         public static Arbitrary<Interval<T, TComparer>> AtomicInterval<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> =>
             Arb.From(from lowerBoundary in Arb.Generate<LowerBoundary<T, TComparer>>()
