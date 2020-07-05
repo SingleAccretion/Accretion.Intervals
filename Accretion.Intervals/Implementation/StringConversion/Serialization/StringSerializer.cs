@@ -5,6 +5,7 @@ namespace Accretion.Intervals.StringConversion
     internal static class StringSerializer
     {
         public const string GeneralFormat = "G";
+        public const string InvalidBoundary = "invalid";
 
         public static string Serialize<T, TComparer>(Interval<T, TComparer> interval, string format, IFormatProvider formatProvider) where TComparer : struct, IBoundaryValueComparer<T>
         {

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using FsCheck;
 using FsCheck.Xunit;
@@ -13,7 +14,13 @@ namespace Accretion.Intervals.Tests.Boundaries
 
         [Property]
         public Property UnequalBoundariesMustBeDifferent(TBoundary left, TBoundary right) =>
-            (left.Type != right.Type || !left.Value.IsEqualTo<T, TComparer>(right.Value)).When(!left.Equals(right));
+            (!left.Equals(right)).Implies(
+             !Result.From(() => left.Type).Equals(Result.From(() => right.Type)) ||
+             !Result.From(() => left.Value).Equals<TComparer>(Result.From(() => right.Value)));
+
+        [Property]
+        public Property AllInvalidBoundariesAreEqual(InvalidBoundaryValue<T, TComparer> firstValue, BoundaryType firstBoundaryType, InvalidBoundaryValue<T, TComparer> secondValue, BoundaryType secondBoundaryType) =>
+            (firstValue.DoesExist && CreateBoundary(firstValue.Value, firstBoundaryType).Equals(CreateBoundary(secondValue.Value, secondBoundaryType))).Or(!firstValue.DoesExist);
 
         [Property(EndSize = 100)]
         public Property EqualBoundariesMustHaveEqualHashCodes(TBoundary[] boundaries) =>
@@ -38,10 +45,24 @@ namespace Accretion.Intervals.Tests.Boundaries
 
         [Property]
         public Property TypePropertyIsIdempotent(TBoundary boundary) =>
-            (boundary.Type == boundary.Type).ToProperty();
+            Result.From(() => boundary.Type).Equals(Result.From(() => boundary.Type)).ToProperty();
 
         [Property]
         public Property ValuePropertyIsIdempotent(TBoundary boundary) =>
-            boundary.Value.IsEqualTo<T, TComparer>(boundary.Value).ToProperty();
+            Result.From(() => boundary.Value).Equals<TComparer>(Result.From(() => boundary.Value)).ToProperty();
+
+        [Property]
+        public Property InvalidBoundariesThrowAndValidOnesDoNot(BoundaryType boundaryType, T value)
+        {
+            var boundary = CreateBoundary(value, boundaryType);
+            var valueResult = Result.From(() => boundary.Value);
+            var typeResult = Result.From(() => boundary.Type);
+
+            return InvalidBoundaryValue.IsInvalidBoundaryValue<T, TComparer>(value) ?
+                   (valueResult.Exception is InvalidOperationException && typeResult.Exception is InvalidOperationException).ToProperty() :
+                   (valueResult.HasValue && typeResult.HasValue).ToProperty();
+        }
+
+        protected abstract TBoundary CreateBoundary(T value, BoundaryType boundaryType);
     }
 }

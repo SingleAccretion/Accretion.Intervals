@@ -58,7 +58,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         public Property EqualIntervalsMustHaveEqualHashCodes(Interval<T, TComparer>[] intervals) =>
             intervals.All(x => intervals.All(y => !x.Equals(y) || x.GetHashCode() == y.GetHashCode())).ToProperty();
 
-        [Property]
+        [Property(MaxTest = 200)]
         public Property ToStringEqualityIsBoundToIntervalEquality(Interval<T, TComparer> left, Interval<T, TComparer> rigth) =>
             (left.Equals(rigth) == left.ToString().Equals(rigth.ToString())).ToProperty();
 
@@ -71,7 +71,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             CultureInfo.CurrentCulture = cultureInfo;
             var changedString = interval.ToString();
             CultureInfo.CurrentCulture = initialCulture;
-
+            
             return inititalString.Equals(changedString).ToProperty();
         }
 
@@ -96,8 +96,10 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             value.IsGreaterThan<T, TComparer>(interval.UpperBoundary.Value).Implies(!interval.Contains(value));
 
         [Property]
-        public Property IntervalsContainValuesBetweenTheirBoundaries(Interval<T, TComparer> interval, T value) => interval.IsEmpty ? true.ToProperty() :
-            (value.IsLessThan<T, TComparer>(interval.UpperBoundary.Value) && value.IsGreaterThan<T, TComparer>(interval.LowerBoundary.Value)).
+        public Property IntervalsContainValidValuesBetweenTheirBoundaries(Interval<T, TComparer> interval, T value) => interval.IsEmpty ? true.ToProperty() :
+           (!InvalidBoundaryValue.IsInvalidBoundaryValue<T, TComparer>(value) && 
+            value.IsLessThan<T, TComparer>(interval.UpperBoundary.Value) && 
+            value.IsGreaterThan<T, TComparer>(interval.LowerBoundary.Value)).
             Implies(interval.Contains(value));
 
         [Property]

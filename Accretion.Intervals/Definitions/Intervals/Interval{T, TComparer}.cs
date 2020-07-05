@@ -96,7 +96,7 @@ namespace Accretion.Intervals
 
         public bool Contains(T value)
         {
-            if (IsEmpty)
+            if (IsEmpty || Checker.IsInvalidBoundaryValue<T, TComparer>(value))
             {
                 return false;
             }
@@ -109,7 +109,7 @@ namespace Accretion.Intervals
         public bool Equals(Interval<T, TComparer> other) => _lowerBoundary == other._lowerBoundary && _upperBoundary == other._upperBoundary;
 
         public override bool Equals(object obj) => obj is Interval<T, TComparer> interval && Equals(interval);
-        public override int GetHashCode() => HashCode.Combine(_lowerBoundary, _upperBoundary);
+        public override int GetHashCode() => !IsEmpty ? HashCode.Combine(_lowerBoundary, _upperBoundary) : 0;
 
         public override string ToString() => StringSerializer.Serialize(this, StringSerializer.GeneralFormat, CultureInfo.InvariantCulture);
 

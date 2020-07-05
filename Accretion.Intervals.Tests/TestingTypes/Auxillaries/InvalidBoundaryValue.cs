@@ -10,7 +10,9 @@ namespace Accretion.Intervals.Tests
             (default(TComparer) is DefaultValueComparer<float>) ||
             (default(TComparer) is DefaultValueComparer<double>) ||
             (default(TComparer) is DefaultValueComparer<DateTime>) ||
-            (default(TComparer) is PositiveValueClassComparer);
+            (default(TComparer) is DoubleComparerByExponent) ||
+            (default(TComparer) is SingleComparerByExponent) ||
+            (default(TComparer) is EvenIntegerComaparer);
 
         public static bool IsInvalidBoundaryValue<T, TComparer>(T value) where TComparer : struct, IBoundaryValueComparer<T> =>
             (value is null) ||

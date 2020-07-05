@@ -28,8 +28,8 @@ namespace Accretion.Intervals.Tests
 
         public int GetHashCode(double value) => (int)Math.Log10(value);
 
-        public bool IsInvalidBoundaryValue(double value) => false;
+        public bool IsInvalidBoundaryValue(double value) => value <= 0 || double.IsNaN(value);
         
-        public string ToString(double value, string format, IFormatProvider formatProvider) => Math.Truncate(Math.Log10(value)).ToString(format, formatProvider);
+        public string ToString(double value, string format, IFormatProvider formatProvider) => Math.Truncate(Math.Log10(value)).ToString(format, formatProvider).Replace("-0", "0");
     }
 }

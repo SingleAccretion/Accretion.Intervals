@@ -27,6 +27,7 @@ namespace Accretion.Intervals.Tests.CreatingIntervals
             Equals(Result.From(() => Interval.CreateSingleton(value))).ToProperty();
     }
 
+    public class IntervalOfDecimalCreateTests : IntervalCreateTests<decimal> { }
     public class IntervalOfDoubleCreateTests : IntervalCreateTests<double> { }
     public class IntervalOfSingleCreateTests : IntervalCreateTests<float> { }
     public class IntervalOfDateTimeCreateTests : IntervalCreateTests<DateTime> { }

@@ -19,9 +19,15 @@ namespace Accretion.Intervals
         }
 
         public int GetHashCode(T value) => HashCode.Combine(value);
-        
+
         public bool IsInvalidBoundaryValue(T value) => Checker.IsNaN(value) || Checker.IsNonUtcDateTime(value);
 
-        public string ToString(T value, string format, IFormatProvider formatProvider) => value is IFormattable formattable ? formattable.ToString(format, formatProvider) : value.ToString();
+        public string ToString(T value, string format, IFormatProvider formatProvider) => value switch
+        {
+            -0.0d => 0.0.ToString(format, formatProvider),
+            -0.0f => 0.0.ToString(format, formatProvider),
+            IFormattable formattable => formattable.ToString(format, formatProvider),
+            _ => value.ToString()
+        };
     }
 }

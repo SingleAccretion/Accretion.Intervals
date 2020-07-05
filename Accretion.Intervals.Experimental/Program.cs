@@ -18,11 +18,13 @@ namespace Accretion.Intervals
 
         private static void Main()
         {
-            var interval = Interval.CreateClosed<ValueClass, PositiveValueClassComparer>(new ValueClass(-1), new ValueClass(2));
+            var interval1 = Interval.CreateClosed(-0.0f, 10);
+            var interval2 = Interval.CreateClosed(0.0f, 10);
 
-            Console.WriteLine(interval);
+            Console.WriteLine(interval1);
+            Console.WriteLine(interval2);
 
-            BenchmarkRunner.Run<Profiled>();
+            //BenchmarkRunner.Run<Profiled>();
             //Console.ReadLine();
         }
     }

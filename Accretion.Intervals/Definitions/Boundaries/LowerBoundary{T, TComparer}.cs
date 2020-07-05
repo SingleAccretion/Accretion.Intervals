@@ -15,17 +15,19 @@ namespace Accretion.Intervals
             _value = value;
         }
 
-        public BoundaryType Type => _type;
-        public T Value => _value;
+        public BoundaryType Type => IsValid ? _type : Throw.Exception<BoundaryType>(BoundariesExceptions.InvalidBoundariesDoNotHaveValues);
+        public T Value => IsValid ? _value : Throw.Exception<T>(BoundariesExceptions.InvalidBoundariesDoNotHaveTypes);
 
         internal bool IsClosed => Type == BoundaryType.Closed;
         internal bool IsOpen => Type == BoundaryType.Open;
 
-        public bool Equals(LowerBoundary<T, TComparer> other) => Value.IsEqualTo<T, TComparer>(other.Value) && Type == other.Type;
-        public override bool Equals(object obj) => obj is LowerBoundary<T, TComparer> boundary && Equals(boundary);
-        public override int GetHashCode() => Checker.IsNull(Value) ? HashCode.Combine(Type) : HashCode.Combine(default(TComparer).GetHashCode(Value), Type);
+        private bool IsValid => !Checker.IsInvalidBoundaryValue<T, TComparer>(_value);
 
-        public override string ToString() => StringSerializer.Serialize(this, StringSerializer.GeneralFormat, CultureInfo.InvariantCulture);
+        public bool Equals(LowerBoundary<T, TComparer> other) => IsValid && other.IsValid ? Value.IsEqualTo<T, TComparer>(other.Value) && Type == other.Type : IsValid == other.IsValid;
+        public override bool Equals(object obj) => obj is LowerBoundary<T, TComparer> boundary && Equals(boundary);
+        public override int GetHashCode() => IsValid ? HashCode.Combine(default(TComparer).GetHashCode(Value), Type) : 0;
+
+        public override string ToString() => IsValid ? StringSerializer.Serialize(this, StringSerializer.GeneralFormat, CultureInfo.InvariantCulture) : StringSerializer.InvalidBoundary;
 
         public static bool operator ==(LowerBoundary<T, TComparer> left, LowerBoundary<T, TComparer> right) => left.Equals(right);
         public static bool operator !=(LowerBoundary<T, TComparer> left, LowerBoundary<T, TComparer> right) => !left.Equals(right);        

@@ -6,7 +6,8 @@ namespace Accretion.Intervals
     {
         private readonly UpperBoundary<T, DefaultValueComparer<T>> _boundary;
 
-        internal UpperBoundary(T value, BoundaryType type) => _boundary = new UpperBoundary<T, DefaultValueComparer<T>>(value, type);
+        internal UpperBoundary(UpperBoundary<T, DefaultValueComparer<T>> boundary) => _boundary = boundary;
+        internal UpperBoundary(T value, BoundaryType type) : this(new UpperBoundary<T, DefaultValueComparer<T>>(value, type)) { }
 
         public BoundaryType Type => _boundary.Type;
         public T Value => _boundary.Value;
@@ -20,8 +21,8 @@ namespace Accretion.Intervals
 
         public override string ToString() => _boundary.ToString();
 
-        public static implicit operator UpperBoundary<T>(UpperBoundary<T, DefaultValueComparer<T>> boundary) => new UpperBoundary<T>(boundary.Value, boundary.Type);
-        public static implicit operator UpperBoundary<T, DefaultValueComparer<T>>(UpperBoundary<T> boundary) => new UpperBoundary<T, DefaultValueComparer<T>>(boundary.Value, boundary.Type);
+        public static implicit operator UpperBoundary<T>(UpperBoundary<T, DefaultValueComparer<T>> boundary) => new UpperBoundary<T>(boundary);
+        public static implicit operator UpperBoundary<T, DefaultValueComparer<T>>(UpperBoundary<T> boundary) => boundary._boundary;
 
         public static bool operator ==(UpperBoundary<T> left, UpperBoundary<T> right) => left.Equals(right);
         public static bool operator !=(UpperBoundary<T> left, UpperBoundary<T> right) => !left.Equals(right);
