@@ -9,6 +9,7 @@ namespace Accretion.Intervals.Tests.Boundaries
         protected override LowerBoundary<T, TComparer> CreateBoundary(T value, BoundaryType boundaryType) => new LowerBoundary<T, TComparer>(value, boundaryType);
     }
 
+    public class LowerBoundaryDateTimeWithComparerTests : LowerBoundaryTests<DateTime, DateTimeComparerByHour> { }
     public class LowerBoundaryEvenIntegerWithComparerTests : LowerBoundaryTests<int, EvenIntegerComaparer> { }
     public class LowerBoundaryOfSingleWithComparerTests : LowerBoundaryTests<float, SingleComparerByExponent> { }
     public class LowerBoundaryOfDoubleWithComparerTests : LowerBoundaryTests<double, DoubleComparerByExponent> { }

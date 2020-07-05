@@ -9,6 +9,7 @@ namespace Accretion.Intervals.Tests.Boundaries
         protected override UpperBoundary<T, TComparer> CreateBoundary(T value, BoundaryType boundaryType) => new UpperBoundary<T, TComparer>(value, boundaryType);
     }
 
+    public class UpperBoundaryDateTimeWithComparerTests : UpperBoundaryTests<DateTime, DateTimeComparerByHour> { }
     public class UpperBoundaryEvenIntegerWithComparerTests : UpperBoundaryTests<int, EvenIntegerComaparer> { }
     public class UpperBoundaryOfSingleWithComparerTests : UpperBoundaryTests<float, SingleComparerByExponent> { }
     public class UpperBoundaryOfDoubleWithComparerTests : UpperBoundaryTests<double, DoubleComparerByExponent> { }

@@ -15,10 +15,16 @@ namespace Accretion.Intervals.Tests
 
         public static Arbitrary<ValueClass> ValueClass() => Arb.From(Arb.Generate<int?>().Select(x => (ValueClass)x));
 
-        public static Arbitrary<InvalidBoundaryValue<T, TComparer>> Values<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> =>
+        public static Arbitrary<InvalidBoundaryValue<T, TComparer>> InvalidBoundaryValues<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> =>
             Arb.From(!InvalidBoundaryValue.HasInvalidValues<T, TComparer>() ? Gen.Constant(new InvalidBoundaryValue<T, TComparer>()) :
                       from value in Arb.Generate<T>()
                       where InvalidBoundaryValue.IsInvalidBoundaryValue<T, TComparer>(value)
                       select new InvalidBoundaryValue<T, TComparer>(value));
+
+        public static Arbitrary<ValidBoundaryValue<T, TComparer>> ValidBoundaryValues<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> =>
+            Arb.From(from value in Arb.Generate<T>()
+                      where !InvalidBoundaryValue.IsInvalidBoundaryValue<T, TComparer>(value)
+                      select new ValidBoundaryValue<T, TComparer>(value));
+
     }
 }
