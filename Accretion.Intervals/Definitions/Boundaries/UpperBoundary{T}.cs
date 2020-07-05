@@ -14,12 +14,14 @@ namespace Accretion.Intervals
 
         internal bool IsClosed => _boundary.IsClosed;
         internal bool IsOpen => _boundary.IsOpen;
+        public bool IsValid => _boundary.IsValid;
 
         public bool Equals(UpperBoundary<T> other) => _boundary == other._boundary;
         public override bool Equals(object obj) => obj is UpperBoundary<T> boundary && Equals(boundary);
         public override int GetHashCode() => _boundary.GetHashCode();
 
         public override string ToString() => _boundary.ToString();
+        public string ToString(string format, IFormatProvider formatProvider) => _boundary.ToString(format, formatProvider);
 
         public static implicit operator UpperBoundary<T>(UpperBoundary<T, DefaultValueComparer<T>> boundary) => new UpperBoundary<T>(boundary);
         public static implicit operator UpperBoundary<T, DefaultValueComparer<T>>(UpperBoundary<T> boundary) => boundary._boundary;

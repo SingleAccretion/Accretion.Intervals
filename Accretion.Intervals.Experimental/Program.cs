@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using Accretion.Intervals.Tests;
 using BenchmarkDotNet.Attributes;
@@ -18,12 +19,17 @@ namespace Accretion.Intervals
 
         private static void Main()
         {
-            var interval1 = Interval.CreateClosed(-0.0f, 10);
-            var interval2 = Interval.CreateClosed(0.0f, 10);
+            //((5.41667E-07, (5.2853085E-07, F, )
+            var b1 = new LowerBoundary<float>(5.41667E-07f, BoundaryType.Open);
+            var b2 = new LowerBoundary<float>(5.2853085E-07f, BoundaryType.Open);
 
-            Console.WriteLine(interval1);
-            Console.WriteLine(interval2);
 
+            Console.WriteLine(b1.Equals(b2));
+            Console.WriteLine(default(SingleComparerByExponent).Compare(b1.Value, b2.Value));
+            Console.WriteLine(default(SingleComparerByExponent).ToString(b1.Value, "G", null));
+            Console.WriteLine(default(SingleComparerByExponent).ToString(b2.Value, "G", null));
+            Console.WriteLine(b1.ToString("F50", null));
+            Console.WriteLine(b2.ToString("F50", null));
             //BenchmarkRunner.Run<Profiled>();
             //Console.ReadLine();
         }

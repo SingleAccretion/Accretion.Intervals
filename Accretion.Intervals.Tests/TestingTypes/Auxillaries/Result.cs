@@ -37,5 +37,7 @@ namespace Accretion.Intervals.Tests
             _value.IsEqualTo<T, TComparer>(other._value) && _exception?.GetType() == other._exception?.GetType();
 
         public override int GetHashCode() => throw new NotSupportedException("GetHashCode method is not supported by the Result<T> type.");
+
+        public override string ToString() => HasValue ? Value.ToString() : Exception.ToString();
     }
 }

@@ -24,5 +24,29 @@ namespace Accretion.Intervals.Tests
             Arb.From(from value in Arb.Generate<T>()
                      from type in Arb.Generate<BoundaryType>()
                      select new UpperBoundary<T>(value, type));
+
+        public static Arbitrary<LowerBoundary<float, SingleComparerByExponent>> LowerBoundaryOfSingleWithComparer() =>
+            Arb.From(from value in Arb.Generate<float>()
+                     where value > -10.1
+                     from type in Arb.Generate<BoundaryType>()
+                     select new LowerBoundary<float, SingleComparerByExponent>(value, type));
+
+        public static Arbitrary<UpperBoundary<float, SingleComparerByExponent>> UpperBoundaryOfSingleWithComparer() =>
+            Arb.From(from value in Arb.Generate<float>()
+                     where value > -10.1
+                     from type in Arb.Generate<BoundaryType>()
+                     select new UpperBoundary<float, SingleComparerByExponent>(value, type));
+
+        public static Arbitrary<LowerBoundary<double, DoubleComparerByExponent>> LowerBoundaryOfDoubleWithComparer() =>
+            Arb.From(from value in Arb.Generate<double>()
+                     where value > -10.1
+                     from type in Arb.Generate<BoundaryType>()
+                     select new LowerBoundary<double, DoubleComparerByExponent>(value, type));
+
+        public static Arbitrary<UpperBoundary<double, DoubleComparerByExponent>> UpperBoundaryOfDoubleWithComparer() =>
+            Arb.From(from value in Arb.Generate<double>()
+                     where value > -10.1
+                     from type in Arb.Generate<BoundaryType>()
+                     select new UpperBoundary<double, DoubleComparerByExponent>(value, type));
     }
 }

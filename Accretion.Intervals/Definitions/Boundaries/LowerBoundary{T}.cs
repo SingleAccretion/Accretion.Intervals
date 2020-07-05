@@ -11,6 +11,7 @@ namespace Accretion.Intervals
 
         public BoundaryType Type => _boundary.Type;
         public T Value => _boundary.Value;
+        public bool IsValid => _boundary.IsValid;
 
         internal bool IsClosed => _boundary.IsClosed;
         internal bool IsOpen => _boundary.IsOpen;
@@ -20,6 +21,7 @@ namespace Accretion.Intervals
         public override int GetHashCode() => _boundary.GetHashCode();
 
         public override string ToString() => _boundary.ToString();
+        public string ToString(string format, IFormatProvider formatProvider) => _boundary.ToString(format, formatProvider);
 
         public static implicit operator LowerBoundary<T>(LowerBoundary<T, DefaultValueComparer<T>> boundary) => new LowerBoundary<T>(boundary);
         public static implicit operator LowerBoundary<T, DefaultValueComparer<T>>(LowerBoundary<T> boundary) => boundary._boundary;

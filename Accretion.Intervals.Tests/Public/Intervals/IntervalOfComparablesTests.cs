@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using FsCheck;
 
 namespace Accretion.Intervals.Tests.AtomicInterval
@@ -23,8 +24,11 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         public Property IntervalOfComparablesGetHashCodeDelegatesToComparerBasedOne(Interval<T, DefaultValueComparer<T>> interval) =>
             interval.GetHashCode().Equals(((Interval<T>)interval).GetHashCode()).ToProperty();
 
-        public Property IntervalOfComparablesToStringDelegatesToComparerBasedOne(Interval<T, DefaultValueComparer<T>> interval) =>
+        public Property IntervalOfComparablesToStringDefaultDelegatesToComparerBasedOne(Interval<T, DefaultValueComparer<T>> interval) =>
             interval.ToString().Equals(((Interval<T>)interval).ToString()).ToProperty();
+
+        public Property IntervalOfComparablesToStringDelegatesToComparerBasedOne(Interval<T, DefaultValueComparer<T>> interval, FormatString format, CultureInfo cultureInfo) =>
+            interval.ToString(format, cultureInfo).Equals(((Interval<T>)interval).ToString(format, cultureInfo)).ToProperty();
 
         public Property ImplicitConversionsWork(Interval<T, DefaultValueComparer<T>> left, Interval<T, DefaultValueComparer<T>> right) =>
             (((Interval<T>)left).Equals(right) == right.Equals((Interval<T>)left)).ToProperty();

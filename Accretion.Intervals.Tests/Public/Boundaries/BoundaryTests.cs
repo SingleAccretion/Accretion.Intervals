@@ -27,10 +27,6 @@ namespace Accretion.Intervals.Tests.Boundaries
             boundaries.All(x => boundaries.All(y => !x.Equals(y) || x.GetHashCode() == y.GetHashCode())).ToProperty();
 
         [Property]
-        public Property ToStringEqualityIsBoundToBoundaryEquality(TBoundary left, TBoundary right) =>
-            (left.Equals(right) == left.ToString().Equals(right.ToString())).ToProperty();
-
-        [Property]
         public Property ToStringDefaultDoesNotChangeWithCulture(TBoundary boundary, CultureInfo cultureInfo)
         {
             var inititalString = boundary.ToString();
@@ -42,6 +38,24 @@ namespace Accretion.Intervals.Tests.Boundaries
 
             return inititalString.Equals(changedString).ToProperty();
         }
+
+        [Property]
+        public Property ToStringOutputIsDifferentForDifferentFormats(TBoundary boundary, FormatString firstFormat, FormatString secondFormat) =>
+            (!firstFormat.Equals(secondFormat)).
+            Implies(!Result.From(() => boundary.ToString(firstFormat, null)).Equals(Result.From(() => boundary.ToString(secondFormat, null)))).
+            When(boundary.IsValid && 
+                !Result.From(() => default(TComparer).ToString(boundary.Value, firstFormat, null)).Equals(
+                 Result.From(() => default(TComparer).ToString(boundary.Value, secondFormat, null)))).
+            Or(!boundary.IsValid || !(boundary.Value is IFormattable));
+
+        [Property]
+        public Property ToStringOutputIsDifferentForDifferentFormatProviders(TBoundary boundary, CultureInfo firstCulture, CultureInfo secondCulture, FormatString format) =>
+            (!firstCulture.Equals(secondCulture)).
+            Implies(!Result.From(() => boundary.ToString(format, firstCulture)).Equals(Result.From(() => boundary.ToString(format, secondCulture)))).
+            When(boundary.IsValid && 
+                !Result.From(() => default(TComparer).ToString(boundary.Value, format, firstCulture)).Equals(
+                 Result.From(() => default(TComparer).ToString(boundary.Value, format, secondCulture)))).
+            Or(!boundary.IsValid || !(boundary.Value is IFormattable));
 
         [Property]
         public Property TypePropertyIsIdempotent(TBoundary boundary) =>
@@ -59,8 +73,8 @@ namespace Accretion.Intervals.Tests.Boundaries
             var typeResult = Result.From(() => boundary.Type);
 
             return InvalidBoundaryValue.IsInvalidBoundaryValue<T, TComparer>(value) ?
-                   (valueResult.Exception is InvalidOperationException && typeResult.Exception is InvalidOperationException).ToProperty() :
-                   (valueResult.HasValue && typeResult.HasValue).ToProperty();
+                   (valueResult.Exception is InvalidOperationException && typeResult.Exception is InvalidOperationException && !boundary.IsValid).ToProperty() :
+                   (valueResult.HasValue && typeResult.HasValue && boundary.IsValid).ToProperty();
         }
 
         protected abstract TBoundary CreateBoundary(T value, BoundaryType boundaryType);

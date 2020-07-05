@@ -28,10 +28,12 @@ namespace Accretion.Intervals.StringConversion
         }
 
         public static string Serialize<T, TComparer>(LowerBoundary<T, TComparer> boundary, string format, IFormatProvider formatProvider) where TComparer : struct, IBoundaryValueComparer<T> =>
+            !boundary.IsValid ? InvalidBoundary :
             (boundary.IsClosed ? Symbols.GetSymbol(TokenType.StartClosed) : Symbols.GetSymbol(TokenType.StartOpen)) +
             Serialize<T, TComparer>(boundary.Value, format, formatProvider);
 
         public static string Serialize<T, TComparer>(UpperBoundary<T, TComparer> boundary, string format, IFormatProvider formatProvider) where TComparer : struct, IBoundaryValueComparer<T> =>
+            !boundary.IsValid ? InvalidBoundary :
             Serialize<T, TComparer>(boundary.Value, format, formatProvider) +
             (boundary.IsClosed ? Symbols.GetSymbol(TokenType.EndClosed) : Symbols.GetSymbol(TokenType.EndOpen));
 

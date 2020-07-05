@@ -2,7 +2,7 @@
 
 namespace Accretion.Intervals
 {
-    public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparable<T> 
+    public readonly struct Interval<T> : IEquatable<Interval<T>>, IFormattable where T : IComparable<T> 
     {
         private readonly Interval<T, DefaultValueComparer<T>> _interval;
 
@@ -59,6 +59,7 @@ namespace Accretion.Intervals
         public override int GetHashCode() => HashCode.Combine(_interval);
         
         public override string ToString() => _interval.ToString();
+        public string ToString(string format, IFormatProvider formatProvider) => _interval.ToString(format, formatProvider);
 
         public static implicit operator Interval<T>(Interval<T, DefaultValueComparer<T>> interval) => new Interval<T>(interval);
         public static implicit operator Interval<T, DefaultValueComparer<T>>(Interval<T> interval) => interval._interval;

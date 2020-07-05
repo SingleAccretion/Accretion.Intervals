@@ -58,10 +58,6 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         public Property EqualIntervalsMustHaveEqualHashCodes(Interval<T, TComparer>[] intervals) =>
             intervals.All(x => intervals.All(y => !x.Equals(y) || x.GetHashCode() == y.GetHashCode())).ToProperty();
 
-        [Property(MaxTest = 200)]
-        public Property ToStringEqualityIsBoundToIntervalEquality(Interval<T, TComparer> left, Interval<T, TComparer> rigth) =>
-            (left.Equals(rigth) == left.ToString().Equals(rigth.ToString())).ToProperty();
-
         [Property]
         public Property ToStringDefaultDoesNotChangeWithCulture(Interval<T, TComparer> interval, CultureInfo cultureInfo)
         {
@@ -74,6 +70,28 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             
             return inititalString.Equals(changedString).ToProperty();
         }
+
+        [Property]
+        public Property ToStringOutputIsDifferentForDifferentFormats(Interval<T, TComparer> interval, FormatString firstFormat, FormatString secondFormat) =>
+            (!firstFormat.Equals(secondFormat)).
+            Implies(!Result.From(() => interval.ToString(firstFormat, null)).Equals(Result.From(() => interval.ToString(secondFormat, null)))).
+            When(!interval.IsEmpty && 
+                 !Result.From(() => default(TComparer).ToString(interval.LowerBoundary.Value, firstFormat, null)).Equals(
+                  Result.From(() => default(TComparer).ToString(interval.LowerBoundary.Value, secondFormat, null))) &&
+                 !Result.From(() => default(TComparer).ToString(interval.UpperBoundary.Value, firstFormat, null)).Equals(
+                  Result.From(() => default(TComparer).ToString(interval.UpperBoundary.Value, secondFormat, null)))).
+            Or(interval.IsEmpty || !(interval.LowerBoundary.Value is IFormattable));
+
+        [Property]
+        public Property ToStringOutputIsDifferentForDifferentFormatProviders(Interval<T, TComparer> interval, CultureInfo firstCulture, CultureInfo secondCulture, FormatString format) =>
+            (!firstCulture.Equals(secondCulture)).
+            Implies(!Result.From(() => interval.ToString(format, firstCulture)).Equals(Result.From(() => interval.ToString(format, secondCulture)))).
+            When(!interval.IsEmpty &&
+                 !Result.From(() => default(TComparer).ToString(interval.LowerBoundary.Value, format, firstCulture)).Equals(
+                  Result.From(() => default(TComparer).ToString(interval.LowerBoundary.Value, format, secondCulture))) &&
+                 !Result.From(() => default(TComparer).ToString(interval.UpperBoundary.Value, format, firstCulture)).Equals(
+                  Result.From(() => default(TComparer).ToString(interval.UpperBoundary.Value, format, secondCulture)))).
+            Or(interval.IsEmpty || !(interval.LowerBoundary.Value is IFormattable));
 
         [Property]
         public Property EmptyIntervalsContainNoValues(T value) =>

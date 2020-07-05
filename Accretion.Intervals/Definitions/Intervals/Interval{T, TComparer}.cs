@@ -4,7 +4,7 @@ using Accretion.Intervals.StringConversion;
 
 namespace Accretion.Intervals
 {
-    public readonly struct Interval<T, TComparer> : IEquatable<Interval<T, TComparer>> where TComparer : struct, IBoundaryValueComparer<T>
+    public readonly struct Interval<T, TComparer> : IEquatable<Interval<T, TComparer>>, IFormattable where TComparer : struct, IBoundaryValueComparer<T>
     {
         private readonly LowerBoundary<T, TComparer> _lowerBoundary;
         private readonly UpperBoundary<T, TComparer> _upperBoundary;
@@ -111,7 +111,8 @@ namespace Accretion.Intervals
         public override bool Equals(object obj) => obj is Interval<T, TComparer> interval && Equals(interval);
         public override int GetHashCode() => !IsEmpty ? HashCode.Combine(_lowerBoundary, _upperBoundary) : 0;
 
-        public override string ToString() => StringSerializer.Serialize(this, StringSerializer.GeneralFormat, CultureInfo.InvariantCulture);
+        public override string ToString() => ToString(StringSerializer.GeneralFormat, CultureInfo.InvariantCulture);
+        public string ToString(string format, IFormatProvider formatProvider) => StringSerializer.Serialize(this, format, formatProvider);
 
         public static bool operator ==(Interval<T, TComparer> left, Interval<T, TComparer> right) => left.Equals(right);
         public static bool operator !=(Interval<T, TComparer> left, Interval<T, TComparer> right) => !(left == right);

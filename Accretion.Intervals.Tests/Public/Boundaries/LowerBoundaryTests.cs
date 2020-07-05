@@ -11,14 +11,9 @@ namespace Accretion.Intervals.Tests.Boundaries
 
     public class LowerBoundaryDateTimeWithComparerTests : LowerBoundaryTests<DateTime, DateTimeComparerByHour> { }
     public class LowerBoundaryEvenIntegerWithComparerTests : LowerBoundaryTests<int, EvenIntegerComaparer> { }
-    public class LowerBoundaryOfSingleWithComparerTests : LowerBoundaryTests<float, SingleComparerByExponent> { }
     public class LowerBoundaryOfDoubleWithComparerTests : LowerBoundaryTests<double, DoubleComparerByExponent> { }
+    public class LowerBoundaryOfSingleWithComparerTests : LowerBoundaryTests<float, SingleComparerByExponent> { }
     public class LowerBoundaryOfValueClassWithComparerTests : LowerBoundaryTests<ValueClass, ValueClassBackwardsComparer> { }
-
-    public class LowerBoundaryOfDoubleWithDefaultComparerTests : LowerBoundaryTests<double, DefaultValueComparer<double>> { }
-    public class LowerBoundaryOfInt32WithDefaultComparerTests : LowerBoundaryTests<int, DefaultValueComparer<int>> { }
-    public class LowerBoundaryOfValueClassWithDefaultComparerTests : LowerBoundaryTests<ValueClass, DefaultValueComparer<ValueClass>> { }
-    public class LowerBoundaryOfValueStructWithDefaultComparerTests : LowerBoundaryTests<ValueStruct, DefaultValueComparer<ValueStruct>> { }
 
     public abstract class LowerBoundaryTests<T> : LowerBoundaryTests<T, DefaultValueComparer<T>> where T : IComparable<T>
     {
@@ -31,8 +26,10 @@ namespace Accretion.Intervals.Tests.Boundaries
             (((LowerBoundary<T>)left).Equals(right) == right.Equals((LowerBoundary<T>)left)).ToProperty();
     }
 
+    public class LowerBoundaryOfDateTimeTests : LowerBoundaryTests<DateTime> { }
     public class LowerBoundaryOfDecimalTests : LowerBoundaryTests<decimal> { }
     public class LowerBoundaryOfDoubleTests : LowerBoundaryTests<double> { }
+    public class LowerBoundaryOfSingleTests : LowerBoundaryTests<float> { }
     public class LowerBoundaryOfInt32Tests : LowerBoundaryTests<int> { }
     public class LowerBoundaryOfValueClassTests : LowerBoundaryTests<ValueClass> { }
     public class LowerBoundaryOfValueStructTests : LowerBoundaryTests<ValueStruct> { }
