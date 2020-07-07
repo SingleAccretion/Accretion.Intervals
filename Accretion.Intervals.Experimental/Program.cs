@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Globalization;
+using System.IO;
 using System.Text;
 using Accretion.Intervals.Tests;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
-using BenchmarkDotNet.Running;
+using FsCheck;
 
 namespace Accretion.Intervals
 {
@@ -19,19 +19,12 @@ namespace Accretion.Intervals
 
         private static void Main()
         {
-            //((5.41667E-07, (5.2853085E-07, F, )
-            var b1 = new LowerBoundary<float>(5.41667E-07f, BoundaryType.Open);
-            var b2 = new LowerBoundary<float>(5.2853085E-07f, BoundaryType.Open);
+            using var streamWriter = new StreamWriter("intervals.txt");            
 
-
-            Console.WriteLine(b1.Equals(b2));
-            Console.WriteLine(default(SingleComparerByExponent).Compare(b1.Value, b2.Value));
-            Console.WriteLine(default(SingleComparerByExponent).ToString(b1.Value, "G", null));
-            Console.WriteLine(default(SingleComparerByExponent).ToString(b2.Value, "G", null));
-            Console.WriteLine(b1.ToString("F50", null));
-            Console.WriteLine(b2.ToString("F50", null));
-            //BenchmarkRunner.Run<Profiled>();
-            //Console.ReadLine();
+            foreach (var interval in Arbitrary.RandomInterval<int, DefaultValueComparer<int>>().Generator.Sample(int.MaxValue / 2, 100))
+            {
+                streamWriter.WriteLine(interval);
+            }
         }
     }
 

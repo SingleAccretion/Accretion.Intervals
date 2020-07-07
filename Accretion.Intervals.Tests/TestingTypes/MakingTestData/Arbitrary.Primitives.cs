@@ -23,7 +23,7 @@ namespace Accretion.Intervals.Tests
                      from result in Gen.Frequency(Tuple.Create(5, Gen.Constant(value)), Tuple.Create(1, Gen.Constant(specialValue)))
                      select result);
 
-        public static Arbitrary<BoundaryType> BoundaryType() => Arb.From(Arb.Generate<bool>().Select(x => x ? Intervals.BoundaryType.Open : Intervals.BoundaryType.Closed));
+        public static Arbitrary<BoundaryType> BoundariesType() => Arb.From(Arb.Generate<bool>().Select(x => x ? BoundaryType.Open : BoundaryType.Closed));
 
         public static Arbitrary<ValueClass> ValueClass() => Arb.From(Arb.Generate<int?>().Select(x => (ValueClass)x));
 

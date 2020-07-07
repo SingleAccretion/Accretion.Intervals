@@ -9,10 +9,10 @@ namespace Accretion.Intervals.Tests.Boundaries
         protected override UpperBoundary<T, TComparer> CreateBoundary(T value, BoundaryType boundaryType) => new UpperBoundary<T, TComparer>(value, boundaryType);
     }
 
-    public class UpperBoundaryDateTimeWithComparerTests : UpperBoundaryTests<DateTime, DateTimeComparerByHour> { }
-    public class UpperBoundaryEvenIntegerWithComparerTests : UpperBoundaryTests<int, EvenIntegerComaparer> { }
-    public class UpperBoundaryOfDoubleWithComparerTests : UpperBoundaryTests<double, DoubleComparerByExponent> { }
     public class UpperBoundaryOfSingleWithComparerTests : UpperBoundaryTests<float, SingleComparerByExponent> { }
+    public class UpperBoundaryOfDoubleWithComparerTests : UpperBoundaryTests<double, DoubleComparerByExponent> { }
+    public class UpperBoundaryEvenIntegerWithComparerTests : UpperBoundaryTests<int, EvenIntegerComaparer> { }
+    public class UpperBoundaryDateTimeWithComparerTests : UpperBoundaryTests<DateTime, DateTimeComparerByHour> { }
     public class UpperBoundaryOfValueClassWithComparerTests : UpperBoundaryTests<ValueClass, ValueClassBackwardsComparer> { }
 
     public abstract class UpperBoundaryTests<T> : UpperBoundaryTests<T, DefaultValueComparer<T>> where T : IComparable<T>
@@ -26,11 +26,11 @@ namespace Accretion.Intervals.Tests.Boundaries
             (((UpperBoundary<T>)left).Equals(right) == right.Equals((UpperBoundary<T>)left)).ToProperty();
     }
 
-    public class UpperBoundaryOfDateTimeTests : UpperBoundaryTests<DateTime> { }
-    public class UpperBoundaryOfDecimalTests : UpperBoundaryTests<decimal> { }
-    public class UpperBoundaryOfDoubleTests : UpperBoundaryTests<double> { }
     public class UpperBoundaryOfSingleTests : UpperBoundaryTests<float> { }
+    public class UpperBoundaryOfDoubleTests : UpperBoundaryTests<double> { }
+    public class UpperBoundaryOfDecimalTests : UpperBoundaryTests<decimal> { }
     public class UpperBoundaryOfInt32Tests : UpperBoundaryTests<int> { }
+    public class UpperBoundaryOfDateTimeTests : UpperBoundaryTests<DateTime> { }
     public class UpperBoundaryOfValueClassTests : UpperBoundaryTests<ValueClass> { }
     public class UpperBoundaryOfValueStructTests : UpperBoundaryTests<ValueStruct> { }
 }

@@ -4,7 +4,7 @@ using FsCheck;
 
 namespace Accretion.Intervals.Tests.AtomicInterval
 {
-    public abstract class IntervalTests<T> : IntervalTests<T, DefaultValueComparer<T>> where T : IComparable<T>
+    public abstract partial class IntervalTests<T> : IntervalTests<T, DefaultValueComparer<T>> where T : IComparable<T>
     {
         public Property IntervalOfComparablesIsEmptyDelegatesToComparerBasedOne(Interval<T, DefaultValueComparer<T>> interval) =>
             interval.IsEmpty.Equals(((Interval<T>)interval).IsEmpty).ToProperty();
@@ -34,8 +34,9 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             (((Interval<T>)left).Equals(right) == right.Equals((Interval<T>)left)).ToProperty();
     }
 
-    public class IntervalOfDoubleTests : IntervalTests<double> { }
     public class IntervalOfSingleTests : IntervalTests<float> { }
+    public class IntervalOfDoubleTests : IntervalTests<double> { }
+    public class IntervalOfDecimalTests : IntervalTests<decimal> { }
     public class IntervalOfInt32Tests : IntervalTests<int> { }
     public class IntervalOfDateTimeTests : IntervalTests<DateTime> { }
     public class IntervalOfValueClassTests : IntervalTests<ValueClass> { }

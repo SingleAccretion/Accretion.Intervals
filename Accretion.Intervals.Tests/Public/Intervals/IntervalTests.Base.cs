@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Accretion.Intervals.Tests.AtomicInterval
 {
-    public abstract class IntervalTests<T, TComparer> : TestsBase where TComparer : struct, IBoundaryValueComparer<T>
+    public abstract partial class IntervalTests<T, TComparer> : TestsBase where TComparer : struct, IBoundaryValueComparer<T>
     {
         [Fact]
         public void DefaultIntervalIsEmptyInterval() => Assert.Equal(default, Interval<T, TComparer>.Empty);
@@ -98,23 +98,25 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             (!Interval<T, TComparer>.Empty.Contains(value)).ToProperty();
 
         [Property]
-        public Property OpenIntervalsDoNotContainTheirBoundaries(Interval<T, TComparer> interval) => interval.IsEmpty ? true.ToProperty() :
-            interval.LowerBoundary.IsOpen.Implies(!interval.Contains(interval.LowerBoundary.Value)).And(interval.UpperBoundary.IsOpen.Implies(!interval.Contains(interval.UpperBoundary.Value)));
+        public Property OpenIntervalsDoNotContainTheirBoundaries(NonEmptyInterval<T, TComparer> interval) =>
+            interval.LowerBoundary.IsOpen.Implies(!interval.Contains(interval.LowerBoundary.Value)).And(
+            interval.UpperBoundary.IsOpen.Implies(!interval.Contains(interval.UpperBoundary.Value)));
 
         [Property]
-        public Property ClosedIntervalsContainTheirBoundaries(Interval<T, TComparer> interval) => interval.IsEmpty ? true.ToProperty() :
-            interval.LowerBoundary.IsClosed.Implies(interval.Contains(interval.LowerBoundary.Value)).And(interval.UpperBoundary.IsClosed.Implies(interval.Contains(interval.UpperBoundary.Value)));
+        public Property ClosedIntervalsContainTheirBoundaries(NonEmptyInterval<T, TComparer> interval) =>
+            interval.LowerBoundary.IsClosed.Implies(interval.Contains(interval.LowerBoundary.Value)).And(
+            interval.UpperBoundary.IsClosed.Implies(interval.Contains(interval.UpperBoundary.Value)));
 
         [Property]
-        public Property IntervalsDoNotContainValuesLessThanTheirLowerBoundary(Interval<T, TComparer> interval, ValidBoundaryValue<T, TComparer> value) => interval.IsEmpty ? true.ToProperty() :
+        public Property IntervalsDoNotContainValuesLessThanTheirLowerBoundary(NonEmptyInterval<T, TComparer> interval, ValidBoundaryValue<T, TComparer> value) =>
             value.Value.IsLessThan<T, TComparer>(interval.LowerBoundary.Value).Implies(!interval.Contains(value));
 
         [Property]
-        public Property IntervalsDoNotContainValuesGreaterThanTheirUpperBoundary(Interval<T, TComparer> interval, ValidBoundaryValue<T, TComparer> value) => interval.IsEmpty ? true.ToProperty() :
+        public Property IntervalsDoNotContainValuesGreaterThanTheirUpperBoundary(NonEmptyInterval<T, TComparer> interval, ValidBoundaryValue<T, TComparer> value) =>
             value.Value.IsGreaterThan<T, TComparer>(interval.UpperBoundary.Value).Implies(!interval.Contains(value));
 
         [Property]
-        public Property IntervalsContainValidValuesBetweenTheirBoundaries(Interval<T, TComparer> interval, ValidBoundaryValue<T, TComparer> value) => interval.IsEmpty ? true.ToProperty() :
+        public Property IntervalsContainValidValuesBetweenTheirBoundaries(NonEmptyInterval<T, TComparer> interval, ValidBoundaryValue<T, TComparer> value) =>
            (value.Value.IsLessThan<T, TComparer>(interval.UpperBoundary.Value) && value.Value.IsGreaterThan<T, TComparer>(interval.LowerBoundary.Value)).Implies(interval.Contains(value));
 
         [Property]
