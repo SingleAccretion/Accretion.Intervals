@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -81,30 +82,21 @@ namespace Accretion.Intervals.Tests.AtomicInterval
 
         private static bool TryGetSimpleParser<TParser>(string name, out TParser parser) where TParser : Delegate
         {
-            TParser CreateDelegate(MethodInfo methodInfo)
-            {
-                var result = Delegate.CreateDelegate(typeof(TParser), methodInfo, throwOnBindFailure: false);
-                if (result is null)
-                {
-                    
-                }
-
-                return (TParser)result;
-            }
-
             var type = typeof(T);
             var parserMethod = typeof(TParser).GetMethod("Invoke");
             var methods = from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                           where method.Name == name
                           where method.ReturnType == parserMethod.ReturnType
                           let parameters = method.GetParameters().Where(x => !x.IsOptional)
-                          let parserParameters = parserMethod.GetParameters().Where(x => !x.IsOptional)
+                          let parserParameters = parserMethod.GetParameters()
                           where parameters.Count() == parserParameters.Count() &&
                                 parameters.Zip(parserParameters).
                                 All(x => x.First.ParameterType == x.Second.ParameterType && x.First.IsOut == x.Second.IsOut)
                           select method;
             
-            parser = methods.Count() == 1 ? CreateDelegate(methods.Single()) : null;
+            //We depend here on the correctness of ShimGenerator, which is probably one of the most complex APIs in the library
+            //This is only possible because it is tested separately
+            parser = methods.Count() == 1 ? ShimGenerator.DefaultParametersPasser<TParser>(methods.Single()) : null;
             return parser is null;
         }
     }
