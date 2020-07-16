@@ -10,6 +10,6 @@ namespace Accretion.Intervals
         public static IntervalFormatException InputMustStartWithValidStartCharacter { get; } = new IntervalFormatException("Input must not have any non-whitespace characters before interval.");
         public static IntervalFormatException BoundariesMustBeSeparated { get; } = new IntervalFormatException($"Boundaries must be separated by '{Symbols.GetSymbol(TokenType.Separator)}'.");
         public static IntervalFormatException IntervalMustHaveUpperBoundary { get; } = new IntervalFormatException("Interval must have an upper boundary");
-        public static IntervalFormatException IntervalMustEndWithEndClosedOrEndOpen { get; } = new IntervalFormatException($"Interval must end with either '{Symbols.GetSymbol(TokenType.EndOpen)}' or '{Symbols.GetSymbol(TokenType.EndOpen)}'.");
+        public static IntervalFormatException IntervalMustEndWithEndClosedOrEndOpen { get; } = new IntervalFormatException($"Interval must end with either '{Symbols.GetSymbol(TokenType.EndOpen)}' or '{Symbols.GetSymbol(TokenType.EndClosed)}'.");
     }
 }

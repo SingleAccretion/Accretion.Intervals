@@ -51,15 +51,13 @@ namespace Accretion.Intervals.StringConversion
                 new MethodSignature(typeof(TDelegate).GetMethod("Invoke")).IsCompatibelWith(method);
 
             var type = typeof(T);
-            var parserInfo = type.
-                GetMethods(BindingFlags.Public | BindingFlags.Static).
-                Where(x => IsCompatibleWith<TParser>(x)).
-                SingleOrDefault();
+            var parserCandidates = type.GetMethods(BindingFlags.Public | BindingFlags.Static).Where(x => x.Name == parserName);
+            var parserInfo = parserCandidates.Where(x => IsCompatibleWith<TParser>(x)).SingleOrDefault();
             
             if (parserInfo is null)
             {
                 var signature = new MethodSignature(parserInfo).ToString();
-                Throw.InvalidOperationException($"The parser method on {type.Name} could not be found. It must have the following signature: {signature}");
+                Throw.ParserNotFound(type, signature);
             }
 
             return Delegate.CreateDelegate(typeof(TParser), parserInfo);
@@ -71,13 +69,26 @@ namespace Accretion.Intervals.StringConversion
 
             public MethodInfo MethodInfo { get; }
 
-            public bool IsCompatibelWith(MethodInfo other) =>
-                MethodInfo.Name == other.Name &&
-                MethodInfo.ReturnType == other.ReturnType &&
-                MethodInfo.GetParameters().
-                Select(x => new ParameterSignature(x)).
-                Zip(other.GetParameters(), (x, y) => x.IsCompatibleWith(y)).
-                All(x => x is true);
+            public bool IsCompatibelWith(MethodInfo other)
+            {
+                var parameters = MethodInfo.GetParameters();
+                var otherParameters = other.GetParameters();
+
+                if (parameters.Length != otherParameters.Length || MethodInfo.ReturnType != other.ReturnType)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    if (!new ParameterSignature(parameters[i]).IsCompatibleWith(otherParameters[i]))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
 
             public override string ToString()
             {
@@ -97,9 +108,7 @@ namespace Accretion.Intervals.StringConversion
 
             public ParameterInfo ParameterInfo { get; }
 
-            public bool IsCompatibleWith(ParameterInfo other) => 
-                ParameterInfo.ParameterType == other.ParameterType &&
-                ParameterInfo.IsOut == other.IsOut;
+            public bool IsCompatibleWith(ParameterInfo other) => ParameterInfo.ParameterType == other.ParameterType && ParameterInfo.IsOut == other.IsOut;
 
             public override string ToString() => ParameterInfo.IsOut ? "out" : "" + ParameterInfo.Name;
         }

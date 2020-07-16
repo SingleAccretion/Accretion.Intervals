@@ -15,26 +15,21 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         [Fact]
         public void EmptyIntervalIsEmpty() => Assert.True(Interval<T, TComparer>.Empty.IsEmpty);
 
+
+        [Fact]
+        public void EmptyIntervalsDoNotHaveBoundaries()
+        {
+            Assert.Throws<InvalidOperationException>(() => Interval<T, TComparer>.Empty.LowerBoundary);
+            Assert.Throws<InvalidOperationException>(() => Interval<T, TComparer>.Empty.UpperBoundary);
+        }
+
         [Property]
         public void AllIntervalsNotEqualToEmptyIntervalAreNotEmpty(Interval<T, TComparer> interval) =>
             (interval.IsEmpty || !interval.Equals(Interval<T, TComparer>.Empty)).ToProperty();
 
         [Property]
-        public Property AllNotEmptyIntervalsHaveBoundariesWhileEmptyOnesDont(Interval<T, TComparer> interval)
-        {
-            var lowerBoundaryResult = Result.From(() => interval.LowerBoundary);
-            var upperBoundaryResult = Result.From(() => interval.UpperBoundary);
-
-            if (interval.IsEmpty)
-            {
-                return (!lowerBoundaryResult.HasValue && lowerBoundaryResult.Exception is InvalidOperationException &&
-                        !upperBoundaryResult.HasValue && upperBoundaryResult.Exception is InvalidOperationException).ToProperty();
-            }
-            else
-            {
-                return (lowerBoundaryResult.HasValue && upperBoundaryResult.HasValue).ToProperty();
-            }
-        }
+        public Property AllNotEmptyIntervalsHaveBoundaries(NonEmptyInterval<T, TComparer> interval) => 
+            (Result.From(() => interval.LowerBoundary).HasValue && Result.From(() => interval.UpperBoundary).HasValue).ToProperty();
 
         [Property]
         public Property LowerBoundaryPropertyIsIdempotent(Interval<T, TComparer> interval) =>
@@ -54,7 +49,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             (!Result.From(() => left.LowerBoundary).Equals(Result.From(() => right.LowerBoundary)) ||
              !Result.From(() => left.UpperBoundary).Equals(Result.From(() => right.UpperBoundary)));
 
-        [Property(EndSize = 100)]
+        [Property]
         public Property EqualIntervalsMustHaveEqualHashCodes(Interval<T, TComparer>[] intervals) =>
             intervals.All(x => intervals.All(y => !x.Equals(y) || x.GetHashCode() == y.GetHashCode())).ToProperty();
 
@@ -67,7 +62,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             CultureInfo.CurrentCulture = cultureInfo;
             var changedString = interval.ToString();
             CultureInfo.CurrentCulture = initialCulture;
-            
+
             return inititalString.Equals(changedString).ToProperty();
         }
 
@@ -75,7 +70,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         public Property ToStringOutputIsDifferentForDifferentFormats(Interval<T, TComparer> interval, FormatString firstFormat, FormatString secondFormat) =>
             (!firstFormat.Equals(secondFormat)).
             Implies(!Result.From(() => interval.ToString(firstFormat, null)).Equals(Result.From(() => interval.ToString(secondFormat, null)))).
-            When(!interval.IsEmpty && 
+            When(!interval.IsEmpty &&
                  !Result.From(() => default(TComparer).ToString(interval.LowerBoundary.Value, firstFormat, null)).Equals(
                   Result.From(() => default(TComparer).ToString(interval.LowerBoundary.Value, secondFormat, null))) &&
                  !Result.From(() => default(TComparer).ToString(interval.UpperBoundary.Value, firstFormat, null)).Equals(
@@ -94,8 +89,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             Or(interval.IsEmpty || !(interval.LowerBoundary.Value is IFormattable));
 
         [Property]
-        public Property EmptyIntervalsContainNoValues(T value) =>
-            (!Interval<T, TComparer>.Empty.Contains(value)).ToProperty();
+        public Property EmptyIntervalsContainNoValues(T value) => (!Interval<T, TComparer>.Empty.Contains(value)).ToProperty();
 
         [Property]
         public Property OpenIntervalsDoNotContainTheirBoundaries(NonEmptyInterval<T, TComparer> interval) =>

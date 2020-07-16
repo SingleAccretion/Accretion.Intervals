@@ -20,6 +20,7 @@ namespace Accretion.Intervals.Tests
         public override bool Equals(object obj) => obj is ValidBoundaryValue<T, TComparer> value && Equals(value);
         public bool Equals(ValidBoundaryValue<T, TComparer> other) => Value.IsEqualTo<T, TComparer>(other.Value);
         public override int GetHashCode() => HashCode.Combine(default(TComparer).GetHashCode(Value));
+        public override string ToString() => Value.ToString();
 
         public static implicit operator T(ValidBoundaryValue<T, TComparer> validBoundaryValue) => validBoundaryValue.Value;
 

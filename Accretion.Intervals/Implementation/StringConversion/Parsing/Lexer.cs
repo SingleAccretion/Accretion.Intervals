@@ -41,7 +41,7 @@ namespace Accretion.Intervals.StringConversion
             var inputAhead = _input.Slice(_currentPosition);
             var nextTokenPosition = inputAhead.IndexOfAny(Symbols.Tokens);
 
-            if (nextTokenPosition < -1)
+            if (nextTokenPosition < 0)
             {
                 token = inputAhead.IsEmpty ? new Token(ReadOnlySpan<char>.Empty, TokenType.End) : new Token(inputAhead, TokenType.Text);
             }

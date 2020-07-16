@@ -19,11 +19,14 @@ namespace Accretion.Intervals
 
         private static void Main()
         {
-            using var streamWriter = new StreamWriter("intervals.txt");            
+            Arb.Register(typeof(Arbitrary));
 
-            foreach (var interval in Arbitrary.RandomInterval<int, DefaultValueComparer<int>>().Generator.Sample(int.MaxValue / 2, 100))
+            using var streamWriter = new StreamWriter("intervals.txt");
+            foreach (var intervalString in Arbitrary.IntervalStrings<int, DefaultValueComparer<int>>().Generator.Sample(100, 100))
             {
-                streamWriter.WriteLine(interval);
+                var interval = Tests.Result.From(() => Interval<int>.Parse(intervalString.String));
+                streamWriter.WriteLine(intervalString);
+                //streamWriter.WriteLine(interval.HasValue ? interval.Value.ToString() : interval.Exception.ToString());
             }
         }
     }

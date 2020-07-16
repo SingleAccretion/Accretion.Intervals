@@ -34,7 +34,7 @@ namespace Accretion.Intervals.Tests
         public bool Equals(Result<T> other) => Equals(_value, other._value) && _exception?.GetType() == other._exception?.GetType();
 
         public bool Equals<TComparer>(Result<T> other) where TComparer : struct, IBoundaryValueComparer<T> =>
-            _value.IsEqualTo<T, TComparer>(other._value) && _exception?.GetType() == other._exception?.GetType();
+            _value.IsEqualTo<T, TComparer>(other._value) && _exception?.GetType() == other._exception?.GetType() && _exception?.Message == other._exception?.Message;
 
         public override int GetHashCode() => throw new NotSupportedException("GetHashCode method is not supported by the Result<T> type.");
 
