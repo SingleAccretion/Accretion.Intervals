@@ -10,7 +10,7 @@ namespace Accretion.Intervals
 {
     internal static class ShimGenerator
     {
-        public static TTarget DefaultParametersPasser<TTarget>(MethodInfo sourceMethod) where TTarget : Delegate
+        public static TTarget WithDefaultParametersPassed<TTarget>(MethodInfo sourceMethod) where TTarget : Delegate
         {
             var targetMethod = typeof(TTarget).GetMethod("Invoke");
 

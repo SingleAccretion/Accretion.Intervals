@@ -21,10 +21,10 @@ namespace Accretion.Intervals.StringConversion
         private static Dictionary<Type, Delegate> TryElementParsers => _tryElementParsers ??= new Dictionary<Type, Delegate>();
         private static Dictionary<Type, Delegate> TrySpanElementParsers => _trySpanElementParsers ??= new Dictionary<Type, Delegate>();
 
-        public static Parse<T> GetElementParser<T>() => 
+        public static Parse<T> GetElementParser<T>() =>
             GetParser<Parse<T>>(ElementParsersStore, () => DiscoverParser<T, Parse<T>>(ParserName));
 
-        public static ParseSpan<T> GetSpanElementParser<T>() => 
+        public static ParseSpan<T> GetSpanElementParser<T>() =>
             GetParser<ParseSpan<T>>(SpanElementParsers, () => DiscoverParser<T, ParseSpan<T>>(ParserName));
 
         public static TryParse<T> GetTryElementParser<T>() =>
@@ -44,15 +44,19 @@ namespace Accretion.Intervals.StringConversion
 
             return (T)parser;
         }
-
+        
         private static Delegate DiscoverParser<T, TParser>(string parserName) where TParser : Delegate
         {
-            static bool IsCompatibleWith<TDelegate>(MethodInfo method) where TDelegate : Delegate => 
+            static bool IsCompatibleWith<TDelegate>(MethodInfo method) where TDelegate : Delegate =>
                 new MethodSignature(typeof(TDelegate).GetMethod("Invoke")).IsCompatibelWith(method);
 
             var type = typeof(T);
             var parserCandidates = type.GetMethods(BindingFlags.Public | BindingFlags.Static).Where(x => x.Name == parserName);
-            var parserInfo = parserCandidates.Where(x => IsCompatibleWith<TParser>(x)).SingleOrDefault();
+            //Multiple parsers can be found because default parameters are not considered part of the signature
+            //In general, some signature differences cannot be resolved with any sane algorithm
+            //E. g. Parse(string str, int x = 0) vs Parse(string str, float x = 0.0f)
+            //We explicitly do not throw in this case but choose a what is essentailly a random overload
+            var parserInfo = parserCandidates.Where(x => IsCompatibleWith<TParser>(x)).OrderBy(x => x.GetParameters().Length).FirstOrDefault();
             
             if (parserInfo is null)
             {
@@ -60,7 +64,7 @@ namespace Accretion.Intervals.StringConversion
                 Throw.ParserNotFound(type, signature);
             }
 
-            return Delegate.CreateDelegate(typeof(TParser), parserInfo);
+            return ShimGenerator.WithDefaultParametersPassed<TParser>(parserInfo);
         }
 
         private readonly struct MethodSignature
@@ -71,8 +75,8 @@ namespace Accretion.Intervals.StringConversion
 
             public bool IsCompatibelWith(MethodInfo other)
             {
-                var parameters = MethodInfo.GetParameters();
-                var otherParameters = other.GetParameters();
+                var parameters = MethodInfo.GetParameters().Where(x => !x.HasDefaultValue).ToArray();
+                var otherParameters = other.GetParameters().Where(x => !x.HasDefaultValue).ToArray();
 
                 if (parameters.Length != otherParameters.Length || MethodInfo.ReturnType != other.ReturnType)
                 {

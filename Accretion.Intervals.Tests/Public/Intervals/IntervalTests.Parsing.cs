@@ -87,7 +87,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             var methods = from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                           where method.Name == name
                           where method.ReturnType == parserMethod.ReturnType
-                          let parameters = method.GetParameters().Where(x => !x.IsOptional)
+                          let parameters = method.GetParameters().Where(x => !x.HasDefaultValue)
                           let parserParameters = parserMethod.GetParameters()
                           where parameters.Count() == parserParameters.Count() &&
                                 parameters.Zip(parserParameters).
@@ -96,7 +96,7 @@ namespace Accretion.Intervals.Tests.AtomicInterval
             
             //We depend here on the correctness of ShimGenerator, which is probably one of the most complex APIs in the library
             //This is only possible because it is tested separately
-            parser = methods.Count() == 1 ? ShimGenerator.DefaultParametersPasser<TParser>(methods.Single()) : null;
+            parser = methods.Count() == 1 ? ShimGenerator.WithDefaultParametersPassed<TParser>(methods.Single()) : null;
             return parser is null;
         }
     }
