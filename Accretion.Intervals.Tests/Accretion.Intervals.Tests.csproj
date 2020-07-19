@@ -20,4 +20,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Accretion.Intervals\Accretion.Intervals.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ShimSources">
+      <HintPath>Internal\ShimGeneratorILSources\ShimSources.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

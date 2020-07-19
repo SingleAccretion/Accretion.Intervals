@@ -13,24 +13,48 @@ namespace Accretion.Intervals
         public static TTarget WithDefaultParametersPassed<TTarget>(MethodInfo sourceMethod) where TTarget : Delegate
         {
             var targetMethod = typeof(TTarget).GetMethod("Invoke");
+            if (targetMethod.ReturnType != sourceMethod.ReturnType)
+            {
+                throw new ArgumentException("Return must be the same for the source and the target.");
+            }
 
             var sourceParameters = sourceMethod.GetParameters();
+            var targetParameters = targetMethod.GetParameters();
+
+            //Fast path for cases where we do not need to create a shim
+            if (!sourceParameters.Any(x => x.HasDefaultValue))
+            {
+                return (TTarget)Delegate.CreateDelegate(typeof(TTarget), sourceMethod);
+            }
 
             var shim = new DynamicMethod(Guid.NewGuid().ToString(), targetMethod.ReturnType, targetMethod.GetParameters().Select(x => x.ParameterType).ToArray());
             using (var il = new GroboIL(shim))
             {
-                for (int i = 0, j = 0; i < sourceParameters.Length; i++)
+                var j = 0;
+                for (int i = 0; i < sourceParameters.Length; i++)
                 {
-                    var parameter = sourceParameters[i];
-                    if (parameter.HasDefaultValue)
+                    var sourceParameter = sourceParameters[i];
+                    if (sourceParameter.HasDefaultValue)
                     {
-                        EmitDefaultParameterValue(il, parameter);
+                        EmitDefaultParameterValue(il, sourceParameter);
                     }
                     else
                     {
-                        il.Ldarg(j);
-                        j++;
+                        if (targetParameters[j].ParameterType == sourceParameter.ParameterType)
+                        {
+                            il.Ldarg(j);
+                            j++;
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"The type of the required source parameter {sourceParameter} does not match that of the target {targetParameters[j]}.");
+                        }
                     }
+                }
+
+                if (j != targetParameters.Length)
+                {
+                    throw new ArgumentException("The parameters of target must be exactly the required parameters of source.");
                 }
 
                 il.Call(sourceMethod);
@@ -57,14 +81,14 @@ namespace Accretion.Intervals
                 var castedValue = As(type, value);
                 if (castedValue is null)
                 {
-                    throw new InvalidOperationException($"Could not convert default parameter value {value} to the parameter's type {type}");
+                    throw new InvalidOperationException($"Could not convert default parameter value {value} of type {value.GetType()} to the parameter's type {type}.");
                 }
 
                 EmitValue(il, castedValue);
             }
         }
 
-        private static void EmitDefaultTypeValue(GroboIL generator, Type type)
+        private static void EmitDefaultTypeValue(GroboIL il, Type type)
         {
             switch (Type.GetTypeCode(type))
             {
@@ -76,40 +100,39 @@ namespace Accretion.Intervals
                 case TypeCode.UInt16:
                 case TypeCode.Int32:
                 case TypeCode.UInt32:
-                    generator.Ldc_I4(0);
+                    il.Ldc_I4(0);
                     return;
                 case TypeCode.Int64:
                 case TypeCode.UInt64:
-                    generator.Ldc_I8(0);
+                    il.Ldc_I8(0);
                     return;
                 case TypeCode.Single:
-                    generator.Ldc_R4(0f);
+                    il.Ldc_R4(0f);
                     return;
                 case TypeCode.Double:
-                    generator.Ldc_R8(0d);
+                    il.Ldc_R8(0d);
                     return;
             }
 
-            if (type.IsPointer || type == typeof(UIntPtr))
+            if (type.IsPointer || type == typeof(UIntPtr) || type == typeof(IntPtr))
             {
-                generator.Ldc_I4(0);
-                generator.Conv<UIntPtr>();
+                il.Ldc_IntPtr(IntPtr.Zero);
+                il.Conv<UIntPtr>();
             }
-            else if (type == typeof(IntPtr))
+            else if (type.IsEnum)
             {
-                generator.Ldc_I4(0);
-                generator.Conv<IntPtr>();
+                EmitDefaultTypeValue(il, Enum.GetUnderlyingType(type));
             }
             else if (type.IsValueType)
             {
-                var local = generator.DeclareLocal(type);
-                generator.Ldloca(local);
-                generator.Initobj(type);
-                generator.Ldloc(local);
+                var local = il.DeclareLocal(type);
+                il.Ldloca(local);
+                il.Initobj(type);
+                il.Ldloc(local);
             }
             else
             {
-                generator.Ldnull();
+                il.Ldnull();
             }
         }
 
@@ -135,7 +158,14 @@ namespace Accretion.Intervals
                 case float float32: il.Ldc_R4(float32); break;
                 case double float64: il.Ldc_R8(float64); break;
                 case decimal decimal128: il.LdDec(decimal128); break;
-                case DateTime dateTime: il.Ldc_I8(Unsafe.As<DateTime, long>(ref dateTime)); break;
+                case DateTime dateTime: 
+                    var local = il.DeclareLocal(typeof(DateTime));
+                    il.Ldloca(local);
+                    il.Ldc_I8(dateTime.Ticks);
+                    il.Ldc_I4((int)dateTime.Kind);
+                    il.Call(typeof(DateTime).GetConstructor(new[] { typeof(long), typeof(DateTimeKind) }));
+                    il.Ldloc(local);
+                    break;
                 case UIntPtr unint: il.Ldc_IntPtr(Unsafe.As<UIntPtr, IntPtr>(ref unint)); break;
                 case IntPtr nint: il.Ldc_IntPtr(nint); break;
                 case Enum enumeration:
@@ -166,7 +196,8 @@ namespace Accretion.Intervals
             //ParameterInfo.ParameterType is DataTime or Decimal and it is decorated with the relevant attributes
             //Or ParameterInfo.ParameterInfo is enum
 
-            var targetTypeCode = Type.GetTypeCode(targetType);
+            //Apparantely, the type code for enums returns the type code for the underlying type, so we have to dodge that bullet
+            var targetTypeCode = !targetType.IsEnum ? Type.GetTypeCode(targetType) : TypeCode.Empty;
 
             //We choose the "strict" approach to interpreting metadata
             switch (targetTypeCode)
@@ -175,14 +206,14 @@ namespace Accretion.Intervals
                     return value switch
                     {
                         bool boolean => boolean,
-                        sbyte int8 => int8 > 0,
-                        byte uint8 => uint8 > 0,
-                        short int16 => int16 > 0,
-                        ushort uint16 => uint16 > 0,
-                        int int32 => int32 > 0,
-                        uint uint32 => uint32 > 0,
-                        long int64 => int64 > 0,
-                        ulong uint64 => uint64 > 0,
+                        sbyte int8 when int8 == 0 || int8 == 1 => int8 == 1,
+                        byte uint8 when uint8 == 0 || uint8 == 1 => uint8 == 1,
+                        short int16 when int16 == 0 || int16 == 1 => int16 == 1,
+                        ushort uint16 when uint16 == 0 || uint16 == 1 => uint16 == 1,
+                        int int32 when int32 == 0 || int32 == 1 => int32 == 1,
+                        uint uint32 when uint32 == 0 || uint32 == 1 => uint32 == 1,
+                        long int64 when int64 == 0 || int64 == 1 => int64 == 1,
+                        ulong uint64 when uint64 == 0 || uint64 == 1 => uint64 == 1,
                         _ => null
                     };
                 case TypeCode.SByte:
@@ -190,6 +221,12 @@ namespace Accretion.Intervals
                     {
                         sbyte int8 => int8,
                         byte uint8 when uint8 <= sbyte.MaxValue => (sbyte)uint8,
+                        short int16 when int16 >= sbyte.MinValue && int16 <= sbyte.MaxValue => (sbyte)int16,
+                        ushort uint16 when uint16 <= sbyte.MaxValue => (sbyte)uint16,
+                        int int32 when int32 >= sbyte.MinValue && int32 <= sbyte.MaxValue => (sbyte)int32,
+                        uint uint32 when uint32 <= sbyte.MaxValue => (sbyte)uint32,
+                        long int64 when int64 >= sbyte.MinValue && int64 <= sbyte.MaxValue => (sbyte)int64,
+                        ulong uint64 when uint64 <= (long)sbyte.MaxValue => (sbyte)uint64,
                         _ => null
                     };
                 case TypeCode.Byte:
@@ -197,6 +234,12 @@ namespace Accretion.Intervals
                     {
                         sbyte int8 when int8 >= 0 => (byte)int8,
                         byte uint8 => uint8,
+                        short int16 when int16 >= byte.MinValue && int16 <= byte.MaxValue => (byte)int16,
+                        ushort uint16 when uint16 <= byte.MaxValue => (byte)uint16,
+                        int int32 when int32 >= byte.MinValue && int32 <= byte.MaxValue => (byte)int32,
+                        uint uint32 when uint32 <= byte.MaxValue => (byte)uint32,
+                        long int64 when int64 >= byte.MinValue && int64 <= byte.MaxValue => (byte)int64,
+                        ulong uint64 when uint64 <= byte.MaxValue => (byte)uint64,
                         _ => null
                     };
                 case TypeCode.Char:
@@ -207,6 +250,10 @@ namespace Accretion.Intervals
                         byte uint8 => (char)uint8,
                         short int16 when int16 >= 0 => (char)int16,
                         ushort uint16 => (char)uint16,
+                        int int32 when int32 >= char.MinValue && int32 <= char.MaxValue => (char)int32,
+                        uint uint32 when uint32 <= char.MaxValue => (char)uint32,
+                        long int64 when int64 >= char.MinValue && int64 <= char.MaxValue => (char)int64,
+                        ulong uint64 when uint64 <= char.MaxValue => (char)uint64,
                         _ => null
                     };
                 case TypeCode.Int16:
@@ -216,6 +263,10 @@ namespace Accretion.Intervals
                         byte uint8 => (short)uint8,
                         short int16 => int16,
                         ushort uint16 when uint16 <= short.MaxValue => (short)uint16,
+                        int int32 when int32 >= short.MinValue && int32 <= short.MaxValue => (short)int32,
+                        uint uint32 when uint32 <= short.MaxValue => (short)uint32,
+                        long int64 when int64 >= short.MinValue && int64 <= short.MaxValue => (short)int64,
+                        ulong uint64 when uint64 <= (long)short.MaxValue => (short)uint64,
                         _ => null
                     };
                 case TypeCode.UInt16:
@@ -225,6 +276,10 @@ namespace Accretion.Intervals
                         byte uint8 => (ushort)uint8,
                         short int16 when int16 >= 0 => (ushort)int16,
                         ushort uint16 => uint16,
+                        int int32 when int32 >= ushort.MinValue && int32 <= ushort.MaxValue => (ushort)int32,
+                        uint uint32 when uint32 <= ushort.MaxValue => (ushort)uint32,
+                        long int64 when int64 >= ushort.MinValue && int64 <= ushort.MaxValue => (ushort)int64,
+                        ulong uint64 when uint64 <= ushort.MaxValue => (ushort)uint64,
                         _ => null
                     };
                 case TypeCode.Int32:
@@ -236,6 +291,8 @@ namespace Accretion.Intervals
                         ushort uint16 => (int)uint16,
                         int int32 => int32,
                         uint uint32 when uint32 <= int.MaxValue => (int)uint32,
+                        long int64 when int64 >= int.MinValue && int64 <= int.MaxValue => (int)int64,
+                        ulong uint64 when uint64 <= int.MaxValue => (int)uint64,
                         _ => null
                     };
                 case TypeCode.UInt32:
@@ -247,6 +304,8 @@ namespace Accretion.Intervals
                         ushort uint16 => (uint)uint16,
                         int int32 when int32 >= 0 => (uint)int32,
                         uint uint32 => uint32,
+                        long int64 when int64 >= uint.MinValue && int64 <= uint.MaxValue => (uint)int64,
+                        ulong uint64 when uint64 <= uint.MaxValue => (uint)uint64,
                         _ => null
                     };
                 case TypeCode.Int64:
@@ -275,8 +334,14 @@ namespace Accretion.Intervals
                         ulong uint64 => uint64,
                         _ => null
                     };
-                case TypeCode.Single: return value as float?;
-                case TypeCode.Double: return value is float float32 ? float32 : value as double?;
+                case TypeCode.Single:
+                    return value switch
+                    {
+                        float float32 => float32,
+                        double float64 => (float)float64,
+                        _ => null
+                    };
+                case TypeCode.Double: return value as double?;
             }
 
             //Strictly speaking, if targetTypes is Enum-derived, value will always be strongly typed
