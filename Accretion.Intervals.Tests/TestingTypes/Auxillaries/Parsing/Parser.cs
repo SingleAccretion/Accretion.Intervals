@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Accretion.Intervals.Tests
 {
@@ -32,7 +31,7 @@ namespace Accretion.Intervals.Tests
         public bool TryParseString(string input, out T value) => TryParseSpan(input, out value);
 
         public override bool Equals(object obj) => obj is Parser<T> parser && Equals(parser);
-        public bool Equals(Parser<T> other) => EqualityComparer<ParseSpan<T>>.Default.Equals(_parser, other._parser) && IsSupported == other.IsSupported;
+        public bool Equals(Parser<T> other) => _parser == other._parser && IsSupported == other.IsSupported;
         public override int GetHashCode() => HashCode.Combine(_parser, IsSupported);
         public override string ToString() => $"{typeof(T)} parser";
 

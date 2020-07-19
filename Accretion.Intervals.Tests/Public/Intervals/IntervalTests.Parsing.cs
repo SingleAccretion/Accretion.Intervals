@@ -44,7 +44,8 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         public Property FullParseStringIsEquivalentToFullParseSpan(IntervalString<T, TComparer> intervalString, Parser<T> parser) =>
             Result.From(() => Interval<T, TComparer>.Parse(intervalString.String, parser.ParseString)).Equals(
             Result.From(() => Interval<T, TComparer>.Parse(intervalString.Span, parser.ParseSpan))).
-            When(intervalString.String != null);
+            When(intervalString.String != null).
+            Or(!parser.IsSupported);
 
         [Property]
         public Property SimpleTryParseSpanIsEquivalentToFullTryParseSpan(IntervalString<T, TComparer> intervalString) =>
@@ -61,7 +62,8 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         public Property FullTryParseStringIsEquivalentToFullTryParseSpan(IntervalString<T, TComparer> intervalString, Parser<T> parser) =>
             Result.From(() => (Interval<T, TComparer>.TryParse(intervalString.String, parser.TryParseString, out var interval), interval)).Equals(
             Result.From(() => (Interval<T, TComparer>.TryParse(intervalString.Span, parser.TryParseSpan, out var interval), interval))).
-            When(intervalString.String != null);
+            When(intervalString.String != null).
+            Or(!parser.IsSupported);
 
         [Property]
         public Property FullTryParseSpanIsEquivalentToFullParseSpan(IntervalString<T, TComparer> intervalString, Parser<T> parser)
@@ -72,6 +74,10 @@ namespace Accretion.Intervals.Tests.AtomicInterval
                     parseResult.HasValue && parseResult.Value == triedInterval : !parseResult.HasValue).
                     Or(!parser.IsSupported);
         }
+
+        [Property]
+        public Property ParseCanParseToStringOutput(Interval<T, TComparer> interval, Parser<T> parser) => 
+            Interval<T, TComparer>.Parse(interval.ToString()).Equals(interval).Or(!parser.IsSupported);
 
         private static TParser GetSimpleParser<TParser>(string name) where TParser : Delegate
         {

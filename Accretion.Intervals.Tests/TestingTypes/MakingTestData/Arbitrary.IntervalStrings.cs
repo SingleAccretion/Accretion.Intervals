@@ -20,20 +20,20 @@ namespace Accretion.Intervals.Tests
 
         public static Arbitrary<InvalidIntervalString<T, TComparer>> InvalidIntervalStrings<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> => Arb.From(
             Gen.OneOf(
-                IntervalStringsWithInvalidFormat<T, TComparer>().Generator.Select(x => new InvalidIntervalString<T, TComparer>(x.String)),
-                IntervalStringsWithInvalidValues<T, TComparer>().Generator.Select(x => new InvalidIntervalString<T, TComparer>(x.String)),
+                NormalIntervalStringsWithInvalidFormat<T, TComparer>().Generator.Select(x => new InvalidIntervalString<T, TComparer>(x.String)),
+                NormalIntervalStringsWithInvalidValues<T, TComparer>().Generator.Select(x => new InvalidIntervalString<T, TComparer>(x.String)),
                 Arb.Generate<string>().Resize(50).Select(x => new InvalidIntervalString<T, TComparer>(x))));
 
-        public static Arbitrary<IntervalStringWithInvalidFormat<T, TComparer>> IntervalStringsWithInvalidFormat<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> => Arb.From(
+        public static Arbitrary<IntervalStringWithInvalidFormat<T, TComparer>> NormalIntervalStringsWithInvalidFormat<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> => Arb.From(
             from interval in NonEmptyIntervals<T, TComparer>().Generator
-            from lowerBoundaryType in Gen.OneOf(Gen.Elements('[', '(', '{'), Arb.Generate<char>())
+            from lowerBoundaryType in Gen.OneOf(Gen.Elements('[', '('), Arb.Generate<char>())
             let lowerBoundaryValue = interval.LowerBoundary.Value
             from separator in Gen.OneOf(Gen.Constant(','), Arb.Generate<char>())
             let upperBoundaryValue = interval.UpperBoundary.Value
-            from upperBoundaryType in Gen.OneOf(Gen.Elements(']', ')', '}'), Arb.Generate<char>())
+            from upperBoundaryType in Gen.OneOf(Gen.Elements(']', ')'), Arb.Generate<char>())
             select new IntervalStringWithInvalidFormat<T, TComparer>(Padded(lowerBoundaryType, lowerBoundaryValue, separator, upperBoundaryValue, upperBoundaryType)));
 
-        public static Arbitrary<IntervalStringWithInvalidValues<T, TComparer>> IntervalStringsWithInvalidValues<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> => Arb.From(
+        public static Arbitrary<IntervalStringWithInvalidValues<T, TComparer>> NormalIntervalStringsWithInvalidValues<T, TComparer>() where TComparer : struct, IBoundaryValueComparer<T> => Arb.From(
             from interval in NormalIntervals<T, TComparer>()
             from lowerBoundaryType in Gen.Elements("[", "(")
             from invalidValue in InvalidBoundaryValues<T, TComparer>().Generator
