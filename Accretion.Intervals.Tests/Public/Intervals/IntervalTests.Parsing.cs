@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using FsCheck;
 using FsCheck.Xunit;
 using Xunit;
@@ -39,7 +37,8 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         [Property]
         public Property SimpleParseStringIsEquivalentToFullParseString(IntervalString<T, TComparer> intervalString) =>
             Result.From(() => Interval<T, TComparer>.Parse(intervalString.String)).Equals(
-            Result.From(() => Interval<T, TComparer>.Parse(intervalString.String, GetSimpleParser<Parse<T>>("Parse")))).ToProperty();
+            Result.From(() => Interval<T, TComparer>.Parse(intervalString.String, GetSimpleParser<Parse<T>>("Parse")))).
+            When(intervalString.String != null);
 
         [Property]
         public Property FullParseStringIsEquivalentToFullParseSpan(IntervalString<T, TComparer> intervalString, Parser<T> parser) =>
@@ -50,15 +49,13 @@ namespace Accretion.Intervals.Tests.AtomicInterval
         [Property]
         public Property SimpleTryParseSpanIsEquivalentToFullTryParseSpan(IntervalString<T, TComparer> intervalString) =>
             Result.From(() => (Interval<T, TComparer>.TryParse(intervalString.Span, out var interval), interval)).Equals(
-            Result.From(() => (Interval<T, TComparer>.TryParse(intervalString.Span, GetSimpleParser<TryParseSpan<T>>("TryParse"), out var interval), interval))).
-            Or(TypeHasNoSimpleParser<TryParseSpan<T>>("TryParse"));
+            Result.From(() => (Interval<T, TComparer>.TryParse(intervalString.Span, GetSimpleParser<TryParseSpan<T>>("TryParse"), out var interval), interval))).ToProperty();
 
         [Property]
         public Property SimpleTryParseStringIsEquivalentToFullTryParseSpan(IntervalString<T, TComparer> intervalString) =>
             Result.From(() => (Interval<T, TComparer>.TryParse(intervalString.String, out var interval), interval)).Equals(
             Result.From(() => (Interval<T, TComparer>.TryParse(intervalString.Span, GetSimpleParser<TryParseSpan<T>>("TryParse"), out var interval), interval))).
-            When(intervalString.String != null).
-            Or(TypeHasNoSimpleParser<TryParse<T>>("TryParse"));
+            When(intervalString.String != null);
 
         [Property]
         public Property FullTryParseStringIsEquivalentToFullTryParseSpan(IntervalString<T, TComparer> intervalString, Parser<T> parser) =>
@@ -76,28 +73,37 @@ namespace Accretion.Intervals.Tests.AtomicInterval
                     Or(!parser.IsSupported);
         }
 
-        private static bool TypeHasNoSimpleParser<TParser>(string name) where TParser : Delegate => !TryGetSimpleParser<TParser>(name, out _);
-
-        private static TParser GetSimpleParser<TParser>(string name) where TParser : Delegate => TryGetSimpleParser<TParser>(name, out var parser) ? parser : throw new InvalidOperationException($"{typeof(T)} does not have a suitable simple parser.");
-
-        private static bool TryGetSimpleParser<TParser>(string name, out TParser parser) where TParser : Delegate
+        private static TParser GetSimpleParser<TParser>(string name) where TParser : Delegate
         {
             var type = typeof(T);
             var parserMethod = typeof(TParser).GetMethod("Invoke");
-            var methods = from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                          where method.Name == name
-                          where method.ReturnType == parserMethod.ReturnType
-                          let parameters = method.GetParameters().Where(x => !x.HasDefaultValue)
-                          let parserParameters = parserMethod.GetParameters()
-                          where parameters.Count() == parserParameters.Count() &&
-                                parameters.Zip(parserParameters).
-                                All(x => x.First.ParameterType == x.Second.ParameterType && x.First.IsOut == x.Second.IsOut)
-                          select method;
-            
+            var parserParameters = parserMethod.GetParameters();
+
+            var methods = (from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                           where method.Name == name
+                           where method.ReturnType == parserMethod.ReturnType
+                           let parameters = method.GetParameters()
+                           let requiredParameters = parameters.Where(x => !x.HasDefaultValue)
+                           where requiredParameters.Count() == parserParameters.Length &&
+                                 requiredParameters.Zip(parserParameters).
+                                 All(x => x.First.ParameterType == x.Second.ParameterType && x.First.IsOut == x.Second.IsOut)
+                           group method by parameters.Length into overloads
+                           orderby overloads.Key
+                           select overloads).
+                           First();
+
+            if (methods.Count() == 0)
+            {
+                throw new InvalidOperationException($"{type} has no suitable parser methods.");
+            }
+            if (methods.Count() > 1)
+            {
+                throw new InvalidOperationException($"{type} has too many suitable parser methods.");
+            }
+
             //We depend here on the correctness of ShimGenerator, which is probably one of the most complex APIs in the library
             //This is only possible because it is tested separately
-            parser = methods.Count() == 1 ? ShimGenerator.WithDefaultParametersPassed<TParser>(methods.Single()) : null;
-            return parser is null;
+            return ShimGenerator.WithDefaultParametersPassed<TParser>(methods.Single());
         }
     }
 }

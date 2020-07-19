@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Accretion.Intervals.StringConversion
 {
@@ -47,38 +48,62 @@ namespace Accretion.Intervals.StringConversion
         
         private static Delegate DiscoverParser<T, TParser>(string parserName) where TParser : Delegate
         {
-            static bool IsCompatibleWith<TDelegate>(MethodInfo method) where TDelegate : Delegate =>
-                new MethodSignature(typeof(TDelegate).GetMethod("Invoke")).IsCompatibelWith(method);
+            var parserInfo = typeof(TParser).GetMethod("Invoke");
+            var parserSignature = new MethodSignature(parserInfo, parserName, MethodAttributes.Public | MethodAttributes.Static);
 
             var type = typeof(T);
             var parserCandidates = type.GetMethods(BindingFlags.Public | BindingFlags.Static).Where(x => x.Name == parserName);
-            //Multiple parsers can be found because default parameters are not considered part of the signature
-            //In general, some signature differences cannot be resolved with any sane algorithm
-            //E. g. Parse(string str, int x = 0) vs Parse(string str, float x = 0.0f)
-            //We explicitly do not throw in this case but choose a what is essentailly a random overload
-            var parserInfo = parserCandidates.Where(x => IsCompatibleWith<TParser>(x)).OrderBy(x => x.GetParameters().Length).FirstOrDefault();
             
-            if (parserInfo is null)
+            var parsers = parserCandidates.
+                Where(x => parserSignature.IsCompatibelWith(x)).
+                Select(x => (Method: x, ParameterCount: x.GetParameters().Length)).
+                OrderBy(x => x.ParameterCount);
+
+            var firstParameter = parsers.FirstOrDefault();
+            if (firstParameter.Equals(default))
             {
-                var signature = new MethodSignature(parserInfo).ToString();
+                var signature = new MethodSignature(parserInfo, parserName, MethodAttributes.Public | MethodAttributes.Static).ToString();
                 Throw.ParserNotFound(type, signature);
             }
 
-            return ShimGenerator.WithDefaultParametersPassed<TParser>(parserInfo);
+            //Multiple parsers can be found because default parameters are not considered part of the signature
+            //In general, some signature differences cannot be resolved with any sane algorithm
+            //E. g. Parse(string str, int x = 0) vs Parse(string str, float x = 0.0f)
+            //We throw in this case
+            var resolvedParsers = parsers.TakeWhile(x => x.ParameterCount == firstParameter.ParameterCount).ToList();
+            if (resolvedParsers.Count > 1)
+            {
+                Throw.OverloadResolutionFailed(type);
+            }
+
+            return ShimGenerator.WithDefaultParametersPassed<TParser>(resolvedParsers[0].Method);
         }
 
         private readonly struct MethodSignature
         {
-            public MethodSignature(MethodInfo methodInfo) => MethodInfo = methodInfo;
+            private readonly string _name;
+            private readonly MethodAttributes _methodAttributes;
+
+            public MethodSignature(MethodInfo methodInfo, string name, MethodAttributes methodAttributes)
+            {
+                MethodInfo = methodInfo;
+                _name = name;
+                _methodAttributes = methodAttributes;
+            }
 
             public MethodInfo MethodInfo { get; }
 
             public bool IsCompatibelWith(MethodInfo other)
             {
-                var parameters = MethodInfo.GetParameters().Where(x => !x.HasDefaultValue).ToArray();
+                if (MethodInfo.ReturnType != other.ReturnType)
+                {
+                    return false;
+                }
+
+                var parameters = MethodInfo.GetParameters();
                 var otherParameters = other.GetParameters().Where(x => !x.HasDefaultValue).ToArray();
 
-                if (parameters.Length != otherParameters.Length || MethodInfo.ReturnType != other.ReturnType)
+                if (parameters.Length != otherParameters.Length)
                 {
                     return false;
                 }
@@ -95,14 +120,24 @@ namespace Accretion.Intervals.StringConversion
             }
 
             public override string ToString()
-            {
-                var accessibilityModifier = MethodInfo.IsPublic ? "public" : "private";
-                var staticModifier = MethodInfo.IsStatic ? "static" : string.Empty;
-                var name = MethodInfo.Name;
+            {                
+                static IEnumerable<string> GetMethodAttributes(MethodSignature signature)
+                {
+                    if (signature._methodAttributes.HasFlag(MethodAttributes.Public))
+                    {
+                        yield return "public";
+                    }
+                    if (signature._methodAttributes.HasFlag(MethodAttributes.Static))
+                    {
+                        yield return "static";
+                    }
+                }
+
+                var name = _name;
                 var returnType = MethodInfo.ReturnType.Name;
                 var parameters = string.Join(", ", MethodInfo.GetParameters().Select(x => new ParameterSignature(x)));
 
-                return $"{accessibilityModifier} {staticModifier} {returnType} {name}({parameters})";
+                return $"{string.Join(" ", GetMethodAttributes(this))} {returnType} {name}({parameters})";
             }
         }
 
@@ -114,7 +149,27 @@ namespace Accretion.Intervals.StringConversion
 
             public bool IsCompatibleWith(ParameterInfo other) => ParameterInfo.ParameterType == other.ParameterType && ParameterInfo.IsOut == other.IsOut;
 
-            public override string ToString() => ParameterInfo.IsOut ? "out" : "" + ParameterInfo.Name;
+            public override string ToString()
+            {
+                var tokens = new List<object>();
+                if (ParameterInfo.IsOut)
+                {
+                    tokens.Add("out");
+                }
+                else if (ParameterInfo.IsIn)
+                {
+                    tokens.Add("in");
+                }
+                else if (ParameterInfo.ParameterType.IsByRef)
+                {
+                    tokens.Add("ref");
+                }
+                
+                tokens.Add(ParameterInfo.ParameterType);
+                tokens.Add(ParameterInfo.Name);
+
+                return string.Join(" ", tokens);
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Accretion.Intervals
         public static void Exception(Exception exception) => throw exception;
         public static T Exception<T>(Exception exception) => throw exception;
 
-        public static void ParserNotFound(Type type, string signature) => throw new InvalidOperationException($"The parser method on {type.Name} could not be found. It must have the following signature: {signature}");
+        public static void ParserNotFound(Type type, string signature) => throw new InvalidOperationException($"The parser method on {type.Name} could not be found. It must have the following signature: {signature}.");
+        public static void OverloadResolutionFailed(Type type) => throw new InvalidOperationException($"There are too many suitable parser methods on {type.Name}. Overload resolution failed");
     }
 }
